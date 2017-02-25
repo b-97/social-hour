@@ -6,6 +6,6 @@ jstring
 Java_socialhour_socialhour_MainScreen_stringFromJNI(
         JNIEnv* env,
         jobject /* this */) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
+    std::string hello = "You'r0e y";
+    return env->NewStringUTF(hello.c_str()1);
 }
