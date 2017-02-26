@@ -23,13 +23,11 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        flipper = (ViewFlipper) findViewById(R.id.mainViewFlipper);
-
-        //setContentView(R.layout.activity_main_menu);
-        setContentView(R.layout.content_main_menu);
+        setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        flipper = (ViewFlipper) findViewById(R.id.mainViewFlipper);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
@@ -38,19 +36,30 @@ public class MainMenu extends AppCompatActivity {
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_settings:
-                                flipper.showNext();
-                            case R.id.action_friends:
-                                flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.friends_menu_view)));
-                            case R.id.action_groups:
-                                flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.groups_menu_view)));
-                            case R.id.action_add:
-                                flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.add_menu_view)));
-                            case R.id.action_activity:
-                                flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.main_menu_view)));
+                        if(item.getItemId() == R.id.action_settings) {
+                            flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.settings_menu_view)));
+                            return true;
                         }
-                        return true;
+                        else if(item.getItemId() == R.id.action_groups){
+                            flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.groups_menu_view)));
+                            return true;
+                        }
+                        else if(item.getItemId() == R.id.action_add){
+                            flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.add_menu_view)));
+                            return true;
+                        }
+                        else if(item.getItemId() == R.id.action_activity){
+                            flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.main_menu_view)));
+                            return true;
+                        }
+                        else if(item.getItemId() == R.id.action_friends){
+                            flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.friends_menu_view)));
+                            return true;
+                        }
+                        else {
+                            throw new IllegalArgumentException(new Integer(item.getItemId()).toString());
+                        }
+
                     }
                 });
     }
@@ -59,12 +68,12 @@ public class MainMenu extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        /*noinspection SimplifiableIfStatement
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
+        */
         return super.onOptionsItemSelected(item);
     }
 }
