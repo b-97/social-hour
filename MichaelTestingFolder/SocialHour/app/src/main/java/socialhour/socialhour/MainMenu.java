@@ -11,17 +11,31 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.content.Intent;
-
+import android.widget.ViewFlipper;
+import android.support.v4.widget.NestedScrollView;
 
 public class MainMenu extends AppCompatActivity {
+
+
+    private ViewFlipper flipper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+        flipper = (ViewFlipper) findViewById(R.id.friends_menu_view);
+        flipper.addView(findViewById(R.id.groups_menu_view));
+        flipper.addView(findViewById(R.id.main_menu_view));
+        flipper.addView(findViewById(R.id.add_menu_view));
+        flipper.addView(findViewById(R.id.main_menu_view));
+
         setContentView(R.layout.activity_main_menu);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
@@ -45,7 +59,6 @@ public class MainMenu extends AppCompatActivity {
                     }
                 });
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

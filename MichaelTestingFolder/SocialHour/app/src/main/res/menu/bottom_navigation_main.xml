@@ -25,11 +25,18 @@
         android:icon="@drawable/ic_add_white_24dp"
         android:title="@string/text_add"
         app:showAsAction="ifRoom" />
+    <!--
     <item
         android:id="@+id/action_settings"
         android:enabled="true"
         android:icon="@drawable/ic_settings_white_24dp"
         android:title="@string/text_settings"
         app:showAsAction="ifRoom" />
-
+    !-->
+    <item
+        android:id="@+id/action_settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_testsetting"
+        android:title="@string/text_settings"
+        app:showAsAction="ifRoom" />
 </menu>
