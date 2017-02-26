@@ -19,10 +19,18 @@
         android:icon="@drawable/ic_activity_white_24dp"
         android:title="@string/text_activity"
         app:showAsAction="ifRoom" />
+    <!--
     <item
         android:id="@+id/action_add"
         android:enabled="true"
         android:icon="@drawable/ic_add_white_24dp"
+        android:title="@string/text_add"
+        app:showAsAction="ifRoom" />
+        !-->
+    <item
+        android:id="@+id/action_add"
+        android:enabled="true"
+        android:icon="@drawable/ic_testedit"
         android:title="@string/text_add"
         app:showAsAction="ifRoom" />
     <!--

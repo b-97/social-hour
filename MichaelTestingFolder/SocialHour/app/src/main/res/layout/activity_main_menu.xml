@@ -35,5 +35,6 @@
 
     <include layout="@layout/content_main_menu" />
 
-    <include layout="@layout/layout_menu_bar" />
+    <include layout="@layout/layout_menu_bar"
+        android:layout_height="566dp" />
 </android.support.design.widget.CoordinatorLayout>

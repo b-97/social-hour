@@ -23,16 +23,10 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        flipper = (ViewFlipper) findViewById(R.id.mainViewFlipper);
 
-
-        flipper = (ViewFlipper) findViewById(R.id.friends_menu_view);
-        flipper.addView(findViewById(R.id.groups_menu_view));
-        flipper.addView(findViewById(R.id.main_menu_view));
-        flipper.addView(findViewById(R.id.add_menu_view));
-        flipper.addView(findViewById(R.id.main_menu_view));
-
-        setContentView(R.layout.activity_main_menu);
-
+        //setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.content_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,14 +40,15 @@ public class MainMenu extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_settings:
-
+                                flipper.showNext();
                             case R.id.action_friends:
-
+                                flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.friends_menu_view)));
                             case R.id.action_groups:
-
+                                flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.groups_menu_view)));
                             case R.id.action_add:
-
+                                flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.add_menu_view)));
                             case R.id.action_activity:
+                                flipper.setDisplayedChild(flipper.indexOfChild(findViewById(R.id.main_menu_view)));
                         }
                         return true;
                     }
