@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements OnConnectionFaile
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess())//signed in successfully, shot authenticated UI
         {
-            GoogleSignInAccount acct = result.getSignInAccount();
-            mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+            //GoogleSignInAccount acct = result.getSignInAccount();
+            //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             updateUI(true);
         }
         else//signed out, unauthenticated UI
@@ -187,10 +187,9 @@ public class MainActivity extends AppCompatActivity implements OnConnectionFaile
 
     private void updateUI(boolean signedIn) {
         if (signedIn) {
-            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+            //findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             //findViewById(R.id.sign_out).setVisibility(View.VISIBLE);
-            Intent intent = new Intent(this,Events.class);
-            startActivity(intent);
+            nextActivity();
         } else {
             //mStatusTextView.setText(R.string.signed_out);
 
@@ -212,6 +211,12 @@ public class MainActivity extends AppCompatActivity implements OnConnectionFaile
                 revokeAccess();
                 break;*/
         }
+    }
+
+    public void nextActivity()
+    {
+        Intent intent = new Intent(this,Events.class);
+        startActivity(intent);
     }
 }
 
