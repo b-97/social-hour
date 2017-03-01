@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "581280288632",
+    "project_id": "firebase-social-hour"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581280288632:android:cd14c0c1b873c850",
+        "android_client_info": {
+          "package_name": "socialhour.socialhour"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581280288632-ldb1gpk4slr986lb0dbomr1dq6tqvhsp.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "581280288632-np6oifrdqqat21ufi4oelv30iscl19o2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "socialhour.socialhour",
+            "certificate_hash": "c376c1cecb31a7ac316503dc954e98552e5e239f"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyoCyn444tOzqNJOeDYOff9rGNW95NYow"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
