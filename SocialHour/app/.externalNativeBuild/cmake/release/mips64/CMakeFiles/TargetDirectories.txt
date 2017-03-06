@@ -1,0 +1,3 @@
+/home/rocco/Documents/CI 102/team85-drexel-17/SocialHour/app/.externalNativeBuild/cmake/release/mips64/CMakeFiles/rebuild_cache.dir
+/home/rocco/Documents/CI 102/team85-drexel-17/SocialHour/app/.externalNativeBuild/cmake/release/mips64/CMakeFiles/edit_cache.dir
+/home/rocco/Documents/CI 102/team85-drexel-17/SocialHour/app/.externalNativeBuild/cmake/release/mips64/CMakeFiles/native-lib.dir
