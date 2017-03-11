@@ -150,7 +150,7 @@ public class add_menu_activity extends frontend_activity {
 
         edit_event_name_textedit = (TextView) findViewById(R.id.edit_event_name_edittext);
 
-        String event_name = edit_event_name_textedit.toString();
+        String event_name = edit_event_name_textedit.getText().toString();
 
         data.putExtra("event_year", this.event_year);
         data.putExtra("event_month", this.event_month);

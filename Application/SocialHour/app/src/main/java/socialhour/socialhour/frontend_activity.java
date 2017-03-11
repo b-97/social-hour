@@ -73,8 +73,10 @@ public class frontend_activity extends AppCompatActivity {
     }
     /*
         This is called when the "Add Event activity finishes.
+        This method then calls parseNewEventData with the event provided.
         Current Behaviour: Shows toast containing the event data passed from the Add Event.
-        TODO: Parse and implement the data coming from Add Event
+        TODO: Update this function to grab more data when more event data is added to the activity
+        TODO: Update this function to throw more data to parseNewEventData()
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ((requestCode == request_code) &&
@@ -87,11 +89,32 @@ public class frontend_activity extends AppCompatActivity {
             int event_start_minute = data.getExtras().getInt("event_start_minute");
             int event_end_minute = data.getExtras().getInt("event_end_minute");
             String event_name = data.getExtras().getString("event_name");
-            Toast.makeText(this.getBaseContext(), event_year + "/" + event_month + "/" + event_date +
-                                                    "; " + event_start_hour + ":" + event_end_minute +
-                                                    " to " + event_end_hour + ":" + event_end_minute,
-                    Toast.LENGTH_LONG).show();
+
+            parseNewEventData(event_year, event_month, event_date, event_start_hour,
+                    event_end_hour, event_start_minute, event_end_minute, event_name);
         }
+    }
+
+    /*
+           This function is where all of the data processing happens.
+           TODO: Update this function to have database integration???
+           TODO: Update this function to grab more variables from onActivityResult() when more data is added to the activity
+           TODO: Update this function to output data to the dashboard???
+     */
+    protected void parseNewEventData(int year, int month, int date, int start_hour,
+                                     int end_hour, int start_minute, int end_minute, String event_name_){
+        int event_year = year;
+        int event_month = month;
+        int event_date = date;
+        int event_start_hour = start_hour;
+        int event_end_hour = end_hour;
+        int event_start_minute = start_minute;
+        int event_end_minute = end_minute;
+        String event_name = event_name_;
+        Toast.makeText(this.getBaseContext(), event_name + " " + event_year + "/" + event_month +
+                        "/" + event_date + "; " + event_start_hour + ":" + event_end_minute +
+                        " to " + event_end_hour + ":" + event_end_minute,
+                Toast.LENGTH_LONG).show();
     }
 
 
@@ -119,43 +142,9 @@ public class frontend_activity extends AppCompatActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_frontend_activity, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
-    }
-
-    /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
+     * TODO: Update public Fragment getItem() to have all three pages when pages are added
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -169,9 +158,14 @@ public class frontend_activity extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch(position){
                 case 0:
+                    return new dashboard();
+                case 1:
                     return new friends_menu();
+                case 2:
+                    return new groups_menu();
                 default:
-                    return PlaceholderFragment.newInstance(position + 1);
+                    throw new RuntimeException("Error: Page not Found! If you're seeing this " +
+                            "message please contact the developers.");
             }
         }
 
