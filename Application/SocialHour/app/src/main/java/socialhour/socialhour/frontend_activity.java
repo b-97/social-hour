@@ -1,5 +1,6 @@
 package socialhour.socialhour;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class frontend_activity extends AppCompatActivity {
 
@@ -36,12 +38,17 @@ public class frontend_activity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+
+    private static final int request_code = 5;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frontend_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Social Hour");
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -58,12 +65,35 @@ public class frontend_activity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(getApplicationContext(), add_menu_activity.class);
+                startActivityForResult(i, request_code);
             }
         });
 
     }
+    /*
+        This is called when the "Add Event activity finishes.
+        Current Behaviour: Shows toast containing the event data passed from the Add Event.
+        TODO: Parse and implement the data coming from Add Event
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ((requestCode == request_code) &&
+                resultCode == RESULT_OK) {
+            int event_year = data.getExtras().getInt("event_year");
+            int event_month = data.getExtras().getInt("event_month");
+            int event_date = data.getExtras().getInt("event_date");
+            int event_start_hour = data.getExtras().getInt("event_start_hour");
+            int event_end_hour = data.getExtras().getInt("event_end_hour");
+            int event_start_minute = data.getExtras().getInt("event_start_minute");
+            int event_end_minute = data.getExtras().getInt("event_end_minute");
+            String event_name = data.getExtras().getString("event_name");
+            Toast.makeText(this.getBaseContext(), event_year + "/" + event_month + "/" + event_date +
+                                                    "; " + event_start_hour + ":" + event_end_minute +
+                                                    " to " + event_end_hour + ":" + event_end_minute,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
 
 
     @Override
@@ -139,13 +169,10 @@ public class frontend_activity extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch(position){
                 case 0:
-                    friends_menu my_friends = new friends_menu();
-                    return my_friends;
+                    return new friends_menu();
                 default:
                     return PlaceholderFragment.newInstance(position + 1);
-
             }
-
         }
 
         @Override

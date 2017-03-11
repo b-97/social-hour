@@ -28,11 +28,13 @@
             android:theme="@style/AppTheme.NoActionBar">
 
             <!-- android:theme="@style/AppTheme" -->
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
 
         <meta-data
@@ -46,6 +48,10 @@
         <activity
             android:name=".add_event"
             android:label="@string/title_activity_add_event"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".add_menu_activity"
+            android:label="@string/title_activity_add_menu_activity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
