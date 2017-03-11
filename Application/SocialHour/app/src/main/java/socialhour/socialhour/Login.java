@@ -215,7 +215,7 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
 
     public void nextActivity()
     {
-        Intent intent = new Intent(this,MainMenu.class);
+        Intent intent = new Intent(this,frontend_activity.class);
         startActivity(intent);
     }
 }

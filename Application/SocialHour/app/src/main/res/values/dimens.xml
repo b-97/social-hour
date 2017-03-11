@@ -5,7 +5,9 @@
     <dimen name="activity_top_margin">48dp</dimen>
     <dimen name="events_margin">24dp</dimen>
 
-    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="toolbar_height">64dp</dimen>
+    <dimen name="app_bar_height">90dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 </resources>
