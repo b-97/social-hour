@@ -1,3 +1,0 @@
-/home/rocco/Documents/CI 102/team85-drexel-17/SocialHour/app/.externalNativeBuild/cmake/release/armeabi/CMakeFiles/rebuild_cache.dir
-/home/rocco/Documents/CI 102/team85-drexel-17/SocialHour/app/.externalNativeBuild/cmake/release/armeabi/CMakeFiles/edit_cache.dir
-/home/rocco/Documents/CI 102/team85-drexel-17/SocialHour/app/.externalNativeBuild/cmake/release/armeabi/CMakeFiles/native-lib.dir
