@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -43,7 +44,6 @@ public class add_menu_activity extends frontend_activity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Add New Event");
         setSupportActionBar(toolbar);
-
 
         /*
             TODO: Convert dialogues to fragments
@@ -150,6 +150,9 @@ public class add_menu_activity extends frontend_activity {
 
         edit_event_name_textedit = (TextView) findViewById(R.id.edit_event_name_edittext);
 
+        final CheckBox is_all_day_checkbox = (CheckBox) findViewById(R.id.is_all_day_checkbox);
+        boolean isAllDay = is_all_day_checkbox.isChecked();
+
         String event_name = edit_event_name_textedit.getText().toString();
 
         data.putExtra("event_year", this.event_year);
@@ -160,6 +163,7 @@ public class add_menu_activity extends frontend_activity {
         data.putExtra("event_start_minute", this.start_minute);
         data.putExtra("event_end_minute", this.end_minute);
         data.putExtra("event_name", event_name);
+        data.putExtra("is_all_day", isAllDay);
 
         setResult(RESULT_OK, data);
         super.finish();

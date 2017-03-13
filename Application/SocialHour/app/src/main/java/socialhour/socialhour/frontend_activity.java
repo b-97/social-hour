@@ -89,9 +89,10 @@ public class frontend_activity extends AppCompatActivity {
             int event_start_minute = data.getExtras().getInt("event_start_minute");
             int event_end_minute = data.getExtras().getInt("event_end_minute");
             String event_name = data.getExtras().getString("event_name");
-
+            boolean is_all_day = data.getExtras().getBoolean("isAllDay");
             parseNewEventData(event_year, event_month, event_date, event_start_hour,
-                    event_end_hour, event_start_minute, event_end_minute, event_name);
+                    event_end_hour, event_start_minute, event_end_minute,
+                    is_all_day, event_name);
         }
     }
 
@@ -102,7 +103,8 @@ public class frontend_activity extends AppCompatActivity {
            TODO: Update this function to output data to the dashboard???
      */
     protected void parseNewEventData(int year, int month, int date, int start_hour,
-                                     int end_hour, int start_minute, int end_minute, String event_name_){
+                                     int end_hour, int start_minute, int end_minute,
+                                     boolean is_all_day, String event_name_){
         int event_year = year;
         int event_month = month;
         int event_date = date;
@@ -111,9 +113,10 @@ public class frontend_activity extends AppCompatActivity {
         int event_start_minute = start_minute;
         int event_end_minute = end_minute;
         String event_name = event_name_;
+        boolean isAllDay = is_all_day;
         Toast.makeText(this.getBaseContext(), event_name + " " + event_year + "/" + event_month +
                         "/" + event_date + "; " + event_start_hour + ":" + event_end_minute +
-                        " to " + event_end_hour + ":" + event_end_minute,
+                        " to " + event_end_hour + ":" + event_end_minute + " " + isAllDay,
                 Toast.LENGTH_LONG).show();
     }
 

@@ -25,13 +25,7 @@
         completions."
     </string>
 
-    <!-- Strings related to menu bar-->
-    <string name="text_friends">Friends</string>
-    <string name="text_add">Add</string>
-    <string name="text_groups">Groups</string>
-    <string name="text_settings">Settings</string>
-    <string name="text_activity">Activity</string>
-    <!---->
+
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
@@ -49,9 +43,13 @@
     <string name="edit_event_time_end">End time:</string>
     <string name="empty_time_button">--:--</string>
     <string name="empty_date_button">--/--/--</string>
+    <string name="edit_is_all_day_title">Event is all-day</string>
+
+
+
+
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
-
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
         based on your message history
