@@ -22,6 +22,9 @@ android {
     }
 
 }
+repositories {
+    mavenCentral()
+}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -30,12 +33,17 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support:percent:25.2.0'
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.android.support:support-vector-drawable:25.2.0'
     testCompile 'junit:junit:4.12'
 
     //Plugins for Google Calendar API
     compile 'com.google.android.gms:play-services-auth:10.2.0'
+
+    compile ('com.google.apis:google-api-services-calendar:v3-rev236-1.22.0'){
+        exclude group: 'org.apache.httpcomponents'
+    }
 
     compile 'pub.devrel:easypermissions:0.2.1'
     compile('com.google.api-client:google-api-client-android:1.22.0') {
@@ -44,5 +52,6 @@ dependencies {
     compile('com.google.apis:google-api-services-calendar:v3-rev235-1.22.0') {
         exclude group: 'org.apache.httpcomponents'
     }
+    compile 'com.google.firebase:firebase-core:10.2.0'
 }
 apply plugin: 'com.google.gms.google-services'
