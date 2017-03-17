@@ -31,6 +31,7 @@ public class add_menu_activity extends frontend_activity {
     private Button date_diag_button;
 
     private TextView edit_event_name_textedit;
+    private TextView edit_event_description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,11 +150,12 @@ public class add_menu_activity extends frontend_activity {
         Intent data = new Intent();
 
         edit_event_name_textedit = (TextView) findViewById(R.id.edit_event_name_edittext);
-
+        edit_event_description = (TextView) findViewById(R.id.event_description_textbox);
         final CheckBox is_all_day_checkbox = (CheckBox) findViewById(R.id.is_all_day_checkbox);
         boolean isAllDay = is_all_day_checkbox.isChecked();
 
         String event_name = edit_event_name_textedit.getText().toString();
+        String event_description = edit_event_description.getText().toString();
 
         data.putExtra("event_year", this.event_year);
         data.putExtra("event_month", this.event_month);
@@ -163,6 +165,7 @@ public class add_menu_activity extends frontend_activity {
         data.putExtra("event_start_minute", this.start_minute);
         data.putExtra("event_end_minute", this.end_minute);
         data.putExtra("event_name", event_name);
+        data.putExtra("event_description", event_description);
         data.putExtra("is_all_day", isAllDay);
 
         setResult(RESULT_OK, data);

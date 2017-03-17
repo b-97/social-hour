@@ -78,5 +78,6 @@
     <string name="toast_confirm">OK</string>
     <string name="toast_cancel">Cancel</string>
     <string name="title_activity_add_menu_activity">add_menu_activity</string>
+    <string name="event_description">Descripton:</string>
 
 </resources>

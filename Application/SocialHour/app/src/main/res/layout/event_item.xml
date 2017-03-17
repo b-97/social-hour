@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:gravity="center_vertical|start"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:id="@+id/cont_event_root">
+
+    <ImageView
+        android:id="@+id/event_list_icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_activity_white_24dp"
+        android:tint="@color/colorAccent"/>
+
+    <TextView
+        android:id="@+id/event_list_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="@string/add_menu_title"
+        />
+</LinearLayout>

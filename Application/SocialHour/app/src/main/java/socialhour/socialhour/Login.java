@@ -3,6 +3,7 @@ package socialhour.socialhour;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,6 +25,10 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+
+import java.io.IOException;
+
+import socialhour.socialhour.model.UserData;
 
 import static com.google.android.gms.common.SignInButton.SIZE_STANDARD;
 
@@ -120,8 +125,20 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess())//signed in successfully, shot authenticated UI
         {
-            //GoogleSignInAccount acct = result.getSignInAccount();
+            GoogleSignInAccount acct = result.getSignInAccount();
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+            UserData.set_user_first_name(acct.getDisplayName());
+            UserData.set_user_last_name(acct.getFamilyName());
+            UserData.set_user_email(acct.getEmail());
+            UserData.set_user_id(acct.getId());
+            try {
+                UserData.set_user_bitmap(MediaStore.Images.Media.getBitmap
+                        (this.getContentResolver(), acct.getPhotoUrl()));
+            }
+            catch (IOException e) {
+                UserData.set_user_bitmap(null);
+            }
+            UserData.set_user_given_name(acct.getGivenName());
             updateUI(true);
         }
         else//signed out, unauthenticated UI
