@@ -45,11 +45,8 @@ public class dashboard extends Fragment {
         return getActivity();
     }
 
-    public void make_toast(EventItem e) {
-        Toast.makeText(this.getThisContext(), e.get_event_title() , Toast.LENGTH_SHORT).show();
-    }
+
     public void updateAdapter(EventItem e) {
-        this.make_toast(e);
         adapter.notifyDataSetChanged();
     }
 }

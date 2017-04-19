@@ -9,9 +9,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -26,6 +28,8 @@ public class add_menu_activity extends frontend_activity {
     int start_hour, end_hour;
     int start_minute, end_minute;
     int event_year, event_month, event_day;
+    int current_year, current_month, current_day;
+
     private Button start_time_diag_button;
     private Button end_time_diag_button;
     private Button date_diag_button;
@@ -33,12 +37,17 @@ public class add_menu_activity extends frontend_activity {
     private TextView edit_event_name_textedit;
     private TextView edit_event_description;
 
+    private CheckBox is_all_day_check_box;
+
+    private boolean isAllDay;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final Calendar cal = Calendar.getInstance();
-        event_year = cal.get(Calendar.YEAR);
-        event_month = cal.get(Calendar.MONTH);
-        event_day = cal.get(Calendar.DAY_OF_MONTH);
+        current_year = cal.get(Calendar.YEAR);
+        current_month = cal.get(Calendar.MONTH);
+        current_day = cal.get(Calendar.DAY_OF_MONTH);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_menu_activity);
@@ -77,8 +86,17 @@ public class add_menu_activity extends frontend_activity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        //.setAction("Action", null).show();
+                attemptFinish(view);
+            }
+        });
+        is_all_day_check_box = (CheckBox) findViewById(R.id.is_all_day_checkbox);
+        is_all_day_check_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                isAllDay = isChecked;
             }
         });
     }
@@ -90,7 +108,7 @@ public class add_menu_activity extends frontend_activity {
         else if(id == 2)
             return new TimePickerDialog(add_menu_activity.this, lTimePickerListener, end_hour, end_minute, false);
         else if(id == 3)
-            return new DatePickerDialog(this, datePickerListener, event_year, event_month, event_day);
+            return new DatePickerDialog(this, datePickerListener, current_year, current_month, current_day);
         return null;
     }
 
@@ -141,34 +159,67 @@ public class add_menu_activity extends frontend_activity {
                     + String.format(Locale.getDefault(), "%02d", end_minute) + " " + am_pm);
         }
     };
+
+    protected void attemptFinish(View view) {
+        if(invalid_fields()) {
+            Snackbar.make(view, "Make sure you fill out event data first!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+        }
+        else {
+            finish();
+        }
+    }
+    /*
+        Function that ensures all fields are valid.
+        TODO: Make sure this function is updated with new fields to be validated.
+     */
+    protected boolean invalid_fields(){
+        return ((((TextView) findViewById(R.id.edit_event_name_edittext)).getText().toString().length() < 1) ||
+                (((TextView) findViewById(R.id.event_description_textbox)).getText().toString().length() < 1) ||
+                event_year == 0);
+    }
+
     /*
     Code that overrides the finish function. This allows the "Add New Event" dialog to return data to the parent function.
      */
-
     @Override
     public void finish() {
         Intent data = new Intent();
 
-        edit_event_name_textedit = (TextView) findViewById(R.id.edit_event_name_edittext);
-        edit_event_description = (TextView) findViewById(R.id.event_description_textbox);
-        final CheckBox is_all_day_checkbox = (CheckBox) findViewById(R.id.is_all_day_checkbox);
-        boolean isAllDay = is_all_day_checkbox.isChecked();
+        if(invalid_fields()){
+            setResult(RESULT_CANCELED, data);
+            super.finish();
+        }
+        else{
+            edit_event_name_textedit = (TextView) findViewById(R.id.edit_event_name_edittext);
+            edit_event_description = (TextView) findViewById(R.id.event_description_textbox);
 
-        String event_name = edit_event_name_textedit.getText().toString();
-        String event_description = edit_event_description.getText().toString();
+            String event_name = edit_event_name_textedit.getText().toString();
+            String event_description = edit_event_description.getText().toString();
 
-        data.putExtra("event_year", this.event_year);
-        data.putExtra("event_month", this.event_month);
-        data.putExtra("event_day", this.event_day);
-        data.putExtra("event_start_hour", this.start_hour);
-        data.putExtra("event_end_hour", this.end_hour);
-        data.putExtra("event_start_minute", this.start_minute);
-        data.putExtra("event_end_minute", this.end_minute);
-        data.putExtra("event_name", event_name);
-        data.putExtra("event_description", event_description);
-        data.putExtra("is_all_day", isAllDay);
+            data.putExtra("event_year", this.event_year);
+            data.putExtra("event_month", this.event_month);
+            data.putExtra("event_day", this.event_day);
+            data.putExtra("event_start_hour", this.start_hour);
+            data.putExtra("event_end_hour", this.end_hour);
+            data.putExtra("event_start_minute", this.start_minute);
+            data.putExtra("event_end_minute", this.end_minute);
+            data.putExtra("event_name", event_name);
+            data.putExtra("event_description", event_description);
+            data.putExtra("is_all_day", isAllDay);
+            setResult(RESULT_OK, data);
+            super.finish();
+        }
+    }
 
-        setResult(RESULT_OK, data);
-        super.finish();
+
+    /*
+        This method overrides frontend_activity's onCreateOptionsMenu
+        so that the ability to access the user settings does not appear.
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        return true;
     }
 }

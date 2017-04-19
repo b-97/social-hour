@@ -32,6 +32,8 @@ import socialhour.socialhour.model.UserData;
 
 import static com.google.android.gms.common.SignInButton.SIZE_STANDARD;
 
+//TODO: Fix bug on removed progress bar
+
 public class Login extends AppCompatActivity implements OnConnectionFailedListener, OnClickListener
 {
     private static final int RC_SIGN_IN = 0;
@@ -94,13 +96,13 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         }
         else//if the user has not previously signed on this device
         {
-            showProgressDialog();
+            //showProgressDialog();
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>()
             {
                 @Override
                 public void onResult(@NonNull GoogleSignInResult googleSignInResult)
                 {
-                    hideProgressDialog();
+                    //hideProgressDialog();
                     handleSignInResult(googleSignInResult);
                 }
             });
@@ -131,18 +133,12 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
             UserData.set_user_last_name(acct.getFamilyName());
             UserData.set_user_email(acct.getEmail());
             UserData.set_user_id(acct.getId());
-            try {
-                UserData.set_user_bitmap(MediaStore.Images.Media.getBitmap
-                        (this.getContentResolver(), acct.getPhotoUrl()));
-            }
-            catch (IOException e) {
-                UserData.set_user_bitmap(null);
-            }
             UserData.set_user_given_name(acct.getGivenName());
             updateUI(true);
         }
         else//signed out, unauthenticated UI
         {
+            Log.d(TAG, "FAILED!!");
             updateUI(false);
         }
     }

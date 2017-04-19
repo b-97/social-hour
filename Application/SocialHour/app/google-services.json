@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "326830327802",
-    "project_id": "social-hour"
+    "project_number": "116643393758",
+    "project_id": "social-hour-165004"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:326830327802:android:cd14c0c1b873c850",
+        "mobilesdk_app_id": "1:116643393758:android:cd14c0c1b873c850",
         "android_client_info": {
           "package_name": "socialhour.socialhour"
         }
       },
       "oauth_client": [
         {
-          "client_id": "326830327802-24ca4h2c47h5lg5t0isuarqhigeqpgdl.apps.googleusercontent.com",
+          "client_id": "116643393758-n3pl5d3rrb3tns4bd3efumthro75hv22.apps.googleusercontent.com",
           "client_type": 3
         },
         {
-          "client_id": "326830327802-verrjbao76d638au00cgm53b31svfbln.apps.googleusercontent.com",
+          "client_id": "116643393758-je3sqqra11q5flm83es8g9t0sciq2r85.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "socialhour.socialhour",
-            "certificate_hash": "a2594432afd5af696e2a51b66de99385e570f1ec"
+            "certificate_hash": "bc9842907946fde8b1e7bb8f6fe1a1b366f04caf"
           }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDEvNuHT5l3cpXsB1JSkq6iFWf6ukIGDJI"
+          "current_key": "AIzaSyBHTasj5xFizsZNV8AgFNtfh_3SAUOBw-A"
         }
       ],
       "services": {

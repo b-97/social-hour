@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:gravity="center_vertical|start"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:id="@+id/cont_event_root">
+    android:id="@+id/cont_friend_root">
 
     <ImageView
-        android:id="@+id/event_list_icon"
+        android:id="@+id/friend_list_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:srcCompat="@drawable/ic_activity_white_24dp"
+        android:src="@drawable/ic_activity_white_24dp"
         android:tint="@color/colorAccent"/>
 
     <TextView
-        android:id="@+id/event_list_text"
+        android:id="@+id/friend_list_text"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"

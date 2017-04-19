@@ -43,7 +43,7 @@
     <string name="edit_event_time_end">End time:</string>
     <string name="empty_time_button">--:--</string>
     <string name="empty_date_button">--/--/--</string>
-    <string name="edit_is_all_day_title">Event is all-day</string>
+    <string name="edit_is_all_day_title">All Day?</string>
 
 
 
@@ -78,6 +78,6 @@
     <string name="toast_confirm">OK</string>
     <string name="toast_cancel">Cancel</string>
     <string name="title_activity_add_menu_activity">add_menu_activity</string>
-    <string name="event_description">Descripton:</string>
+    <string name="event_description">Description:</string>
 
 </resources>

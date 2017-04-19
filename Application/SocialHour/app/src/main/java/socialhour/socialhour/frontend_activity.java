@@ -101,10 +101,17 @@ public class frontend_activity extends AppCompatActivity {
             int event_end_minute = data.getExtras().getInt("event_end_minute");
             String event_name = data.getExtras().getString("event_name");
             String event_description = data.getExtras().getString("event_description");
-            boolean is_all_day = data.getExtras().getBoolean("isAllDay");
+            boolean is_all_day = data.getExtras().getBoolean("is_all_day");
             parseNewEventData(event_year, event_month, event_date, event_start_hour,
                     event_end_hour, event_start_minute, event_end_minute,
                     is_all_day, event_name, event_description);
+        }
+        else if ((requestCode == request_code) &&
+                resultCode == RESULT_CANCELED) {
+            Toast.makeText(this,
+                    //toast text
+                    "Event creation cancelled."
+                    , Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -119,11 +126,18 @@ public class frontend_activity extends AppCompatActivity {
                                      boolean is_all_day, String event_name, String event_description) {
         EventItem event = new EventItem(start_hour, start_minute, end_hour, end_minute, event_name, event_description, date, month, year, is_all_day);
         EventData.add_event(event);
+        make_toast(event);
         d.updateAdapter(event);
 
     }
+    public void make_toast(EventItem e) {
 
-
+        Toast.makeText(this,
+                //toast text
+                e.get_event_title() + " at " + e.get_monthOfYear() + "/" +
+                        e.get_dayOfMonth() + "/" + e.get_year() + "Is all day: " +  e.get_isAllDay()
+                , Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
