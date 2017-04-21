@@ -1,6 +1,7 @@
 package socialhour.socialhour;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -18,9 +19,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 
 import socialhour.socialhour.model.EventData;
 import socialhour.socialhour.model.EventItem;
+import socialhour.socialhour.model.UserData;
 
 /*
     No longer used libraries that at one point were integral to the application.
@@ -57,12 +60,38 @@ public class frontend_activity extends AppCompatActivity {
     private friends_menu f;
     private groups_menu g;
 
-    private FirebaseUser current_user;
+    private FirebaseUser current_user_firebase;
+    private UserData current_user_local;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frontend_activity);
+
+        /*
+                Let's pull Firebase data down into the application.
+         */
+        current_user_firebase = FirebaseAuth.getInstance().getCurrentUser();
+        current_user_local = new UserData();
+
+        if(current_user_firebase != null) {
+            for (UserInfo profile : current_user_firebase.getProviderData()) {
+                // Id of the provider (ex: google.com)
+                current_user_local.set_providerId(profile.getProviderId());
+
+                // UID specific to the provider
+                current_user_local.set_uid(profile.getUid());
+
+                // Name, email address, and profile photo Url
+                current_user_local.set_user_display_name(profile.getDisplayName());
+                current_user_local.set_user_email(profile.getEmail());
+                current_user_local.set_user_photo(profile.getPhotoUrl());
+            };
+
+        }
+
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Social Hour");
@@ -85,8 +114,6 @@ public class frontend_activity extends AppCompatActivity {
                 startActivityForResult(i, request_code);
             }
         });
-
-        current_user = FirebaseAuth.getInstance().getCurrentUser();
 
     }
     /*
@@ -156,7 +183,8 @@ public class frontend_activity extends AppCompatActivity {
                 //toast text
                 e.get_event_title() + " at " + e.get_start_month() + "/" +
                         e.get_start_date() + "/" + e.get_end_month() + "Is all day: " +
-                        e.get_isAllDay() + e.get_privacy()
+                        e.get_isAllDay() + e.get_privacy() +
+                        current_user_local.get_user_display_name()
                 , Toast.LENGTH_SHORT).show();
     }
 
