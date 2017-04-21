@@ -12,7 +12,6 @@ import android.view.ViewGroup;
     //import android.support.v7.widget.Toolbar;
  */
 
-
 public class friends_menu extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

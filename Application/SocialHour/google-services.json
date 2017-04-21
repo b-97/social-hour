@@ -1,33 +1,35 @@
 {
   "project_info": {
-    "project_number": "116643393758",
-    "project_id": "social-hour-165004"
+    "project_number": "922986027585",
+    "firebase_url": "https://social-hour-7fe4d.firebaseio.com",
+    "project_id": "social-hour-7fe4d",
+    "storage_bucket": "social-hour-7fe4d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:116643393758:android:cd14c0c1b873c850",
+        "mobilesdk_app_id": "1:922986027585:android:cd14c0c1b873c850",
         "android_client_info": {
           "package_name": "socialhour.socialhour"
         }
       },
       "oauth_client": [
         {
-          "client_id": "116643393758-n3pl5d3rrb3tns4bd3efumthro75hv22.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "116643393758-je3sqqra11q5flm83es8g9t0sciq2r85.apps.googleusercontent.com",
+          "client_id": "922986027585-oq4cqbl9hnr93t7fcc3r9j4uvf79jppc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "socialhour.socialhour",
             "certificate_hash": "bc9842907946fde8b1e7bb8f6fe1a1b366f04caf"
           }
+        },
+        {
+          "client_id": "922986027585-g8jrpqtv5udahntugd3l386qhgomh156.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBHTasj5xFizsZNV8AgFNtfh_3SAUOBw-A"
+          "current_key": "AIzaSyD2274m2XxcaVAGJszznPcS0K9wVLJOsxs"
         }
       ],
       "services": {
@@ -35,11 +37,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922986027585-g8jrpqtv5udahntugd3l386qhgomh156.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

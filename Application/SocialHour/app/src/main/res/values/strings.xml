@@ -35,7 +35,8 @@
     <string name="add_menu_title">Add or Edit Event</string>
     <string name="edit_event_name">Event Name:</string>
     <string name="edit_event_time">Event time:</string>
-    <string name="edit_event_date">Event date:</string>
+    <string name="edit_event_start_date">Start date:</string>
+    <string name="edit_event_end_date">End date:</string>
     <string name="edit_event_groups">Add Groups:</string>
     <string name="add_event">Add Event</string>
     <string name="cancel">Cancel</string>
@@ -45,8 +46,11 @@
     <string name="empty_date_button">--/--/--</string>
     <string name="edit_is_all_day_title">All Day?</string>
 
-
-
+    <string-array name="privacy_array">
+        <item>Default</item>
+        <item>Private</item>
+        <item>Public</item>
+    </string-array>
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
@@ -79,5 +83,6 @@
     <string name="toast_cancel">Cancel</string>
     <string name="title_activity_add_menu_activity">add_menu_activity</string>
     <string name="event_description">Description:</string>
+    <string name="Privacy_ViewText">Privacy:</string>
 
 </resources>

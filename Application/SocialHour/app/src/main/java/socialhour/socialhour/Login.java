@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -25,6 +26,13 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.io.IOException;
 
@@ -54,11 +62,15 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
     private TextView tvName, tvMail, tvNotSignedIn;
     private ImageView imgProfilePic;
     private LinearLayout viewContainer;
-
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
+
+        mAuth = FirebaseAuth.getInstance();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
 
@@ -66,8 +78,10 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
+        //TODO: Replace this with putting the value in string.xml. Currently not in there due to a bug.
         //grabs information needed by google for sign in
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("922986027585-g8jrpqtv5udahntugd3l386qhgomh156.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
@@ -86,28 +100,36 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
     public void onStart()
     {
         super.onStart();
-
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if(opr.isDone())//if true, the user's cached credentials are valid and will be able to sign in instantly
-        {
-            Log.d(TAG, "Got chached sign-in");
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        }
-        else//if the user has not previously signed on this device
-        {
-            //showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>()
-            {
-                @Override
-                public void onResult(@NonNull GoogleSignInResult googleSignInResult)
-                {
-                    //hideProgressDialog();
-                    handleSignInResult(googleSignInResult);
-                }
-            });
-        }
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
     }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(Login.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -128,18 +150,14 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         if (result.isSuccess())//signed in successfully, shot authenticated UI
         {
             GoogleSignInAccount acct = result.getSignInAccount();
-            //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-            UserData.set_user_first_name(acct.getDisplayName());
-            UserData.set_user_last_name(acct.getFamilyName());
-            UserData.set_user_email(acct.getEmail());
-            UserData.set_user_id(acct.getId());
-            UserData.set_user_given_name(acct.getGivenName());
-            updateUI(true);
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            firebaseAuthWithGoogle(acct);
+            updateUI(currentUser);
         }
         else//signed out, unauthenticated UI
         {
             Log.d(TAG, "FAILED!!");
-            updateUI(false);
+            updateUI(null);
         }
     }
 
@@ -157,7 +175,7 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
                     @Override
                     public void onResult(Status status)
                     {
-                        updateUI(false);
+                        updateUI(null);
                     }
                 });
     }
@@ -170,7 +188,7 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
                     @Override
                     public void onResult(Status status)
                     {
-                        updateUI(false);
+                        updateUI(null);
                     }
                 });
     }
@@ -198,8 +216,8 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         }
     }
 
-    private void updateUI(boolean signedIn) {
-        if (signedIn) {
+    private void updateUI(FirebaseUser usr) {
+        if (usr != null) {
             //findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             //findViewById(R.id.sign_out).setVisibility(View.VISIBLE);
             nextActivity();

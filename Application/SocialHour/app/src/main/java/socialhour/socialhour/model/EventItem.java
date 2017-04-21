@@ -13,25 +13,42 @@ public class EventItem{
     private int end_minute;
     private String event_title;
     private String event_description;
-    private int dayOfMonth;
-    private int monthOfYear;
-    private int year;
+    private String event_location;
+
+    private int start_date;
+    private int start_month;
+    private int start_year;
+    private int end_date;
+    private int end_month;
+    private int end_year;
+
+    private int privacy;
+
     private boolean isAllDay;
-    public EventItem(int start_hour_, int start_minute_, int end_hour_,
-                     int end_minute_, String event_title_, String event_description_,
-                     int dayOfMonth_, int monthOfYear_, int year_,
-                     boolean isAllDay_)
+    public EventItem(int event_start_year, int event_start_month, int event_start_date,
+                     int event_end_year, int event_end_month, int event_end_date,
+                     int event_start_hour, int event_end_hour, int event_start_minute,
+                     int event_end_minute, boolean is_all_day, String event_name,
+                     String event_description_, int event_privacy)
     {
-        start_hour = start_hour_;
-        start_minute = start_minute_;
-        end_hour = end_hour_;
-        end_minute = end_minute_;
-        event_title = event_title_;
+        start_hour = event_start_hour;
+        start_minute = event_start_minute;
+        end_hour = event_end_hour;
+        end_minute = event_end_minute;
+        event_title = event_name;
         event_description = event_description_;
-        dayOfMonth = dayOfMonth_;
-        monthOfYear = monthOfYear_;
-        year = year_;
-        isAllDay = isAllDay_;
+
+        start_date = event_start_date;
+        start_month = event_start_month;
+        start_year = event_start_year;
+
+        end_date = event_end_date;
+        end_month = event_end_month;
+        end_year = event_end_year;
+
+        privacy = event_privacy;
+
+        isAllDay = is_all_day;
     }
 
     /*
@@ -43,9 +60,17 @@ public class EventItem{
     public int get_end_minute() { return end_minute;}
     public String get_event_title() { return event_title;}
     public String get_event_description() { return event_description;}
-    public int get_dayOfMonth() { return dayOfMonth;}
-    public int get_monthOfYear() { return monthOfYear;}
-    public int get_year() { return year;}
+
+    public int get_start_date() { return start_date;}
+    public int get_start_month() { return start_month;}
+    public int get_start_year() { return start_year;}
+
+    public int get_end_date() { return end_date;}
+    public int get_end_month() { return end_month;}
+    public int get_end_year() { return end_year;}
+
+    public int get_privacy() { return privacy;}
+
     public boolean get_isAllDay() { return isAllDay;}
 
     /*
@@ -72,22 +97,37 @@ public class EventItem{
     {
         event_title = event_title_;
     }
-    public void set_event_description(String event_description_)
-    {
+    public void set_event_description(String event_description_) {
         event_description = event_description_;
     }
-    public void set_dayOfMonth(int dayOfMonth_)
+    public void set_start_date(int dayOfMonth_)
     {
-        dayOfMonth = dayOfMonth_;
+        start_date = dayOfMonth_;
     }
-    public void set_monthOfYear(int monthOfYear_)
+    public void set_start_month(int monthOfYear_)
     {
-        monthOfYear= monthOfYear_;
+        start_month= monthOfYear_;
     }
-    public void set_year(int year_)
+    public void set_start_year(int year_)
     {
-        year = year_;
+        start_year = year_;
     }
+
+    public void set_end_date(int dayOfMonth_)
+    {
+        end_date = dayOfMonth_;
+    }
+    public void set_end_month(int monthOfYear_)
+    {
+        end_month= monthOfYear_;
+    }
+    public void set_end_year(int year_)
+    {
+        end_year = year_;
+    }
+
+    public void set_privacy(int privacy_) {privacy = privacy_;}
+
     public void set_isAllDay(boolean isAllDay_)
     {
         isAllDay = isAllDay_;

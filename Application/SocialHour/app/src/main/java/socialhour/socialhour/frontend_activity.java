@@ -1,31 +1,38 @@
 package socialhour.socialhour;
 
-import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.RecyclerView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.TextView;
 import android.widget.Toast;
 
-import socialhour.socialhour.adapter.EventAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import socialhour.socialhour.model.EventData;
 import socialhour.socialhour.model.EventItem;
+
+/*
+    No longer used libraries that at one point were integral to the application.
+    Left here for reference.
+    import android.widget.TextView;
+    import socialhour.socialhour.adapter.EventAdapter;
+    import android.view.LayoutInflater;
+    import android.support.v7.widget.RecyclerView;
+    import android.support.v7.widget.LinearLayoutManager;
+    import android.support.design.widget.Snackbar;
+    import android.app.usage.UsageEvents;
+ */
 
 public class frontend_activity extends AppCompatActivity {
 
@@ -50,7 +57,7 @@ public class frontend_activity extends AppCompatActivity {
     private friends_menu f;
     private groups_menu g;
 
-
+    private FirebaseUser current_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +77,6 @@ public class frontend_activity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        //d.make_toast();
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +85,8 @@ public class frontend_activity extends AppCompatActivity {
                 startActivityForResult(i, request_code);
             }
         });
+
+        current_user = FirebaseAuth.getInstance().getCurrentUser();
 
     }
     /*
@@ -92,9 +99,16 @@ public class frontend_activity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ((requestCode == request_code) &&
                 resultCode == RESULT_OK) {
-            int event_year = data.getExtras().getInt("event_year");
-            int event_month = data.getExtras().getInt("event_month");
-            int event_date = data.getExtras().getInt("event_date");
+            int event_start_year = data.getExtras().getInt("event_start_year");
+            int event_start_month = data.getExtras().getInt("event_start_month");
+            int event_start_date = data.getExtras().getInt("event_start_date");
+
+            int event_end_year = data.getExtras().getInt("event_end_year");
+            int event_end_month = data.getExtras().getInt("event_end_month");
+            int event_end_date = data.getExtras().getInt("event_end_date");
+
+            int event_privacy = data.getExtras().getInt("event_privacy");
+
             int event_start_hour = data.getExtras().getInt("event_start_hour");
             int event_end_hour = data.getExtras().getInt("event_end_hour");
             int event_start_minute = data.getExtras().getInt("event_start_minute");
@@ -102,9 +116,11 @@ public class frontend_activity extends AppCompatActivity {
             String event_name = data.getExtras().getString("event_name");
             String event_description = data.getExtras().getString("event_description");
             boolean is_all_day = data.getExtras().getBoolean("is_all_day");
-            parseNewEventData(event_year, event_month, event_date, event_start_hour,
+            parseNewEventData(event_start_year, event_start_month, event_start_date,
+                    event_end_year, event_end_month, event_end_date, event_start_hour,
                     event_end_hour, event_start_minute, event_end_minute,
-                    is_all_day, event_name, event_description);
+                    is_all_day, event_name, event_description, event_privacy);
+
         }
         else if ((requestCode == request_code) &&
                 resultCode == RESULT_CANCELED) {
@@ -121,10 +137,14 @@ public class frontend_activity extends AppCompatActivity {
            TODO: Update this function to grab more variables from onActivityResult() when more data is added to the activity
            TODO: Update this function to output data to the dashboard???
      */
-    protected void parseNewEventData(int year, int month, int date, int start_hour,
-                                     int end_hour, int start_minute, int end_minute,
-                                     boolean is_all_day, String event_name, String event_description) {
-        EventItem event = new EventItem(start_hour, start_minute, end_hour, end_minute, event_name, event_description, date, month, year, is_all_day);
+    protected void parseNewEventData(int event_start_year, int event_start_month, int event_start_date,
+                                     int event_end_year, int event_end_month, int event_end_date,
+                                     int event_start_hour, int event_end_hour, int event_start_minute,
+                                     int event_end_minute, boolean is_all_day, String event_name,
+                                     String event_description, int event_privacy) {
+        EventItem event = new EventItem(event_start_year, event_start_month, event_start_date,
+        event_end_year, event_end_month, event_end_date, event_start_hour, event_end_hour, event_start_minute,
+        event_end_minute, is_all_day, event_name, event_description, event_privacy);
         EventData.add_event(event);
         make_toast(event);
         d.updateAdapter(event);
@@ -134,8 +154,9 @@ public class frontend_activity extends AppCompatActivity {
 
         Toast.makeText(this,
                 //toast text
-                e.get_event_title() + " at " + e.get_monthOfYear() + "/" +
-                        e.get_dayOfMonth() + "/" + e.get_year() + "Is all day: " +  e.get_isAllDay()
+                e.get_event_title() + " at " + e.get_start_month() + "/" +
+                        e.get_start_date() + "/" + e.get_end_month() + "Is all day: " +
+                        e.get_isAllDay() + e.get_privacy()
                 , Toast.LENGTH_SHORT).show();
     }
 

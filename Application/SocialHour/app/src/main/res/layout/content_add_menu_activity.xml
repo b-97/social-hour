@@ -14,13 +14,13 @@
         android:id="@+id/edit_event_name_edittext"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         android:layout_weight="3.21"
         android:hint="Event Name:"
         android:inputType="text"
-        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,14 +30,14 @@
         android:id="@+id/event_description_textbox"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:ems="10"
         android:hint="Event Location"
         android:inputType="textPersonName"
-        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_event_name_edittext" />
@@ -49,7 +49,7 @@
         android:id="@+id/linearLayout2"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/event_description_textbox"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="24dp"
         app:layout_constraintLeft_toLeftOf="parent">
 
         <TextView
@@ -69,44 +69,36 @@
             android:checked="false" />
     </LinearLayout>
 
-    <android.support.v7.widget.GridLayout
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v7.widget.GridLayout xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/GridLayout1"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="0dp"
         app:columnCount="4"
-        app:orientation="horizontal"
 
-        app:rowCount="2"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        tools:context=".GridXMLActivity"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent">
+        app:orientation="horizontal"
+        app:rowCount="2"
+        tools:context=".GridXMLActivity">
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/edit_event_date" />
+            android:text="@string/edit_event_start_date" />
 
         <Button
-            android:id="@+id/date_button"
+            android:id="@+id/start_date_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/empty_date_button" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/textView5"
@@ -120,6 +112,20 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/empty_time_button" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/edit_event_end_date" />
+
+        <Button
+            android:id="@+id/end_date_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/empty_date_button" />
 
         <TextView
             android:id="@+id/textView6"
@@ -136,7 +142,29 @@
             android:text="@string/empty_time_button" />
     </android.support.v7.widget.GridLayout>
 
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/Privacy_ViewText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/GridLayout1"
+        tools:text="@string/Privacy_ViewText" />
 
+    <Spinner
+        android:id="@+id/privacy_spinner"
+        style="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
 
 </android.support.constraint.ConstraintLayout>
