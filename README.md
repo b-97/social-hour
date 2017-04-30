@@ -1,6 +1,6 @@
 # README #
 
-### Team Social Hour's Repository? ###
+### Team Social Hour's Repository ###
 
 * Quick summary
 * Version
