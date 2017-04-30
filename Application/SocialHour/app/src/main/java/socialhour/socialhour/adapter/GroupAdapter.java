@@ -4,6 +4,7 @@ import android.app.LauncherActivity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -26,12 +29,15 @@ import socialhour.socialhour.model.*;
  */
 
 import java.util.ArrayList;
+
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupHolder> {
 
     private LayoutInflater inflater;
+    private Context context;
 
     public GroupAdapter(ArrayList<GroupItem> listData, Context c) {
         this.inflater = LayoutInflater.from(c);
+        context = c;
     }
 
     @Override
@@ -44,7 +50,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupHolder>
     public void onBindViewHolder(GroupHolder holder, int position) {
         GroupItem item = GroupData.get_group(position);
         holder.title.setText(item.get_name());
-
+        holder.icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_groups_white_24dp));
     }
 
     @Override

@@ -3,11 +3,13 @@ package socialhour.socialhour;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import socialhour.socialhour.adapter.GroupAdapter;
 import socialhour.socialhour.model.GroupData;
 
 /*
@@ -17,6 +19,8 @@ import socialhour.socialhour.model.GroupData;
 
 public class groups_menu extends Fragment {
 
+    public RecyclerView recView;
+    public GroupAdapter adapter;
     public LinearLayout noGroupsLayout;
 
     @Override
@@ -29,8 +33,6 @@ public class groups_menu extends Fragment {
         if(GroupData.get_groups_count() != 0) {
             noGroupsLayout.setVisibility(View.GONE);
         }
-
         return view;
-
     }
 }

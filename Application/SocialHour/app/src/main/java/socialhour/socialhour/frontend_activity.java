@@ -17,44 +17,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import socialhour.socialhour.model.EventData;
 import socialhour.socialhour.model.EventItem;
-import socialhour.socialhour.model.UserData;
 
-/*
-    No longer used libraries that at one point were integral to the application.
-    Left here for reference.
-    import android.widget.TextView;
-    import socialhour.socialhour.adapter.EventAdapter;
-    import android.view.LayoutInflater;
-    import android.support.v7.widget.RecyclerView;
-    import android.support.v7.widget.LinearLayoutManager;
-    import android.support.design.widget.Snackbar;
-    import android.app.usage.UsageEvents;
-
- */
 
 public class frontend_activity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
 
     private static final int request_code = 5;
@@ -64,7 +40,8 @@ public class frontend_activity extends AppCompatActivity {
     private groups_menu g;
 
     private FirebaseUser current_user_firebase;
-    private UserData current_user_local;
+    private DatabaseReference mDatabase;
+    private FirebaseDatabase mFirebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,25 +52,6 @@ public class frontend_activity extends AppCompatActivity {
                 Let's pull Firebase data down into the application.
          */
         current_user_firebase = FirebaseAuth.getInstance().getCurrentUser();
-        current_user_local = new UserData();
-
-        if(current_user_firebase != null) {
-            for (UserInfo profile : current_user_firebase.getProviderData()) {
-                // Id of the provider (ex: google.com)
-                current_user_local.set_providerId(profile.getProviderId());
-
-                // UID specific to the provider
-                current_user_local.set_uid(profile.getUid());
-
-                // Name, email address, and profile photo Url
-                current_user_local.set_user_display_name(profile.getDisplayName());
-                current_user_local.set_user_email(profile.getEmail());
-                current_user_local.set_user_photo(profile.getPhotoUrl());
-            };
-
-        }
-
-
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -205,7 +163,7 @@ public class frontend_activity extends AppCompatActivity {
         EventItem event = new EventItem(event_start_year, event_start_month, event_start_date,
         event_end_year, event_end_month, event_end_date, event_start_hour, event_end_hour, event_start_minute,
         event_end_minute, is_all_day, event_name, event_location, event_privacy,
-                current_user_local.get_user_photo(), current_user_local.get_user_display_name());
+                current_user_firebase.getPhotoUrl(), current_user_firebase.getDisplayName());
         EventData.add_event(event);
         make_toast(event);
         d.updateAdapter(event);
@@ -218,7 +176,7 @@ public class frontend_activity extends AppCompatActivity {
                 e.get_name() + " at " + e.get_start_month() + "/" +
                         e.get_start_date() + "/" + e.get_end_month() + "Is all day: " +
                         e.get_isAllDay() + e.get_privacy() +
-                        current_user_local.get_user_display_name()
+                        current_user_firebase.getDisplayName()
                 , Toast.LENGTH_SHORT).show();
     }
 

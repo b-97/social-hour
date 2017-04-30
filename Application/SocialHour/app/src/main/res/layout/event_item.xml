@@ -12,8 +12,7 @@
     <ImageView
         android:id="@+id/event_list_icon"
         android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:src="@drawable/ic_activity_white_24dp" />
+        android:layout_height="56dp" />
 
     <TextView
         android:id="@+id/event_list_text"

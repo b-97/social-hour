@@ -2,20 +2,21 @@ package socialhour.socialhour;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import socialhour.socialhour.adapter.FriendAdapter;
+import socialhour.socialhour.adapter.GroupAdapter;
 import socialhour.socialhour.model.FriendData;
 
-/*
-    Currently unused import statements; put these back in the code if necessary
-    //import android.support.v7.widget.LinearLayoutManager;
-    //import android.support.v7.widget.Toolbar;
- */
 
 public class friends_menu extends Fragment {
+
+    public RecyclerView recView;
+    public FriendAdapter adapter;
     public LinearLayout noFriendLayout;
 
     @Override
