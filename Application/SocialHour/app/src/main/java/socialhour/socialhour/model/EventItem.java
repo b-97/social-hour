@@ -24,6 +24,10 @@ public class EventItem{
 
     private int privacy;
 
+    final int PRIVACY_DEFAULT = 0;
+    final int PRIVACY_PUBLIC = 1;
+    final int PRIVACY_PRIVATE = 2;
+
     private boolean isAllDay;
     public EventItem(int event_start_year, int event_start_month, int event_start_date,
                      int event_end_year, int event_end_month, int event_end_date,

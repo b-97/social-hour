@@ -51,7 +51,6 @@ public class add_menu_activity extends frontend_activity {
     private Spinner privacy_spinner;
 
 
-
     private boolean isAllDay;
 
     private boolean EVENT_CREATION_CANCELLED;
@@ -238,6 +237,32 @@ public class add_menu_activity extends frontend_activity {
             else am_pm = "AM";
             start_time_diag_button.setText(String.format(Locale.getDefault(), "%02d", start_hour_12) + ":"
                     + String.format(Locale.getDefault(), "%02d", start_minute) + " " + am_pm);
+
+            //set the end button to one hour later by default
+            if(end_hour == 0 && end_minute == 0){
+                end_minute = start_minute;
+                end_hour = start_hour + 1;
+                //if the automatic end time placement puts us to the next day
+                //TODO: Write implementation if the end of the event takes us to the next month, year
+                if (end_hour == 24) {
+                    event_end_day++;
+                    end_date_diag_button.setText(String.format(Locale.getDefault(), "%02d", event_end_month) + "/"
+                            + String.format(Locale.getDefault(), "%02d", event_end_day) + "/"
+                            + String.format(Locale.getDefault(), "%04d", event_end_year));
+                }
+                if (end_hour > 24)  end_hour -= 24;
+                int end_hour_12 = end_hour;
+                if(end_hour_12 > 12)
+                {
+                    end_hour_12 -= 12;
+                    if (end_hour_12 == 12) am_pm = "am";
+                    else am_pm = "PM";
+                }
+                else if(end_hour_12 == 12) am_pm = "PM";
+                else am_pm = "AM";
+                end_time_diag_button.setText(String.format(Locale.getDefault(), "%02d", end_hour_12) + ":"
+                        + String.format(Locale.getDefault(), "%02d", end_minute) + " " + am_pm);
+            }
         }
     };
     protected TimePickerDialog.OnTimeSetListener lTimePickerListener = new TimePickerDialog.OnTimeSetListener() {
