@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -27,41 +26,41 @@ import socialhour.socialhour.model.*;
  */
 
 import java.util.ArrayList;
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder> {
+public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupHolder> {
 
     private LayoutInflater inflater;
 
-    public EventAdapter(ArrayList<EventItem> listData, Context c) {
+    public GroupAdapter(ArrayList<GroupItem> listData, Context c) {
         this.inflater = LayoutInflater.from(c);
     }
 
     @Override
-    public EventHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.event_item, parent, false);
-        return new EventHolder(view);
+    public GroupHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.group_item, parent, false);
+        return new GroupHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(EventHolder holder, int position) {
-        EventItem item = EventData.get_event(position);
+    public void onBindViewHolder(GroupHolder holder, int position) {
+        GroupItem item = GroupData.get_group(position);
         holder.title.setText(item.get_name());
 
     }
 
     @Override
     public int getItemCount() {
-        return EventData.getListData().size();
+        return GroupData.getListData().size();
     }
 
-    class EventHolder extends RecyclerView.ViewHolder {
+    class GroupHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private ImageView icon;
         private View container;
-        public EventHolder(View itemView) {
+        public GroupHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.event_list_text);
-            icon = (ImageView) itemView.findViewById(R.id.event_list_icon);
-            container = itemView.findViewById(R.id.cont_event_root);
+            title = (TextView) itemView.findViewById(R.id.group_list_text);
+            icon = (ImageView) itemView.findViewById(R.id.group_list_icon);
+            container = itemView.findViewById(R.id.cont_group_root);
         }
 
     }

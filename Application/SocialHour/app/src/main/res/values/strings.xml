@@ -86,5 +86,6 @@
     <string name="Privacy_ViewText">Privacy:</string>
     <string name="no_event_text">No events created yet! Click the icon below to add one.</string>
     <string name="no_friends_text">Social Hour is much more fun with friends! Click the button below to add one.</string>
+    <string name="no_groups_text">You haven\'t joined any groups yet! Click the button to create one.</string>
 
 </resources>
