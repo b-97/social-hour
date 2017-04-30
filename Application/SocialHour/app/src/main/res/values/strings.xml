@@ -85,5 +85,6 @@
     <string name="event_description">Description:</string>
     <string name="Privacy_ViewText">Privacy:</string>
     <string name="no_event_text">No events created yet! Click the icon below to add one.</string>
+    <string name="no_friends_text">No friends yet! Click the button below to add one.</string>
 
 </resources>
