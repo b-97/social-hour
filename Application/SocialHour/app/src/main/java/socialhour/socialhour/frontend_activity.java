@@ -124,6 +124,7 @@ public class frontend_activity extends AppCompatActivity {
                 if(position == 0) {
                     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
                     fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.pastel_red)));
+                    fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_testedit));
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -135,10 +136,12 @@ public class frontend_activity extends AppCompatActivity {
                 else if(position == 1) {
                     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
                     fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.pastel_orange)));
+                    fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_person_add_black_24dp));
                 }
                 else if(position == 2) {
                     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
                     fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.pastel_yellow)));
+                    fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_group_add_black_24dp));
                 }
 
             }
