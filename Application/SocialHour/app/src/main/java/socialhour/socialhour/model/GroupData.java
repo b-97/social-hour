@@ -20,4 +20,7 @@ public class GroupData{
     public static void remove_event(int pos){
         group_list.remove(pos);
     }
+    public static int get_groups_count() {
+        return group_list.size();
+    }
 }

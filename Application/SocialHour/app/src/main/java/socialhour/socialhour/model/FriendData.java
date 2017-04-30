@@ -16,4 +16,5 @@ public class FriendData{
     public static void remove_friend(int pos){
         friend_list.remove(pos);
     }
+    public static int get_friend_count() {return friend_list.size();}
 }

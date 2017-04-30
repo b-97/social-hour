@@ -52,7 +52,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
     @Override
     public void onBindViewHolder(EventHolder holder, int position) {
         EventItem item = EventData.get_event(position);
-        holder.title.setText(item.get_picture().toString());
+        holder.title.setText(item.get_user_name() + " created event " + item.get_name() +
+                                " at " + item.get_location());
         Picasso.with(context).load(item.get_picture()).into(holder.icon);
     }
 

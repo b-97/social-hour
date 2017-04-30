@@ -204,7 +204,8 @@ public class frontend_activity extends AppCompatActivity {
                                      String event_location, int event_privacy) {
         EventItem event = new EventItem(event_start_year, event_start_month, event_start_date,
         event_end_year, event_end_month, event_end_date, event_start_hour, event_end_hour, event_start_minute,
-        event_end_minute, is_all_day, event_name, event_location, event_privacy, current_user_local.get_user_photo());
+        event_end_minute, is_all_day, event_name, event_location, event_privacy,
+                current_user_local.get_user_photo(), current_user_local.get_user_display_name());
         EventData.add_event(event);
         make_toast(event);
         d.updateAdapter(event);

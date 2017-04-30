@@ -16,6 +16,7 @@ public class EventItem{
     private String name;
     private String description;
     private String location;
+    private String user_name;
 
     private int start_date;
     private int start_month;
@@ -35,7 +36,8 @@ public class EventItem{
                      int event_end_year, int event_end_month, int event_end_date,
                      int event_start_hour, int event_end_hour, int event_start_minute,
                      int event_end_minute, boolean is_all_day, String event_name,
-                     String event_location, int event_privacy, Uri event_photo)
+                     String event_location, int event_privacy, Uri event_photo,
+                     String user_display_name)
     {
         start_hour = event_start_hour;
         start_minute = event_start_minute;
@@ -56,6 +58,7 @@ public class EventItem{
 
         isAllDay = is_all_day;
         picture = event_photo;
+        user_name = user_display_name;
     }
 
 
@@ -82,6 +85,9 @@ public class EventItem{
     public Uri get_picture() {return picture;}
 
     public boolean get_isAllDay() { return isAllDay;}
+
+    public String get_user_name() {return user_name;}
+    public String get_location() {return location;}
 
     /*
         BASIC MUTATORS - EACH RESPECTIVE METHOD MERELY MODIFIES THE VALUE
@@ -135,6 +141,10 @@ public class EventItem{
     }
 
     public void set_privacy(int privacy_) {privacy = privacy_;}
+
+    public void set_location(String event_location) {location = event_location;}
+
+    public void set_user_name(String name) {user_name = name;}
 
     public void set_isAllDay(boolean isAllDay_)
     {
