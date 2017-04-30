@@ -11,9 +11,9 @@ public class EventItem{
     private int start_minute;
     private int end_hour;
     private int end_minute;
-    private String event_title;
-    private String event_description;
-    private String event_location;
+    private String name;
+    private String description;
+    private String location;
 
     private int start_date;
     private int start_month;
@@ -29,14 +29,14 @@ public class EventItem{
                      int event_end_year, int event_end_month, int event_end_date,
                      int event_start_hour, int event_end_hour, int event_start_minute,
                      int event_end_minute, boolean is_all_day, String event_name,
-                     String event_description_, int event_privacy)
+                     String event_location, int event_privacy)
     {
         start_hour = event_start_hour;
         start_minute = event_start_minute;
         end_hour = event_end_hour;
         end_minute = event_end_minute;
-        event_title = event_name;
-        event_description = event_description_;
+        name = event_name;
+        location = event_location;
 
         start_date = event_start_date;
         start_month = event_start_month;
@@ -58,8 +58,8 @@ public class EventItem{
     public int get_end_hour() { return end_hour;}
     public int get_start_minute() { return start_minute;}
     public int get_end_minute() { return end_minute;}
-    public String get_event_title() { return event_title;}
-    public String get_event_description() { return event_description;}
+    public String get_name() { return name;}
+    public String get_description() { return description;}
 
     public int get_start_date() { return start_date;}
     public int get_start_month() { return start_month;}
@@ -93,13 +93,11 @@ public class EventItem{
     {
         end_minute = end_minute_;
     }
-    public void set_event_title(String event_title_)
+    public void set_name(String name_)
     {
-        event_title = event_title_;
+        name = name_;
     }
-    public void set_event_description(String event_description_) {
-        event_description = event_description_;
-    }
+
     public void set_start_date(int dayOfMonth_)
     {
         start_date = dayOfMonth_;

@@ -141,12 +141,12 @@ public class frontend_activity extends AppCompatActivity {
             int event_start_minute = data.getExtras().getInt("event_start_minute");
             int event_end_minute = data.getExtras().getInt("event_end_minute");
             String event_name = data.getExtras().getString("event_name");
-            String event_description = data.getExtras().getString("event_description");
+            String event_location = data.getExtras().getString("event_location");
             boolean is_all_day = data.getExtras().getBoolean("is_all_day");
             parseNewEventData(event_start_year, event_start_month, event_start_date,
                     event_end_year, event_end_month, event_end_date, event_start_hour,
                     event_end_hour, event_start_minute, event_end_minute,
-                    is_all_day, event_name, event_description, event_privacy);
+                    is_all_day, event_name, event_location, event_privacy);
 
         }
         else if ((requestCode == request_code) &&
@@ -168,10 +168,10 @@ public class frontend_activity extends AppCompatActivity {
                                      int event_end_year, int event_end_month, int event_end_date,
                                      int event_start_hour, int event_end_hour, int event_start_minute,
                                      int event_end_minute, boolean is_all_day, String event_name,
-                                     String event_description, int event_privacy) {
+                                     String event_location, int event_privacy) {
         EventItem event = new EventItem(event_start_year, event_start_month, event_start_date,
         event_end_year, event_end_month, event_end_date, event_start_hour, event_end_hour, event_start_minute,
-        event_end_minute, is_all_day, event_name, event_description, event_privacy);
+        event_end_minute, is_all_day, event_name, event_location, event_privacy);
         EventData.add_event(event);
         make_toast(event);
         d.updateAdapter(event);
@@ -181,7 +181,7 @@ public class frontend_activity extends AppCompatActivity {
 
         Toast.makeText(this,
                 //toast text
-                e.get_event_title() + " at " + e.get_start_month() + "/" +
+                e.get_name() + " at " + e.get_start_month() + "/" +
                         e.get_start_date() + "/" + e.get_end_month() + "Is all day: " +
                         e.get_isAllDay() + e.get_privacy() +
                         current_user_local.get_user_display_name()

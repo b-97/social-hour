@@ -46,7 +46,7 @@ public class add_menu_activity extends frontend_activity {
     private Button start_date_diag_button;
     private Button end_date_diag_button;
     private TextView edit_event_name_textedit;
-    private TextView edit_event_description;
+    private TextView edit_event_location;
     private CheckBox is_all_day_check_box;
     private Spinner privacy_spinner;
 
@@ -281,7 +281,7 @@ public class add_menu_activity extends frontend_activity {
      */
     protected boolean invalid_fields(){
         return ((((TextView) findViewById(R.id.edit_event_name_edittext)).getText().toString().length() < 1) ||
-                (((TextView) findViewById(R.id.event_description_textbox)).getText().toString().length() < 1) ||
+                (((TextView) findViewById(R.id.event_location_textbox)).getText().toString().length() < 1) ||
                 event_start_year == 0);
     }
 
@@ -298,10 +298,10 @@ public class add_menu_activity extends frontend_activity {
         }
         else{
             edit_event_name_textedit = (TextView) findViewById(R.id.edit_event_name_edittext);
-            edit_event_description = (TextView) findViewById(R.id.event_description_textbox);
+            edit_event_location = (TextView) findViewById(R.id.event_location_textbox);
 
             String event_name = edit_event_name_textedit.getText().toString();
-            String event_description = edit_event_description.getText().toString();
+            String event_location = edit_event_location.getText().toString();
 
             data.putExtra("event_start_year", this.event_start_year);
             data.putExtra("event_start_month", this.event_start_month);
@@ -317,7 +317,7 @@ public class add_menu_activity extends frontend_activity {
             data.putExtra("event_end_minute", this.end_minute);
 
             data.putExtra("event_name", event_name);
-            data.putExtra("event_description", event_description);
+            data.putExtra("event_location", event_location);
             data.putExtra("is_all_day", isAllDay);
 
             data.putExtra("event_privacy", event_privacy);

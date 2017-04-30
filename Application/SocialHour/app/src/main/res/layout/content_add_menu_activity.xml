@@ -27,7 +27,7 @@
 
 
     <EditText
-        android:id="@+id/event_description_textbox"
+        android:id="@+id/event_location_textbox"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginLeft="16dp"
@@ -48,7 +48,7 @@
         android:orientation="horizontal"
         android:id="@+id/linearLayout2"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/event_description_textbox"
+        app:layout_constraintTop_toBottomOf="@+id/event_location_textbox"
         android:layout_marginLeft="24dp"
         app:layout_constraintLeft_toLeftOf="parent">
 
