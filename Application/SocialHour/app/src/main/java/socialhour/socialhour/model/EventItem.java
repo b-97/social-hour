@@ -1,5 +1,7 @@
 package socialhour.socialhour.model;
 
+import android.net.Uri;
+
 /**
  * Created by michael on 3/15/17.
  * Handles all of the data for the events.
@@ -21,8 +23,8 @@ public class EventItem{
     private int end_date;
     private int end_month;
     private int end_year;
-
     private int privacy;
+    private Uri picture;
 
     final int PRIVACY_DEFAULT = 0;
     final int PRIVACY_PUBLIC = 1;
@@ -33,7 +35,7 @@ public class EventItem{
                      int event_end_year, int event_end_month, int event_end_date,
                      int event_start_hour, int event_end_hour, int event_start_minute,
                      int event_end_minute, boolean is_all_day, String event_name,
-                     String event_location, int event_privacy)
+                     String event_location, int event_privacy, Uri event_photo)
     {
         start_hour = event_start_hour;
         start_minute = event_start_minute;
@@ -53,7 +55,9 @@ public class EventItem{
         privacy = event_privacy;
 
         isAllDay = is_all_day;
+        picture = event_photo;
     }
+
 
     /*
         ACCESSORS - EACH RESPECTIVE METHOD MERELY RETURNS THE VALUE
@@ -74,6 +78,8 @@ public class EventItem{
     public int get_end_year() { return end_year;}
 
     public int get_privacy() { return privacy;}
+
+    public Uri get_picture() {return picture;}
 
     public boolean get_isAllDay() { return isAllDay;}
 

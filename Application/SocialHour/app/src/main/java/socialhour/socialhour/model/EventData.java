@@ -16,4 +16,5 @@ public class EventData{
     public static void remove_event(int pos){
         event_list.remove(pos);
     }
+    public static int get_event_count() {return event_list.size();}
 }

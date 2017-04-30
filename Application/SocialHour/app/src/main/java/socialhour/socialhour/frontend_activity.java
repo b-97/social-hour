@@ -2,7 +2,6 @@ package socialhour.socialhour;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +37,7 @@ import socialhour.socialhour.model.UserData;
     import android.support.v7.widget.LinearLayoutManager;
     import android.support.design.widget.Snackbar;
     import android.app.usage.UsageEvents;
+
  */
 
 public class frontend_activity extends AppCompatActivity {
@@ -203,7 +204,7 @@ public class frontend_activity extends AppCompatActivity {
                                      String event_location, int event_privacy) {
         EventItem event = new EventItem(event_start_year, event_start_month, event_start_date,
         event_end_year, event_end_month, event_end_date, event_start_hour, event_end_hour, event_start_minute,
-        event_end_minute, is_all_day, event_name, event_location, event_privacy);
+        event_end_minute, is_all_day, event_name, event_location, event_privacy, current_user_local.get_user_photo());
         EventData.add_event(event);
         make_toast(event);
         d.updateAdapter(event);

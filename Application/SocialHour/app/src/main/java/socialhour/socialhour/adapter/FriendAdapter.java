@@ -51,11 +51,11 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendHold
 
     }
 
-
     public void add_friend(FriendItem friend) {
         FriendData.add_friend(friend);
         notifyDataSetChanged();
     }
+
     @Override
     public int getItemCount() {
         return FriendData.getListData().size();

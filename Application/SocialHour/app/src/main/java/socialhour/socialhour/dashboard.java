@@ -31,12 +31,14 @@ public class dashboard extends Fragment {
         recView = (RecyclerView) view.findViewById(R.id.event_list);
         noEventLayout = (LinearLayout) view.findViewById(R.id.NoEventLayout);
 
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getThisContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recView.setLayoutManager(layoutManager);
         adapter = new EventAdapter(EventData.getListData(), this.getThisContext());
         recView.setAdapter(adapter);
+        if(EventData.get_event_count() != 0) {
+            noEventLayout.setVisibility(View.GONE);
+        }
         return view;
 
     }
