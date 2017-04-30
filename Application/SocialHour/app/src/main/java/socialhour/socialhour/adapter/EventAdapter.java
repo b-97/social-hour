@@ -30,17 +30,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
 
     private LayoutInflater inflater;
 
-
     public EventAdapter(ArrayList<EventItem> listData, Context c) {
         this.inflater = LayoutInflater.from(c);
-        //this.listData = listData;
     }
-
 
     @Override
     public EventHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.event_item, parent, false);
-
         return new EventHolder(view);
     }
 
@@ -51,11 +47,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
 
     }
 
-
-    public void add_event(EventItem event) {
-        EventData.add_event(event);
-        notifyDataSetChanged();
-    }
     @Override
     public int getItemCount() {
         return EventData.getListData().size();
