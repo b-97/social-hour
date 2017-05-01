@@ -25,6 +25,7 @@ import socialhour.socialhour.R;
 import socialhour.socialhour.model.*;
 
 /**
+ *
  * Created by michael on 3/15/17.
  */
 

@@ -1,5 +1,6 @@
 package socialhour.socialhour.model;
 
+import android.app.usage.UsageEvents;
 import android.net.Uri;
 
 /**
@@ -25,18 +26,17 @@ public class EventItem{
     private int end_month;
     private int end_year;
     private int privacy;
-    private Uri picture;
+    private String picture;
 
-    final int PRIVACY_DEFAULT = 0;
-    final int PRIVACY_PUBLIC = 1;
-    final int PRIVACY_PRIVATE = 2;
+    private String id;
+
 
     private boolean isAllDay;
     public EventItem(int event_start_year, int event_start_month, int event_start_date,
                      int event_end_year, int event_end_month, int event_end_date,
                      int event_start_hour, int event_end_hour, int event_start_minute,
                      int event_end_minute, boolean is_all_day, String event_name,
-                     String event_location, int event_privacy, Uri event_photo,
+                     String event_location, int event_privacy, String event_photo,
                      String user_display_name)
     {
         start_hour = event_start_hour;
@@ -45,20 +45,40 @@ public class EventItem{
         end_minute = event_end_minute;
         name = event_name;
         location = event_location;
-
         start_date = event_start_date;
         start_month = event_start_month;
         start_year = event_start_year;
-
         end_date = event_end_date;
         end_month = event_end_month;
         end_year = event_end_year;
-
         privacy = event_privacy;
-
         isAllDay = is_all_day;
         picture = event_photo;
         user_name = user_display_name;
+    }
+
+    public EventItem(EventItem e, String id){
+        this.start_hour = e.get_start_hour();
+        this.start_minute = e.get_start_minute();
+        this.end_hour = e.get_end_hour();
+        this.end_minute = e.get_end_minute();
+        this.name = e.get_name();
+        this.start_date = e.get_start_date();
+        this.start_month = e.get_start_month();
+        this.start_year = e.get_start_year();
+        this.end_date = e.get_end_date();
+        this.end_month = e.get_end_month();
+        this.end_year = e.get_end_year();
+        this.privacy = e.get_privacy();
+        this.isAllDay = e.get_isAllDay();
+        this.picture = e.get_picture();
+        this.user_name = e.get_user_name();
+        this.id = id;
+
+    }
+
+    public EventItem() {
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
 
@@ -71,23 +91,18 @@ public class EventItem{
     public int get_end_minute() { return end_minute;}
     public String get_name() { return name;}
     public String get_description() { return description;}
-
     public int get_start_date() { return start_date;}
     public int get_start_month() { return start_month;}
     public int get_start_year() { return start_year;}
-
     public int get_end_date() { return end_date;}
     public int get_end_month() { return end_month;}
     public int get_end_year() { return end_year;}
-
     public int get_privacy() { return privacy;}
-
-    public Uri get_picture() {return picture;}
-
+    public String get_picture() {return picture;}
     public boolean get_isAllDay() { return isAllDay;}
-
     public String get_user_name() {return user_name;}
     public String get_location() {return location;}
+    public String get_id() {return id;}
 
     /*
         BASIC MUTATORS - EACH RESPECTIVE METHOD MERELY MODIFIES THE VALUE
@@ -113,7 +128,6 @@ public class EventItem{
     {
         name = name_;
     }
-
     public void set_start_date(int dayOfMonth_)
     {
         start_date = dayOfMonth_;
@@ -126,7 +140,6 @@ public class EventItem{
     {
         start_year = year_;
     }
-
     public void set_end_date(int dayOfMonth_)
     {
         end_date = dayOfMonth_;
@@ -139,15 +152,13 @@ public class EventItem{
     {
         end_year = year_;
     }
-
     public void set_privacy(int privacy_) {privacy = privacy_;}
-
     public void set_location(String event_location) {location = event_location;}
-
     public void set_user_name(String name) {user_name = name;}
-
     public void set_isAllDay(boolean isAllDay_)
     {
         isAllDay = isAllDay_;
     }
+    public void set_id(String id){this.id = id;}
+    public void set_picture(String pict){this.picture = pict;}
 }

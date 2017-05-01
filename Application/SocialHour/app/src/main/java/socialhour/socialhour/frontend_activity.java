@@ -52,7 +52,7 @@ public class frontend_activity extends AppCompatActivity {
                 Let's pull Firebase data down into the application.
          */
         current_user_firebase = FirebaseAuth.getInstance().getCurrentUser();
-
+        EventData.init();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Social Hour");
@@ -163,7 +163,7 @@ public class frontend_activity extends AppCompatActivity {
         EventItem event = new EventItem(event_start_year, event_start_month, event_start_date,
         event_end_year, event_end_month, event_end_date, event_start_hour, event_end_hour, event_start_minute,
         event_end_minute, is_all_day, event_name, event_location, event_privacy,
-                current_user_firebase.getPhotoUrl(), current_user_firebase.getDisplayName());
+                current_user_firebase.getPhotoUrl().toString(), current_user_firebase.getDisplayName());
         EventData.add_event(event);
         make_toast(event);
         d.updateAdapter(event);
@@ -189,9 +189,7 @@ public class frontend_activity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
