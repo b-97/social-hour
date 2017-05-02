@@ -25,7 +25,7 @@ public class EventData{
     public static void add_event(EventItem event){
         String key = eventDatabase.push().getKey();
         EventItem data_event = new EventItem(event, key);
-        eventDatabase.child(data_event.get_user_name()).child(key).setValue(event);
+        eventDatabase.child(FirebaseEncodeEmail(data_event.get_user_email())).child(key).setValue(event);
         event_list.add(event);
     }
     public static void remove_event(int pos){
@@ -33,5 +33,13 @@ public class EventData{
     }
     public static int get_event_count() {
         return event_list.size();
+    }
+
+    public static String FirebaseEncodeEmail(String string) {
+        return string.replace(".", ",");
+    }
+
+    public static String FirebaseDecodeEmail(String string) {
+        return string.replace(",", ".");
     }
 }

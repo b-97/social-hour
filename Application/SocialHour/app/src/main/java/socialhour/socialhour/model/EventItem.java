@@ -27,7 +27,7 @@ public class EventItem{
     private int end_year;
     private int privacy;
     private String picture;
-
+    private String user_email;
     private String id;
 
 
@@ -37,7 +37,7 @@ public class EventItem{
                      int event_start_hour, int event_end_hour, int event_start_minute,
                      int event_end_minute, boolean is_all_day, String event_name,
                      String event_location, int event_privacy, String event_photo,
-                     String user_display_name)
+                     String user_display_name, String user_email)
     {
         start_hour = event_start_hour;
         start_minute = event_start_minute;
@@ -55,6 +55,7 @@ public class EventItem{
         isAllDay = is_all_day;
         picture = event_photo;
         user_name = user_display_name;
+        this.user_email = user_email;
     }
 
     public EventItem(EventItem e, String id){
@@ -73,8 +74,8 @@ public class EventItem{
         this.isAllDay = e.get_isAllDay();
         this.picture = e.get_picture();
         this.user_name = e.get_user_name();
+        this.user_email = e.get_user_email();
         this.id = id;
-
     }
 
     public EventItem() {
@@ -103,6 +104,7 @@ public class EventItem{
     public String get_user_name() {return user_name;}
     public String get_location() {return location;}
     public String get_id() {return id;}
+    public String get_user_email() {return user_email;}
 
     /*
         BASIC MUTATORS - EACH RESPECTIVE METHOD MERELY MODIFIES THE VALUE
@@ -161,4 +163,5 @@ public class EventItem{
     }
     public void set_id(String id){this.id = id;}
     public void set_picture(String pict){this.picture = pict;}
+    public void set_user_email(String email){this.user_email = email;}
 }

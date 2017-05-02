@@ -163,7 +163,8 @@ public class frontend_activity extends AppCompatActivity {
         EventItem event = new EventItem(event_start_year, event_start_month, event_start_date,
         event_end_year, event_end_month, event_end_date, event_start_hour, event_end_hour, event_start_minute,
         event_end_minute, is_all_day, event_name, event_location, event_privacy,
-                current_user_firebase.getPhotoUrl().toString(), current_user_firebase.getDisplayName());
+                current_user_firebase.getPhotoUrl().toString(), current_user_firebase.getDisplayName(),
+                current_user_firebase.getEmail());
         EventData.add_event(event);
         make_toast(event);
         d.updateAdapter(event);
