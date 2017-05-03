@@ -71,16 +71,10 @@ public class frontend_activity extends AppCompatActivity {
 
 
         /*
-                Uploads the user's data to Google Firebase.
-
+                Gets a local copy of the Firebase User data.
          */
         current_user_local = new UserData(current_user_firebase.getPhotoUrl().toString(),
                 current_user_firebase.getDisplayName().toString(), current_user_firebase.getEmail());
-
-        mDatabase = FirebaseDatabase.getInstance().getInstance().getReference("users");
-
-        mDatabase.child(EventData.FirebaseEncodeEmail(current_user_local.get_email()))
-                .setValue(current_user_local);
 
         /*
                Sets up the floating action buttion that persists between tabs.

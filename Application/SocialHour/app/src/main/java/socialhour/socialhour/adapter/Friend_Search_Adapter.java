@@ -45,8 +45,6 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
         fArrayList = arrayList;
         fFilteredList = arrayList;
         this.context = context;
-
-
     }
 
     @Override
@@ -57,8 +55,7 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
 
     @Override
     public void onBindViewHolder(Friend_Search_Adapter.ViewHolder viewHolder, int i){
-        viewHolder.result_name_text.setText(fFilteredList.get(i).get_display_name());
-        viewHolder.friends_text.setText(Boolean.toString(false));
+        viewHolder.friends_text.setText(fFilteredList.get(i).get_display_name());
         Picasso.with(context).load(fFilteredList.get(i).get_profile_picture()).into(viewHolder.imageView);
     }
 
@@ -106,13 +103,11 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView result_name_text;
         private TextView friends_text;
         private ImageView imageView;
 
         public ViewHolder(View view) {
             super(view);
-            result_name_text = (TextView) view.findViewById(R.id.result_name_text);
             friends_text = (TextView) view.findViewById(R.id.friends_text);
             imageView = (ImageView) view.findViewById(R.id.friendImageView);
         }

@@ -31,6 +31,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import socialhour.socialhour.model.EventData;
+import socialhour.socialhour.model.UserData;
 
 import static com.google.android.gms.common.SignInButton.SIZE_STANDARD;
 
@@ -110,6 +115,17 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            /*
+                                   Upload Firebase User Data to Google Firebase
+                             */
+                            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
+                            UserData current_user_local = new UserData(user.getPhotoUrl().toString(),
+                                    user.getDisplayName().toString(), user.getEmail());
+                            mDatabase.child(EventData.FirebaseEncodeEmail(current_user_local.get_email()))
+                                    .setValue(current_user_local);
+                            /*
+                                Update the rest of the application
+                             */
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -118,8 +134,6 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
-
-                        // ...
                     }
                 });
     }

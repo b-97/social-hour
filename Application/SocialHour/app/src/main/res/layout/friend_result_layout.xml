@@ -30,14 +30,5 @@
             android:paddingRight="8dp"
             android:text="@string/friend_result_text"
             tools:text="@string/friend_result_text" />
-
-        <TextView
-            android:id="@+id/result_name_text"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/is_friend_text" />
     </LinearLayout>
 </android.support.v7.widget.CardView>
