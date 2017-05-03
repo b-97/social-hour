@@ -2,6 +2,7 @@ package socialhour.socialhour;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -75,6 +76,9 @@ public class frontend_activity extends AppCompatActivity {
                 startActivityForResult(i, request_code);
             }
         });
+
+        AppBarLayout mAppBar = (AppBarLayout) findViewById(R.id.appbar);
+        mAppBar.setExpanded(true, false);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {}
