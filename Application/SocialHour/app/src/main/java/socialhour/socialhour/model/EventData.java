@@ -12,8 +12,7 @@ public class EventData{
     private static FirebaseDatabase database;
 
     public static void init() {
-        database = FirebaseDatabase.getInstance().getInstance();
-        eventDatabase = database.getReference("events");
+        eventDatabase = FirebaseDatabase.getInstance().getReference("events");
     }
 
     public static void initFirebaseEventData(){

@@ -2,7 +2,6 @@ package socialhour.socialhour;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import socialhour.socialhour.model.EventData;
 import socialhour.socialhour.model.EventItem;
+import socialhour.socialhour.model.UserData;
 
 
 public class frontend_activity extends AppCompatActivity {
@@ -41,8 +41,9 @@ public class frontend_activity extends AppCompatActivity {
     private groups_menu g;
 
     private FirebaseUser current_user_firebase;
+    private UserData current_user_local;
+
     private DatabaseReference mDatabase;
-    private FirebaseDatabase mFirebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,23 @@ public class frontend_activity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+
+        /*
+                Uploads the user's data to Google Firebase.
+
+         */
+        current_user_local = new UserData(current_user_firebase.getPhotoUrl().toString(),
+                current_user_firebase.getDisplayName().toString(), current_user_firebase.getEmail());
+
+        mDatabase = FirebaseDatabase.getInstance().getInstance().getReference("users");
+
+        mDatabase.child(EventData.FirebaseEncodeEmail(current_user_local.get_email()))
+                .setValue(current_user_local);
+
+        /*
+               Sets up the floating action buttion that persists between tabs.
+               Behaviour of the floating action button changes depending on page loaded.
+         */
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,10 +94,6 @@ public class frontend_activity extends AppCompatActivity {
                 startActivityForResult(i, request_code);
             }
         });
-
-        AppBarLayout mAppBar = (AppBarLayout) findViewById(R.id.appbar);
-        mAppBar.setExpanded(true, false);
-
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {}
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
@@ -100,6 +114,13 @@ public class frontend_activity extends AppCompatActivity {
                     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
                     fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.pastel_orange)));
                     fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_person_add_black_24dp));
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent i = new Intent(getApplicationContext(), add_friends_activity.class);
+                            startActivityForResult(i, request_code);
+                        }
+                    });
                 }
                 else if(position == 2) {
                     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

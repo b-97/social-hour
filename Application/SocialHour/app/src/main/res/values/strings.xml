@@ -137,5 +137,7 @@
 
     <string name="action_search">Search</string>
     <string name="friends_search_hint">Name of friend:</string>
+    <string name="friend_result_text">Sample User Name Text</string>
+    <string name="is_friend_text">Boolean</string>
 
 </resources>
