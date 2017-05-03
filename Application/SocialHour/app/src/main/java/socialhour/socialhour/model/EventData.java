@@ -16,6 +16,10 @@ public class EventData{
         eventDatabase = database.getReference("events");
     }
 
+    public static void initFirebaseEventData(){
+
+    }
+
     public static ArrayList<EventItem> getListData(){
         return event_list;
     }

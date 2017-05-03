@@ -71,7 +71,7 @@ public class frontend_activity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), add_menu_activity.class);
+                Intent i = new Intent(getApplicationContext(), add_event_activity.class);
                 startActivityForResult(i, request_code);
             }
         });
@@ -87,7 +87,7 @@ public class frontend_activity extends AppCompatActivity {
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent i = new Intent(getApplicationContext(), add_menu_activity.class);
+                            Intent i = new Intent(getApplicationContext(), add_event_activity.class);
                             startActivityForResult(i, request_code);
                         }
                     });

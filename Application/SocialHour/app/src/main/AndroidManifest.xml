@@ -49,12 +49,13 @@
             android:label="@string/title_activity_add_event"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".add_menu_activity"
+            android:name=".add_event_activity"
             android:label="@string/title_activity_add_menu_activity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".settings_activity"
-            android:label="@string/title_activity_settings_activity"></activity>
+            android:label="@string/title_activity_settings_activity" />
+        <activity android:name=".add_friends_activity"></activity>
     </application>
 
 </manifest>

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
@@ -20,12 +19,11 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class add_menu_activity extends frontend_activity {
+public class add_event_activity extends frontend_activity {
     private TimePicker time_picker;
 
     int start_hour, end_hour;
@@ -180,9 +178,9 @@ public class add_menu_activity extends frontend_activity {
     @Override
     protected Dialog onCreateDialog(int id) {
         if(id == 1)
-            return new TimePickerDialog(add_menu_activity.this, kTimePickerListener, start_hour, start_minute, false);
+            return new TimePickerDialog(add_event_activity.this, kTimePickerListener, start_hour, start_minute, false);
         else if(id == 2)
-            return new TimePickerDialog(add_menu_activity.this, lTimePickerListener, end_hour, end_minute, false);
+            return new TimePickerDialog(add_event_activity.this, lTimePickerListener, end_hour, end_minute, false);
         else if(id == 3)
             return new DatePickerDialog(this, startdatePickerListener, current_year, current_month, current_day);
         else if(id == 4)
