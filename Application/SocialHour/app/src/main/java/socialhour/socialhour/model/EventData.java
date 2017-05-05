@@ -25,12 +25,15 @@ public class EventData{
     public static EventItem get_event(int position){
         return event_list.get(position);
     }
-    public static void add_event(EventItem event){
+    public static void add_event_to_firebase(EventItem event){
         String key = eventDatabase.push().getKey();
         EventItem data_event = new EventItem(event, key);
         eventDatabase.child(FirebaseEncodeEmail(data_event.get_user_email())).child(key).setValue(event);
+    }
+    public static void add_event_from_firebase(EventItem event){
         event_list.add(event);
     }
+
     public static void remove_event(int pos){
         event_list.remove(pos);
     }

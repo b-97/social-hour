@@ -139,5 +139,7 @@
     <string name="friends_search_hint">Name of friend:</string>
     <string name="friend_result_text">Sample User Name Text</string>
     <string name="is_friend_text">Boolean</string>
+    <string name="title_activity_add_group_activity">add_group_activity</string>
+    <string name="groups_add_friends_text">Add Friends</string>
 
 </resources>

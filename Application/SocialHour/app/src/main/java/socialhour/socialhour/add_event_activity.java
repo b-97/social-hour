@@ -65,18 +65,16 @@ public class add_event_activity extends frontend_activity {
 
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_menu_activity);
+        setContentView(R.layout.activity_add_event_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Add New Event");
         setSupportActionBar(toolbar);
-
 
         /*
             Setting up the spinner with an adapter and a listener so that we can get the user's
             privacy choice.
          */
         //adapter setup
-
 
         privacy_spinner = (Spinner) findViewById(R.id.privacy_spinner);
         final ArrayAdapter<String> privacy_adapter = new ArrayAdapter<String>(this,

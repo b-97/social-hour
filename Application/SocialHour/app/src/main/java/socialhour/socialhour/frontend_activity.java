@@ -1,5 +1,6 @@
 package socialhour.socialhour;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.support.design.widget.TabLayout;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,9 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -42,6 +47,9 @@ public class frontend_activity extends AppCompatActivity {
 
     private FirebaseUser current_user_firebase;
     private UserData current_user_local;
+
+    private DatabaseReference lDatabase;
+    private FirebaseDatabase fDatabase;
 
     private DatabaseReference mDatabase;
 
@@ -80,6 +88,37 @@ public class frontend_activity extends AppCompatActivity {
                Sets up the floating action buttion that persists between tabs.
                Behaviour of the floating action button changes depending on page loaded.
          */
+
+        fDatabase = FirebaseDatabase.getInstance();
+        lDatabase = fDatabase.getReference("events/" +
+                EventData.FirebaseEncodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+
+        lDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                EventItem event = dataSnapshot.getValue(EventItem.class);
+                EventData.add_event_from_firebase(event);
+                try {
+                    d.updateAdapter(event);
+                } catch (NullPointerException e) {
+                    Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                }
+
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("FAILED!!", null, null);
+            }
+        });
+
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +159,13 @@ public class frontend_activity extends AppCompatActivity {
                     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
                     fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.pastel_yellow)));
                     fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_group_add_black_24dp));
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent i = new Intent(getApplicationContext(), add_group_activity.class);
+                            startActivityForResult(i, request_code);
+                        }
+                    });
                 }
 
             }
@@ -184,10 +230,9 @@ public class frontend_activity extends AppCompatActivity {
         event_end_minute, is_all_day, event_name, event_location, event_privacy,
                 current_user_firebase.getPhotoUrl().toString(), current_user_firebase.getDisplayName(),
                 current_user_firebase.getEmail());
-        EventData.add_event(event);
+        EventData.add_event_to_firebase(event);
         make_toast(event);
         d.updateAdapter(event);
-
     }
     public void make_toast(EventItem e) {
 

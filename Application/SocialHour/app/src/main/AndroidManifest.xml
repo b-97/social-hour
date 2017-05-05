@@ -65,6 +65,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/friend_searchable" />
         </activity>
+        <activity
+            android:name=".add_group_activity"
+            android:label="@string/title_activity_add_group_activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
     </application>
 
 </manifest>

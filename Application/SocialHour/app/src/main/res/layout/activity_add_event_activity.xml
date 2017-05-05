@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="socialhour.socialhour.add_event_activity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_add_event_activity"
+        android:id="@+id/include" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginEnd="0dp"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/pastel_red"
+        app:useCompatPadding="true"
+        app:backgroundTint="@color/pastel_red"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="bottom|center_horizontal"
+        app:srcCompat="@drawable/ic_clear_black_24px" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|right"
+        android:layout_margin="@dimen/fab_margin"
+        android:background="@color/pastel_red"
+        android:backgroundTint="@color/pastel_red"
+        app:backgroundTint="@color/pastel_red"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="bottom|center_horizontal"
+        app:srcCompat="@drawable/ic_done_black_24px"
+        app:useCompatPadding="true" />
+
+</android.support.design.widget.CoordinatorLayout>

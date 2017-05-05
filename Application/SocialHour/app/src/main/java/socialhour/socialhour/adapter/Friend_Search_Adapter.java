@@ -23,11 +23,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import socialhour.socialhour.R;
 import socialhour.socialhour.model.Friend_Search_Result;
 import socialhour.socialhour.model.UserData;
+
+import static java.util.Collections.sort;
 
 /**
  * Serves as an adapter for searching for new friends
@@ -38,8 +43,6 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
     private ArrayList<UserData> fArrayList;
     private ArrayList<UserData> fFilteredList;
     private  Context context;
-    private FirebaseDatabase fDatabase;
-    private DatabaseReference lDatabase;
 
     public Friend_Search_Adapter(ArrayList<UserData> arrayList, Context context) {
         fArrayList = arrayList;
@@ -55,7 +58,8 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
 
     @Override
     public void onBindViewHolder(Friend_Search_Adapter.ViewHolder viewHolder, int i){
-        viewHolder.friends_text.setText(fFilteredList.get(i).get_display_name());
+        viewHolder.friends_text.setText(fFilteredList.get(i).get_display_name() + " (" +
+                                        fFilteredList.get(i).get_email() +")");
         Picasso.with(context).load(fFilteredList.get(i).get_profile_picture()).into(viewHolder.imageView);
     }
 
@@ -97,6 +101,7 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 fFilteredList = (ArrayList<UserData>) filterResults.values;
+                sort(fFilteredList);
                 notifyDataSetChanged();
             }
         };

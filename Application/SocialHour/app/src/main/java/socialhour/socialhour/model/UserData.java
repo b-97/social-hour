@@ -1,13 +1,19 @@
 package socialhour.socialhour.model;
 
+import android.support.annotation.NonNull;
+
+import java.util.ArrayList;
+
 /**
  * Created by michael on 5/3/17.
  */
 
-public class UserData {
+public class UserData implements Comparable<UserData>{
     private String profile_picture;
     private String display_name;
     private String email;
+    private ArrayList<UserData> userFriends;
+
 
     public UserData(String profile_picture, String display_name, String email){
         this.profile_picture = profile_picture;
@@ -39,4 +45,9 @@ public class UserData {
     public void set_email(String email){
         this.email = email;
     }
+
+    public int compareTo(@NonNull UserData user2){
+        return this.get_display_name().compareTo(user2.get_display_name());
+    }
+
 }
