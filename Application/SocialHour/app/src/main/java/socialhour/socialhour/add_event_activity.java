@@ -20,6 +20,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -62,7 +64,6 @@ public class add_event_activity extends frontend_activity {
         event_privacy = 0;
 
         EVENT_CREATION_CANCELLED = true; //by default event creation wasn't cancelled
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event_activity);

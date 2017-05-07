@@ -38,7 +38,6 @@ public class add_group_activity extends frontend_activity {
         });
     }
 
-
     /*
         This method overrides frontend_activity's onCreateOptionsMenu
         so that the ability to access the user settings does not appear.

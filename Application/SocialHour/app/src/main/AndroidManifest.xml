@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.ACCOUNT_MANAGER" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -22,19 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainMenu"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-
-            <!-- android:theme="@style/AppTheme" -->
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -44,17 +31,12 @@
             android:name=".frontend_activity"
             android:label="@string/title_activity_frontend_activity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-            android:name=".add_event"
-            android:label="@string/title_activity_add_event"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <activity
             android:name=".add_event_activity"
             android:label="@string/title_activity_add_menu_activity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-            android:name=".settings_activity"
-            android:label="@string/title_activity_settings_activity" />
+
         <activity android:name=".add_friends_activity">
             android:launchMode="singleTop">
             <intent-filter>
@@ -68,7 +50,7 @@
         <activity
             android:name=".add_group_activity"
             android:label="@string/title_activity_add_group_activity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>

@@ -1,30 +1,15 @@
 package socialhour.socialhour.adapter;
 
-import android.app.LauncherActivity;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.view.menu.MenuView;
+
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-
 import socialhour.socialhour.R;
-
 import socialhour.socialhour.model.*;
 
 /**

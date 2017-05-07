@@ -93,6 +93,9 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         //Sets the size of the sign in button
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SIZE_STANDARD);
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
     }
 
     @Override
