@@ -59,6 +59,7 @@ public class frontend_activity extends AppCompatActivity {
 
     private DatabaseReference public_event_database;
     private DatabaseReference private_user_database;
+    private DatabaseReference public_user_database;
 
     private DatabaseReference friend_connection_database;
     private DatabaseReference group_database;
@@ -118,7 +119,13 @@ public class frontend_activity extends AppCompatActivity {
                             current_user_firebase.getProviderId(), new ArrayList<PublicUserData>(),
                             new ArrayList<GroupItem>(), new ArrayList<EventItem>());
                     private_user_database.setValue(current_user_local);
+
                 }
+                public_user_database = fDatabase.getReference("public_user_data/" +
+                        EventData.FirebaseEncodeEmail(current_user_local.get_email()));
+                PublicUserData temp_user_data = new PublicUserData(current_user_local.get_photo(),
+                        current_user_local.get_display_name(), current_user_local.get_email());
+                public_user_database.setValue(temp_user_data);
             }
             @Override
             public void onCancelled(DatabaseError databaseError){
@@ -166,6 +173,8 @@ public class frontend_activity extends AppCompatActivity {
                 Log.d("FAILED!!", null, null);
             }
         });
+
+
 
 
         //TODO: Implement Friend Connection Database
@@ -258,11 +267,16 @@ public class frontend_activity extends AppCompatActivity {
 
             EventItem event = new EventItem(start_year, start_month, start_date, end_year,
                     end_month, end_date, start_hour, end_hour, start_minute, end_minute, is_all_day,
-                    name, location, privacy, current_user_firebase.getPhotoUrl().toString(),
-                    current_user_firebase.getDisplayName(), current_user_firebase.getEmail(),
+                    name, location, privacy, current_user_local.get_photo(),
+                    current_user_local.get_display_name(), current_user_local.get_email(),
                     creation_date);
 
             EventData.add_event_to_firebase(event);
+
+            //add the event to the private user database aswell
+            current_user_local.add_event(event);
+            private_user_database.setValue(current_user_local);
+
             Toast.makeText(this, event.get_name() + " at " + event.get_start_month() + "/" +
                             event.get_start_date() + "/" + event.get_end_month() + "Is all day: " +
                             event.get_isAllDay() + event.get_privacy() + creation_date.getTime() +
@@ -271,6 +285,15 @@ public class frontend_activity extends AppCompatActivity {
         else if ((requestCode == request_code_add_event) &&
                 resultCode == RESULT_CANCELED) {
             Toast.makeText(this, "Event creation cancelled.", Toast.LENGTH_SHORT).show();
+        }
+        else if (requestCode == request_code_edit_settings){ //currently we don't allow the user to cancel
+            current_user_local.set_display_name(data.getExtras().getString("display_name"));
+            current_user_local.set_pref_default_privacy(data.getExtras().getInt("privacy"));
+            current_user_local.set_pref_display_24hr(data.getExtras().getBoolean("is_24_hr"));
+            private_user_database.setValue(current_user_local);
+            PublicUserData temp_user_data = new PublicUserData(current_user_local.get_photo(),
+                    current_user_local.get_display_name(), current_user_local.get_email());
+            public_user_database.setValue(temp_user_data);
         }
     }
 
@@ -287,6 +310,9 @@ public class frontend_activity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent i = new Intent(getApplicationContext(), edit_settings_activity.class);
+            i.putExtra("display_name", current_user_local.get_display_name());
+            i.putExtra("is_24_hr", current_user_local.get_pref_display_24hr());
+            i.putExtra("privacy", current_user_local.get_pref_default_privacy());
             startActivityForResult(i, request_code_edit_settings);
             return true;
         }

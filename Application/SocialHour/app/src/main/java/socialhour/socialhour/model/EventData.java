@@ -41,7 +41,7 @@ public class EventData {
         eventDatabase.child(FirebaseEncodeEmail(event.get_user_email())).child(key).setValue(event);
     }
     public static void add_event_from_firebase(EventItem event){
-        event_list.add(0, event);
+        event_list.add(event);
         sort(event_list, Collections.reverseOrder());
     }
 
@@ -54,6 +54,10 @@ public class EventData {
         return event_list.size();
     }
 
+    public static void update_event_nickname(String email, String nickname){
+        //TODO: IMPLEMENT THIS METHOD
+    }
+
     public static String FirebaseEncodeEmail(String string) {
         return string.replace(".", ",");
     }
@@ -61,6 +65,5 @@ public class EventData {
     public static String FirebaseDecodeEmail(String string) {
         return string.replace(",", ".");
     }
-
 
 }

@@ -119,14 +119,6 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             /*
-                                   Upload Firebase User Data to Google Firebase
-                             */
-                            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-                            PublicUserData current_user_local = new PublicUserData(user.getPhotoUrl().toString(),
-                                    user.getDisplayName().toString(), user.getEmail());
-                            mDatabase.child(EventData.FirebaseEncodeEmail(current_user_local.get_email()))
-                                    .setValue(current_user_local);
-                            /*
                                 Update the rest of the application
                              */
                             updateUI(user);
@@ -261,5 +253,3 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         startActivity(intent);
     }
 }
-
-
