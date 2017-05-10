@@ -1,7 +1,8 @@
 # README #
 
-### Team Social Hour's Repository ###
+### Social Hour Bitbucket Repository ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+#### Formal Issues List
+* Google Calendar does not authenticate for pushing and pulling events
+* Implementation for friends menu still needs to be done
+* Implementation for groups menu still needs to be done
