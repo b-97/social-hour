@@ -3,22 +3,21 @@ package socialhour.socialhour;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 
 import java.util.ArrayList;
 
-import socialhour.socialhour.model.UserData;
+import socialhour.socialhour.model.PublicUserData;
 
 public class add_group_activity extends frontend_activity {
 
 
-    private ArrayList<UserData> group_members;
+    private ArrayList<PublicUserData> group_members;
     private String group_name;
     private String group_description;
-    private UserData group_owner;
+    private PublicUserData group_owner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

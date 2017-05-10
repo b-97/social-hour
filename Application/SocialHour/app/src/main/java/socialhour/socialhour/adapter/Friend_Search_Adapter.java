@@ -2,35 +2,20 @@ package socialhour.socialhour.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filterable;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import socialhour.socialhour.R;
-import socialhour.socialhour.model.Friend_Search_Result;
-import socialhour.socialhour.model.UserData;
+import socialhour.socialhour.model.PublicUserData;
 
 import static java.util.Collections.sort;
 
@@ -40,11 +25,11 @@ import static java.util.Collections.sort;
  */
 
 public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Adapter.ViewHolder> implements Filterable{
-    private ArrayList<UserData> fArrayList;
-    private ArrayList<UserData> fFilteredList;
+    private ArrayList<PublicUserData> fArrayList;
+    private ArrayList<PublicUserData> fFilteredList;
     private  Context context;
 
-    public Friend_Search_Adapter(ArrayList<UserData> arrayList, Context context) {
+    public Friend_Search_Adapter(ArrayList<PublicUserData> arrayList, Context context) {
         fArrayList = arrayList;
         fFilteredList = arrayList;
         this.context = context;
@@ -81,9 +66,9 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
                     fFilteredList = fArrayList;
                 } else {
 
-                    ArrayList<UserData> filteredList = new ArrayList<>();
+                    ArrayList<PublicUserData> filteredList = new ArrayList<>();
 
-                    for (UserData f : fArrayList) {
+                    for (PublicUserData f : fArrayList) {
 
                         if (f.get_display_name().toLowerCase().contains(charString) || f.get_email().toLowerCase().contains(charString)) {
                             filteredList.add(f);
@@ -100,7 +85,7 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                fFilteredList = (ArrayList<UserData>) filterResults.values;
+                fFilteredList = (ArrayList<PublicUserData>) filterResults.values;
                 sort(fFilteredList);
                 notifyDataSetChanged();
             }

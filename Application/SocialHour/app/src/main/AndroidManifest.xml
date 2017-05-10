@@ -31,12 +31,10 @@
             android:name=".frontend_activity"
             android:label="@string/title_activity_frontend_activity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
         <activity
             android:name=".add_event_activity"
             android:label="@string/title_activity_add_menu_activity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
         <activity android:name=".add_friends_activity">
             android:launchMode="singleTop">
             <intent-filter>
@@ -51,6 +49,7 @@
             android:name=".add_group_activity"
             android:label="@string/title_activity_add_group_activity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".edit_settings_activity"></activity>
     </application>
 
 </manifest>

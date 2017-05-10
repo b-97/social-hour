@@ -1,9 +1,5 @@
 package socialhour.socialhour;
 
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -22,18 +17,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import socialhour.socialhour.adapter.Friend_Search_Adapter;
-import socialhour.socialhour.model.UserData;
+import socialhour.socialhour.model.PublicUserData;
 
 public class add_friends_activity extends frontend_activity {
 
     private Friend_Search_Adapter friendAdapter;
     private RecyclerView result_recycler_view;
     private DatabaseReference lDatabase;
-    private ArrayList<UserData> fArrayList;
+    private ArrayList<PublicUserData> fArrayList;
     private boolean finished = false;
 
     @Override
@@ -41,7 +35,7 @@ public class add_friends_activity extends frontend_activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends_activity);
 
-        fArrayList = new ArrayList<UserData>();
+        fArrayList = new ArrayList<PublicUserData>();
         friendAdapter = new Friend_Search_Adapter(fArrayList, this.getApplicationContext());
 
 
@@ -54,12 +48,12 @@ public class add_friends_activity extends frontend_activity {
         setSupportActionBar(toolbar);
 
 
-        lDatabase = FirebaseDatabase.getInstance().getReference("users");
+        lDatabase = FirebaseDatabase.getInstance().getReference("public_user_data");
 
         lDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                UserData user = dataSnapshot.getValue(UserData.class);
+                PublicUserData user = dataSnapshot.getValue(PublicUserData.class);
                 fArrayList.add(user);
                 friendAdapter.getFilter().filter("");
                 friendAdapter.notifyDataSetChanged();

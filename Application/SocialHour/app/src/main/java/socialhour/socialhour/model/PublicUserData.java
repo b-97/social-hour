@@ -8,19 +8,17 @@ import java.util.ArrayList;
  * Created by michael on 5/3/17.
  */
 
-public class UserData implements Comparable<UserData>{
+public class PublicUserData implements Comparable<PublicUserData>{
     private String profile_picture;
     private String display_name;
     private String email;
-    private ArrayList<UserData> userFriends;
 
-
-    public UserData(String profile_picture, String display_name, String email){
+    public PublicUserData(String profile_picture, String display_name, String email){
         this.profile_picture = profile_picture;
         this.display_name = display_name;
         this.email = email;
     }
-    public UserData(){
+    public PublicUserData(){
         //Default Constructor required for Firebase
     }
 
@@ -46,7 +44,7 @@ public class UserData implements Comparable<UserData>{
         this.email = email;
     }
 
-    public int compareTo(@NonNull UserData user2){
+    public int compareTo(@NonNull PublicUserData user2){
         return this.get_display_name().compareTo(user2.get_display_name());
     }
 

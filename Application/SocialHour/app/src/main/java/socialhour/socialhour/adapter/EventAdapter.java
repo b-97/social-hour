@@ -17,7 +17,11 @@ import socialhour.socialhour.model.*;
  * Created by michael on 3/15/17
  */
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder> {
 
     private LayoutInflater inflater;
@@ -38,6 +42,29 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
     @Override
     public void onBindViewHolder(EventHolder holder, int position) {
         EventItem item = EventData.get_event(position);
+
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(new Date());
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(item.get_creation_date());
+
+        String event_creation_date_text;
+
+        if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)){
+            SimpleDateFormat sdf = new SimpleDateFormat("K:m a");
+            event_creation_date_text = sdf.format(item.get_creation_date());
+        }
+        else if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)){
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM d");
+            event_creation_date_text = sdf.format(item.get_creation_date());
+        }
+        else {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, YYYY");
+            event_creation_date_text = sdf.format(item.get_creation_date());
+        }
+
+        holder.date.setText(event_creation_date_text);
         holder.title.setText(item.get_user_name() + " created event " + item.get_name() +
                                 " at " + item.get_location());
         Picasso.with(context).load(item.get_picture()).into(holder.icon);
@@ -52,8 +79,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         private TextView title;
         private ImageView icon;
         private View container;
+        private TextView date;
+
         public EventHolder(View itemView) {
             super(itemView);
+            date = (TextView) itemView.findViewById(R.id.event_date_text);
             title = (TextView) itemView.findViewById(R.id.event_list_text);
             icon = (ImageView) itemView.findViewById(R.id.event_list_icon);
             container = itemView.findViewById(R.id.cont_event_root);

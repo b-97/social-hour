@@ -35,7 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import socialhour.socialhour.model.EventData;
-import socialhour.socialhour.model.UserData;
+import socialhour.socialhour.model.PublicUserData;
 
 import static com.google.android.gms.common.SignInButton.SIZE_STANDARD;
 
@@ -122,7 +122,7 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
                                    Upload Firebase User Data to Google Firebase
                              */
                             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-                            UserData current_user_local = new UserData(user.getPhotoUrl().toString(),
+                            PublicUserData current_user_local = new PublicUserData(user.getPhotoUrl().toString(),
                                     user.getDisplayName().toString(), user.getEmail());
                             mDatabase.child(EventData.FirebaseEncodeEmail(current_user_local.get_email()))
                                     .setValue(current_user_local);

@@ -1,7 +1,9 @@
 package socialhour.socialhour.model;
 
-import android.app.usage.UsageEvents;
-import android.net.Uri;
+import android.support.annotation.NonNull;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by michael on 3/15/17.
@@ -9,7 +11,7 @@ import android.net.Uri;
  * Right now, there is no reason to have
  */
 
-public class EventItem{
+public class EventItem implements Comparable<EventItem>{
     private int start_hour;
     private int start_minute;
     private int end_hour;
@@ -18,7 +20,7 @@ public class EventItem{
     private String description;
     private String location;
     private String user_name;
-
+    private Date creation_date;
     private int start_date;
     private int start_month;
     private int start_year;
@@ -32,50 +34,32 @@ public class EventItem{
 
 
     private boolean isAllDay;
-    public EventItem(int event_start_year, int event_start_month, int event_start_date,
-                     int event_end_year, int event_end_month, int event_end_date,
-                     int event_start_hour, int event_end_hour, int event_start_minute,
-                     int event_end_minute, boolean is_all_day, String event_name,
-                     String event_location, int event_privacy, String event_photo,
-                     String user_display_name, String user_email)
+    public EventItem(int start_year, int start_month, int start_date,
+                     int end_year, int end_month, int end_date,
+                     int start_hour, int end_hour, int start_minute,
+                     int end_minute, boolean is_all_day, String name,
+                     String location, int privacy, String picture,
+                     String user_display_name, String user_email, Date creation_date)
     {
-        start_hour = event_start_hour;
-        start_minute = event_start_minute;
-        end_hour = event_end_hour;
-        end_minute = event_end_minute;
-        name = event_name;
-        location = event_location;
-        start_date = event_start_date;
-        start_month = event_start_month;
-        start_year = event_start_year;
-        end_date = event_end_date;
-        end_month = event_end_month;
-        end_year = event_end_year;
-        privacy = event_privacy;
-        isAllDay = is_all_day;
-        picture = event_photo;
-        user_name = user_display_name;
+        this.start_hour = start_hour;
+        this.start_minute = start_minute;
+        this.end_hour = end_hour;
+        this.end_minute = end_minute;
+        this.name = name;
+        this.location = location;
+        this.start_date = start_date;
+        this.start_month = start_month;
+        this.start_year = start_year;
+        this.end_date = end_date;
+        this.end_month = end_month;
+        this.end_year = end_year;
+        this.privacy = privacy;
+        this.isAllDay = is_all_day;
+        this.picture = picture;
+        this.user_name = user_display_name;
         this.user_email = user_email;
-    }
-
-    public EventItem(EventItem e, String id){
-        this.start_hour = e.get_start_hour();
-        this.start_minute = e.get_start_minute();
-        this.end_hour = e.get_end_hour();
-        this.end_minute = e.get_end_minute();
-        this.name = e.get_name();
-        this.start_date = e.get_start_date();
-        this.start_month = e.get_start_month();
-        this.start_year = e.get_start_year();
-        this.end_date = e.get_end_date();
-        this.end_month = e.get_end_month();
-        this.end_year = e.get_end_year();
-        this.privacy = e.get_privacy();
-        this.isAllDay = e.get_isAllDay();
-        this.picture = e.get_picture();
-        this.user_name = e.get_user_name();
-        this.user_email = e.get_user_email();
-        this.id = id;
+        this.creation_date = creation_date;
+        this.id = "ID_NULL";
     }
 
     public EventItem() {
@@ -105,6 +89,7 @@ public class EventItem{
     public String get_location() {return location;}
     public String get_id() {return id;}
     public String get_user_email() {return user_email;}
+    public Date get_creation_date() {return creation_date;}
 
     /*
         BASIC MUTATORS - EACH RESPECTIVE METHOD MERELY MODIFIES THE VALUE
@@ -161,7 +146,12 @@ public class EventItem{
     {
         isAllDay = isAllDay_;
     }
+    public void set_creation_date(Date date) {creation_date = date;}
     public void set_id(String id){this.id = id;}
     public void set_picture(String pict){this.picture = pict;}
     public void set_user_email(String email){this.user_email = email;}
+
+    public int compareTo(@NonNull EventItem event2){
+        return this.get_creation_date().compareTo(event2.get_creation_date());
+    }
 }

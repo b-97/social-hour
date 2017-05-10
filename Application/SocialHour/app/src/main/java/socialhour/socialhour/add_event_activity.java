@@ -20,9 +20,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class add_event_activity extends frontend_activity {
@@ -58,9 +57,11 @@ public class add_event_activity extends frontend_activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final Calendar cal = Calendar.getInstance();
+
         current_year = cal.get(Calendar.YEAR);
         current_month = cal.get(Calendar.MONTH);
         current_day = cal.get(Calendar.DAY_OF_MONTH);
+
         event_privacy = 0;
 
         EVENT_CREATION_CANCELLED = true; //by default event creation wasn't cancelled
@@ -325,6 +326,7 @@ public class add_event_activity extends frontend_activity {
             String event_name = edit_event_name_textedit.getText().toString();
             String event_location = edit_event_location.getText().toString();
 
+
             data.putExtra("event_start_year", this.event_start_year);
             data.putExtra("event_start_month", this.event_start_month);
             data.putExtra("event_start_day", this.event_start_day);
@@ -337,6 +339,7 @@ public class add_event_activity extends frontend_activity {
             data.putExtra("event_end_hour", this.end_hour);
             data.putExtra("event_start_minute", this.start_minute);
             data.putExtra("event_end_minute", this.end_minute);
+
 
             data.putExtra("event_name", event_name);
             data.putExtra("event_location", event_location);

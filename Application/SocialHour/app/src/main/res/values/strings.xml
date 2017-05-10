@@ -141,5 +141,12 @@
     <string name="is_friend_text">Boolean</string>
     <string name="title_activity_add_group_activity">add_group_activity</string>
     <string name="groups_add_friends_text">Add Friends</string>
+    <string name="settings_display_name">Display Name (How people see you on here)</string>
+    <string name="settings_time_display">Time Display</string>
+    <string name="display_name_hint">\"\"</string>
+    <string name="radio_12_hour_text">12 Hour</string>
+    <string name="radio_24_hour_text">24 Hour</string>
+    <string name="settings_sign_out_button">Sign Out</string>
+    <string name="settings_sign_out_textview">Sign Out (Will close the application!)</string>
 
 </resources>
