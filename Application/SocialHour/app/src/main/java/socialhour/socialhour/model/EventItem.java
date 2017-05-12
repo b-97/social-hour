@@ -46,6 +46,7 @@ public class EventItem implements Comparable<EventItem>{
         this.end_hour = end_hour;
         this.end_minute = end_minute;
         this.name = name;
+        this.description = "UNIMPLEMENTED DESCRIPTION";
         this.location = location;
         this.start_date = start_date;
         this.start_month = start_month;

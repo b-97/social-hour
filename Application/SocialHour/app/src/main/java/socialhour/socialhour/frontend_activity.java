@@ -18,6 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.CalendarScopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -29,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import socialhour.socialhour.model.EventData;
@@ -36,6 +41,7 @@ import socialhour.socialhour.model.EventItem;
 import socialhour.socialhour.model.GroupItem;
 import socialhour.socialhour.model.PrivateUserData;
 import socialhour.socialhour.model.PublicUserData;
+import socialhour.socialhour.tools.CalendarRequestTask;
 
 
 public class frontend_activity extends AppCompatActivity {
@@ -272,6 +278,13 @@ public class frontend_activity extends AppCompatActivity {
                     creation_date);
 
             EventData.add_event_to_firebase(event);
+
+            final String[] SCOPES = { CalendarScopes.CALENDAR };
+            GoogleAccountCredential mCredential = GoogleAccountCredential.usingOAuth2(
+                    getApplicationContext(), Arrays.asList(SCOPES))
+                    .setBackOff(new ExponentialBackOff());
+            CalendarRequestTask request = new CalendarRequestTask(mCredential);
+            request.pushEvent(event);
 
             //add the event to the private user database aswell
             current_user_local.add_event(event);

@@ -154,5 +154,6 @@
     <string name="google_calendar_integration_textview">Integrate with Google Calendar</string>
     <string name="empty_text" />
     <string name="google_calendar_integrate_buttontext">Integrate</string>
+    <string name="event_creation_test">Test Event Creation</string>
 
 </resources>

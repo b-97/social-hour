@@ -27,6 +27,7 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.client.util.DateTime;
 
 import com.google.api.services.calendar.model.*;
+import com.google.api.services.calendar.model.Calendar;
 
 import android.Manifest;
 import android.accounts.AccountManager;
@@ -52,9 +53,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -62,6 +61,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 import org.w3c.dom.Text;
 
 import socialhour.socialhour.R;
+import socialhour.socialhour.model.EventItem;
+import socialhour.socialhour.tools.CalendarRequestTask;
 
 public class edit_settings_activity extends frontend_activity
     implements EasyPermissions.PermissionCallbacks {
@@ -108,6 +109,7 @@ public class edit_settings_activity extends frontend_activity
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+
         calendarApiAuth = (ToggleButton) findViewById(R.id.calendar_integration_button);
         //TODO: Set initial Calendar Checked value
         calendarApiAuth.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +123,7 @@ public class edit_settings_activity extends frontend_activity
                 }
             }
         });
+
 
 
         //Initialize values for the radio buttons.
@@ -210,6 +213,7 @@ public class edit_settings_activity extends frontend_activity
                     Toast.LENGTH_SHORT).show();
         } else {
             new MakeRequestTask(mCredential).execute();
+            new CalendarRequestTask(mCredential).execute(new EventItem(2017, 5, 14, 2017, 5, 14, 10, 10, 30, 30, false, "Coffee", "Joe's", 1, "NULL", "Michael Rinehart", "mrinehart97@gmail,com", new Date()));
         }
     }
 
@@ -450,6 +454,44 @@ public class edit_settings_activity extends frontend_activity
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), start));
             }
+            java.util.Calendar start_cal = java.util.Calendar.getInstance();
+            start_cal.set(java.util.Calendar.YEAR, 2017);
+            start_cal.set(java.util.Calendar.MONTH, 5);
+            start_cal.set(java.util.Calendar.DAY_OF_MONTH, 12);
+            start_cal.set(java.util.Calendar.HOUR, 10);
+            start_cal.set(java.util.Calendar.MINUTE, 30);
+            java.util.Calendar end_cal = java.util.Calendar.getInstance();
+            end_cal.set(java.util.Calendar.YEAR, 2017);
+            end_cal.set(java.util.Calendar.MONTH, 5);
+            end_cal.set(java.util.Calendar.DAY_OF_MONTH, 12);
+            end_cal.set(java.util.Calendar.HOUR, 11);
+            end_cal.set(java.util.Calendar.MINUTE, 30);
+
+            Date start_date = start_cal.getTime();
+            Date end_date = start_cal.getTime();
+
+            DateTime start_date_time = new DateTime(start_date);
+            DateTime end_date_time = new DateTime(end_date);
+
+            EventDateTime event_start_date_time = new EventDateTime()
+                    .setDateTime(start_date_time);
+            EventDateTime event_end_date_time = new EventDateTime()
+                    .setDateTime(end_date_time);
+
+            Event google_event = new Event()
+                    .setSummary("Coffee")
+                    .setLocation("Joe's")
+                    .setDescription("test")
+                    .setStart(event_start_date_time)
+                    .setEnd(event_end_date_time);
+            try {
+                google_event = mService.events().insert("primary", google_event).execute();
+                Log.d("Event000 created: %s\n", google_event.getHtmlLink());
+            }
+            catch(IOException e){
+                throw e;
+            }
+
             return eventStrings;
         }
 
@@ -465,7 +507,8 @@ public class edit_settings_activity extends frontend_activity
             if (output == null || output.size() == 0) {
                 Toast.makeText(getApplicationContext(), "No Results Returned!", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getApplicationContext(), "Data retrieved using the Google Calendar API:", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Data retrieved using the Google Calendar API:" + output.toString(), Toast.LENGTH_SHORT).show();
+
             }
         }
 
