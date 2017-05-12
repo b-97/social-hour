@@ -147,9 +147,12 @@
     <string name="radio_12_hour_text">12 Hour</string>
     <string name="radio_24_hour_text">24 Hour</string>
     <string name="settings_sign_out_button">Sign Out</string>
-    <string name="settings_sign_out_textview">Sign Out (Will close the application!)</string>
+    <string name="settings_sign_out_textview">Sign Out (Will close the app!)</string>
     <string name="settings_privacy_hint">Default Privacy for New Events</string>
     <string name="radio_private_text">Private</string>
     <string name="radio_public_text">Public</string>
+    <string name="google_calendar_integration_textview">Integrate with Google Calendar</string>
+    <string name="empty_text" />
+    <string name="google_calendar_integrate_buttontext">Integrate</string>
 
 </resources>
