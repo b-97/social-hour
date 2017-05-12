@@ -279,13 +279,6 @@ public class frontend_activity extends AppCompatActivity {
 
             EventData.add_event_to_firebase(event);
 
-            final String[] SCOPES = { CalendarScopes.CALENDAR };
-            GoogleAccountCredential mCredential = GoogleAccountCredential.usingOAuth2(
-                    getApplicationContext(), Arrays.asList(SCOPES))
-                    .setBackOff(new ExponentialBackOff());
-            CalendarRequestTask request = new CalendarRequestTask(mCredential);
-            request.pushEvent(event);
-
             //add the event to the private user database aswell
             current_user_local.add_event(event);
             private_user_database.setValue(current_user_local);
