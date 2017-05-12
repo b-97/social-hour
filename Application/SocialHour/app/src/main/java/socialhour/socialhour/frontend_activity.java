@@ -201,6 +201,14 @@ public class frontend_activity extends AppCompatActivity {
                 startActivityForResult(i, request_code_add_event);
             }
         });
+        FloatingActionButton fabcal = (FloatingActionButton) findViewById(R.id.fabcal);
+        fabcal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), calendar_activity.class);
+                startActivityForResult(i, request_code_add_event);
+            }
+        });
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {}
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
