@@ -75,6 +75,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         return EventData.getListData().size();
     }
 
+    public void delete(int position)
+    {
+        EventData.remove_event(position);
+        notifyItemRemoved(position);
+    }
+
     class EventHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private ImageView icon;

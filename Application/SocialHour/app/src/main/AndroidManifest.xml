@@ -50,6 +50,11 @@
             android:label="@string/title_activity_add_group_activity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".edit_settings_activity"></activity>
+
+        <activity
+            android:name=".calendar_activity"
+            android:label="@string/title_calendar_activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>
