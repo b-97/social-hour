@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -69,7 +70,6 @@ public class calendar_activity extends AppCompatActivity{
 
         for(EventItem e : EventData.getListData()){
             adapter.add(e);
-            adapter.add(e);
         }
         calRecView = (RecyclerView) this.findViewById(R.id.event_list_calendar);
         date_Pick = (LinearLayout) this.findViewById(R.id.NoEventLayout);
@@ -84,16 +84,6 @@ public class calendar_activity extends AppCompatActivity{
         current_year = cal.get(Calendar.YEAR);
         current_month = cal.get(Calendar.MONTH);
         current_day = cal.get(Calendar.DAY_OF_MONTH);
-
-        pick_date_button = (Button) findViewById(R.id.pick_date);
-        pick_date_button.setOnClickListener(
-                new View.OnClickListener(){
-                    public void onClick(View v){
-                        showDialog(1);
-
-                    }
-                }
-        );
 
         Calendar today = Calendar.getInstance();
 
@@ -118,9 +108,7 @@ public class calendar_activity extends AppCompatActivity{
     }
 
     protected void updateDisplay(){
-
         adapter.clear();
-
         for(EventItem e : EventData.getListData())
         {
             Calendar eCal = Calendar.getInstance();
@@ -130,7 +118,6 @@ public class calendar_activity extends AppCompatActivity{
                     == mMonth && eCal.get(Calendar.YEAR)==mYear)
                 adapter.add(e);
         }
-
 
         updateAdapter();
     }
