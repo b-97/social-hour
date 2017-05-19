@@ -32,9 +32,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import socialhour.socialhour.model.EventData;
 import socialhour.socialhour.model.EventItem;
@@ -262,25 +266,30 @@ public class frontend_activity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ((requestCode == request_code_add_event) &&
                 resultCode == RESULT_OK) {
-            int start_year = data.getExtras().getInt("event_start_year");
-            int start_month = data.getExtras().getInt("event_start_month");
-            int start_date = data.getExtras().getInt("event_start_date");
-            int end_year = data.getExtras().getInt("event_end_year");
-            int end_month = data.getExtras().getInt("event_end_month");
-            int end_date = data.getExtras().getInt("event_end_date");
+            long start_date_millis = data.getExtras().getLong("start_date_millis");
+            long end_date_millis = data.getExtras().getLong("end_date_millis");
+            String start_date_timezone = data.getExtras().getString("start_date_timezone");
+            String end_date_timezone = data.getExtras().getString("end_date_timezone");
+
+            Calendar start_date = Calendar.getInstance();
+            start_date.setTimeZone(TimeZone.getTimeZone(start_date_timezone));
+            Calendar end_date = Calendar.getInstance();
+            end_date.setTimeZone(TimeZone.getTimeZone(end_date_timezone));
+            start_date.setTimeInMillis(start_date_millis);
+            end_date.setTimeInMillis(end_date_millis);
+
+            Date start_time = start_date.getTime();
+            Date end_time = end_date.getTime();
+
             int privacy = data.getExtras().getInt("event_privacy");
-            int start_hour = data.getExtras().getInt("event_start_hour");
-            int end_hour = data.getExtras().getInt("event_end_hour");
-            int start_minute = data.getExtras().getInt("event_start_minute");
-            int end_minute = data.getExtras().getInt("event_end_minute");
+
             String name = data.getExtras().getString("event_name");
             String location = data.getExtras().getString("event_location");
             Date creation_date = new Date();
             boolean is_all_day = data.getExtras().getBoolean("is_all_day");
 
 
-            EventItem event = new EventItem(start_year, start_month, start_date, end_year,
-                    end_month, end_date, start_hour, end_hour, start_minute, end_minute, is_all_day,
+            EventItem event = new EventItem(start_time, end_time, is_all_day,
                     name, location, privacy, current_user_local.get_photo(),
                     current_user_local.get_display_name(), current_user_local.get_email(),
                     creation_date);
@@ -291,8 +300,8 @@ public class frontend_activity extends AppCompatActivity {
             current_user_local.add_event(event);
             private_user_database.setValue(current_user_local);
 
-            Toast.makeText(this, event.get_name() + " at " + event.get_start_month() + "/" +
-                            event.get_start_date() + "/" + event.get_end_month() + "Is all day: " +
+            Toast.makeText(this, event.get_name() + " at " + event.get_start_date() + "/" +
+                            event.get_start_date() + "/" + event.get_end_date() + "Is all day: " +
                             event.get_isAllDay() + event.get_privacy() + creation_date.getTime() +
                             current_user_firebase.getDisplayName(), Toast.LENGTH_SHORT).show();
         }

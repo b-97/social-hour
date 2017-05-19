@@ -98,21 +98,9 @@ public class CalendarRequestTask extends AsyncTask<EventItem, EventItem, EventIt
         }
 
         public EventItem pushEvent(EventItem local_event){
-            Calendar start_cal = Calendar.getInstance();
-            start_cal.set(Calendar.YEAR, local_event.get_start_year());
-            start_cal.set(Calendar.MONTH, local_event.get_start_month());
-            start_cal.set(Calendar.DAY_OF_MONTH, local_event.get_start_date());
-            start_cal.set(Calendar.HOUR, local_event.get_start_hour());
-            start_cal.set(Calendar.MINUTE, local_event.get_start_minute());
-            Calendar end_cal = Calendar.getInstance();
-            end_cal.set(Calendar.YEAR, local_event.get_end_year());
-            end_cal.set(Calendar.MONTH, local_event.get_end_month());
-            end_cal.set(Calendar.DAY_OF_MONTH, local_event.get_end_date());
-            end_cal.set(Calendar.HOUR, local_event.get_end_hour());
-            end_cal.set(Calendar.MINUTE, local_event.get_end_minute());
 
-            Date start_date = start_cal.getTime();
-            Date end_date = start_cal.getTime();
+            Date start_date = local_event.get_start_date();
+            Date end_date = local_event.get_end_date();
 
             DateTime start_date_time = new DateTime(start_date);
             DateTime end_date_time = new DateTime(end_date);

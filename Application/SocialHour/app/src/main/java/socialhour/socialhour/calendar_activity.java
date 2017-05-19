@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -23,8 +25,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
+import socialhour.socialhour.adapter.CalendarAdapter;
 import socialhour.socialhour.adapter.EventAdapter;
 import socialhour.socialhour.model.EventData;
 import socialhour.socialhour.model.EventItem;
@@ -45,29 +49,28 @@ public class calendar_activity extends AppCompatActivity{
 
     private calendar_activity c;
     public RecyclerView calRecView;
-    public EventAdapter adapter;
+    public CalendarAdapter adapter;
     public LinearLayout date_Pick;
     private int mYear;
     private int mMonth;
     private int mDay;
     private Button pick_date_button;
 
-    int current_year, current_month, current_day;
+    private DatePicker date_picker;
 
-    ArrayList<EventItem> events_Today;
+    int current_year, current_month, current_day;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendar_layout);
 
-        current_user_firebase = FirebaseAuth.getInstance().getCurrentUser();
-        fDatabase = FirebaseDatabase.getInstance();
+        adapter = new CalendarAdapter(new ArrayList<EventItem>(),this);
 
-        public_event_database = fDatabase.getReference("public_event_data/" +
-                EventData.FirebaseEncodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
-
-        adapter = new EventAdapter(events_Today,this);
+        for(EventItem e : EventData.getListData()){
+            adapter.add(e);
+            adapter.add(e);
+        }
         calRecView = (RecyclerView) this.findViewById(R.id.event_list_calendar);
         date_Pick = (LinearLayout) this.findViewById(R.id.NoEventLayout);
 
@@ -92,23 +95,19 @@ public class calendar_activity extends AppCompatActivity{
                 }
         );
 
+        Calendar today = Calendar.getInstance();
 
-    }
-    protected DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth){
-            mYear = year;
-            mMonth = monthOfYear;
-            mDay = dayOfMonth;
-            updateDisplay();
-        }
-    };
-
-    @Override
-    protected Dialog onCreateDialog(int id){
-        if(id==1)
-            return new DatePickerDialog(calendar_activity.this,datePickerListener,current_year, current_month, current_day);
-        else
-            return null;
+        date_picker = (DatePicker) findViewById(R.id.datePicker);
+        date_picker.init(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener(){
+            @Override
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth){
+                mYear = year;
+                mMonth = monthOfYear;
+                mDay = dayOfMonth;
+                Toast.makeText(calendar_activity.super.getApplicationContext(), "" + mYear + "/" + mMonth + "/" + mDay + "", Toast.LENGTH_SHORT).show();
+                updateDisplay();
+            }
+        });
     }
 
 
@@ -119,16 +118,20 @@ public class calendar_activity extends AppCompatActivity{
     }
 
     protected void updateDisplay(){
-        //if (events_Today!=null)
-        //    events_Today.clear();
-        //    for(int i = 0;i<adapter.getItemCount();i++)
-        //        adapter.delete(i);
+
+        adapter.clear();
+
         for(EventItem e : EventData.getListData())
         {
-            if(e.get_start_date()==mDay && e.get_start_month()==mMonth && e.get_start_year()==mYear)
-                events_Today.add(e);
+            Calendar eCal = Calendar.getInstance();
+            eCal.setTime(e.get_start_date());
+            Toast.makeText(calendar_activity.super.getApplicationContext(), e.get_start_date() + "", Toast.LENGTH_SHORT).show();
+            if(eCal.get(Calendar.DAY_OF_MONTH) ==mDay && eCal.get(Calendar.MONTH)
+                    == mMonth && eCal.get(Calendar.YEAR)==mYear)
+                adapter.add(e);
         }
-        adapter = new EventAdapter(events_Today, this);
+
+
         updateAdapter();
-        }
+    }
 }

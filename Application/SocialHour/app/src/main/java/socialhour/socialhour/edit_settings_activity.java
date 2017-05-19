@@ -213,7 +213,11 @@ public class edit_settings_activity extends frontend_activity
                     Toast.LENGTH_SHORT).show();
         } else {
             new MakeRequestTask(mCredential).execute();
-            new CalendarRequestTask(mCredential).execute(new EventItem(2017, 5, 14, 2017, 5, 14, 10, 10, 30, 30, false, "Coffee", "Joe's", 1, "NULL", "Michael Rinehart", "mrinehart97@gmail,com", new Date()));
+            new CalendarRequestTask(mCredential).execute(
+                    new EventItem(java.util.Calendar.getInstance().getTime(),
+                            java.util.Calendar.getInstance().getTime(),
+                            false, "Coffee", "Joe's", 1, "NULL", "Michael Rinehart",
+                            "mrinehart97@gmail,com", new Date()));
         }
     }
 
