@@ -100,9 +100,6 @@ public class calendar_activity extends AppCompatActivity{
         });
     }
 
-
-
-
     public void updateAdapter() {
         adapter.notifyDataSetChanged();
     }

@@ -24,9 +24,6 @@ public class dashboard extends Fragment {
     public EventAdapter adapter;
     public LinearLayout noEventLayout;
 
-    private static DatabaseReference lDatabase;
-    private static FirebaseDatabase fDatabase;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,7 +48,7 @@ public class dashboard extends Fragment {
     }
 
 
-    public void updateAdapter(EventItem e) {
+    public void updateAdapter() {
         noEventLayout.setVisibility(View.GONE);
         adapter.notifyDataSetChanged();
     }

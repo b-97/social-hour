@@ -21,6 +21,9 @@ import java.util.ArrayList;
 
 import socialhour.socialhour.adapter.Friend_Search_Adapter;
 import socialhour.socialhour.model.PublicUserData;
+import socialhour.socialhour.tools.FirebaseData;
+
+import static socialhour.socialhour.tools.FirebaseData.FirebaseDecodeEmail;
 
 public class add_friends_activity extends frontend_activity {
 
@@ -54,10 +57,13 @@ public class add_friends_activity extends frontend_activity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 PublicUserData user = dataSnapshot.getValue(PublicUserData.class);
-                fArrayList.add(user);
-                friendAdapter.getFilter().filter("");
-                friendAdapter.notifyDataSetChanged();
-                Log.d("ADDED USER", null, null);
+                if(FirebaseDecodeEmail(user.get_email()).compareTo(
+                        FirebaseDecodeEmail(current_user_local.get_email())) != 0) {
+                    fArrayList.add(user);
+                    friendAdapter.getFilter().filter("");
+                    friendAdapter.notifyDataSetChanged();
+                    Log.d("ADDED USER", null, null);
+                }
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
@@ -89,13 +95,11 @@ public class add_friends_activity extends frontend_activity {
                 new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextChange (String newText) {
-                        //TODO: UPDATE INTERFACE
                         if(!finished){
                             friendAdapter.getFilter().filter(newText);
                         }
                         return false;
                     }
-
                     public boolean onQueryTextSubmit(String query) {
                         return false; //we want live results
                     }

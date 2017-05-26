@@ -44,6 +44,10 @@ public class PrivateUserData {
         //empty constructor for god knows what reason why
     }
 
+    public PublicUserData getPublicData(){
+        return new PublicUserData(this.get_photo(), this.get_display_name(), this.get_email());
+    }
+
 
     public String get_display_name(){return display_name;}
     public String get_email(){return email;}

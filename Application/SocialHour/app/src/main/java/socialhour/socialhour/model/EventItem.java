@@ -9,7 +9,6 @@ import java.util.Date;
 /**
  * Created by michael on 3/15/17.
  * Handles all of the data for the events.
- * Right now, there is no reason to have
  */
 
 public class EventItem implements Comparable<EventItem>{

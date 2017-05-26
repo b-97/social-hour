@@ -6,6 +6,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import socialhour.socialhour.tools.FirebaseData;
+
 import static java.util.Collections.sort;
 
 public class EventData {
@@ -16,11 +18,6 @@ public class EventData {
     public static void init() {
         eventDatabase = FirebaseDatabase.getInstance().getReference("public_event_data/");
     }
-
-    public static void initFirebaseEventData(){
-
-    }
-
     //sorts the array based on creation date
     public static void sort_list(){
         sort(event_list);
@@ -38,7 +35,7 @@ public class EventData {
     public static void add_event_to_firebase(EventItem event){
         String key = eventDatabase.push().getKey();
         event.set_id(key);
-        eventDatabase.child(FirebaseEncodeEmail(event.get_user_email())).child(key).setValue(event);
+        eventDatabase.child(FirebaseData.FirebaseEncodeEmail(event.get_user_email())).child(key).setValue(event);
     }
     public static void add_event_from_firebase(EventItem event){
         event_list.add(event);
@@ -54,16 +51,5 @@ public class EventData {
         return event_list.size();
     }
 
-    public static void update_event_nickname(String email, String nickname){
-        //TODO: IMPLEMENT THIS METHOD
-    }
-
-    public static String FirebaseEncodeEmail(String string) {
-        return string.replace(".", ",");
-    }
-
-    public static String FirebaseDecodeEmail(String string) {
-        return string.replace(",", ".");
-    }
 
 }

@@ -42,10 +42,14 @@ import java.util.TimeZone;
 
 import socialhour.socialhour.model.EventData;
 import socialhour.socialhour.model.EventItem;
+import socialhour.socialhour.model.FriendData;
+import socialhour.socialhour.model.FriendItem;
 import socialhour.socialhour.model.GroupItem;
 import socialhour.socialhour.model.PrivateUserData;
 import socialhour.socialhour.model.PublicUserData;
 import socialhour.socialhour.tools.CalendarRequestTask;
+
+import static socialhour.socialhour.tools.FirebaseData.FirebaseEncodeEmail;
 
 
 public class frontend_activity extends AppCompatActivity {
@@ -75,7 +79,7 @@ public class frontend_activity extends AppCompatActivity {
     private DatabaseReference group_database;
 
     private FirebaseDatabase fDatabase;
-    private PrivateUserData current_user_local;
+    public static PrivateUserData current_user_local;
     private DatabaseReference mDatabase;
 
     @Override
@@ -84,12 +88,14 @@ public class frontend_activity extends AppCompatActivity {
         setContentView(R.layout.activity_frontend_activity);
 
 
-        //Let's pull Firebase data down into the application.
+        //allows us to get data of the user currently logged into firebase.
         current_user_firebase = FirebaseAuth.getInstance().getCurrentUser();
 
 
-
+        //Fire up the databases that depend on recyclers (events, friends, groups)
         EventData.init();
+        FriendData.init();
+
 
 
         //Set up the title bar
@@ -115,7 +121,7 @@ public class frontend_activity extends AppCompatActivity {
         //later on, and have them persist throughout the application. If the data doesn't already
         //exist, we'll make a new PrivateUserData and throw that shit in Google Firebase.
         private_user_database = fDatabase.getReference("private_user_data/" +
-                EventData.FirebaseEncodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                FirebaseEncodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
         private_user_database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
@@ -124,7 +130,7 @@ public class frontend_activity extends AppCompatActivity {
                 }
                 else{
                     current_user_local = new PrivateUserData(current_user_firebase.getDisplayName(),
-                            EventData.FirebaseEncodeEmail(current_user_firebase.getEmail()),
+                            FirebaseEncodeEmail(current_user_firebase.getEmail()),
                             current_user_firebase.getPhotoUrl().toString(),
                             current_user_firebase.getProviderId(), new ArrayList<PublicUserData>(),
                             new ArrayList<GroupItem>(), new ArrayList<EventItem>());
@@ -132,7 +138,7 @@ public class frontend_activity extends AppCompatActivity {
 
                 }
                 public_user_database = fDatabase.getReference("public_user_data/" +
-                        EventData.FirebaseEncodeEmail(current_user_local.get_email()));
+                        FirebaseEncodeEmail(current_user_local.get_email()));
                 PublicUserData temp_user_data = new PublicUserData(current_user_local.get_photo(),
                         current_user_local.get_display_name(), current_user_local.get_email());
                 public_user_database.setValue(temp_user_data);
@@ -143,10 +149,12 @@ public class frontend_activity extends AppCompatActivity {
             }
         });
 
+
         //Grab all of the public events from Google Firebase. If the user is friends with an
         //individual, the event will be placed on the user's feed.
+        //TODO: Provide implementation for the user to
         public_event_database = fDatabase.getReference("public_event_data/" +
-                EventData.FirebaseEncodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                FirebaseEncodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
         public_event_database.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -165,7 +173,45 @@ public class frontend_activity extends AppCompatActivity {
                 if(should_add_event){
                     EventData.add_event_from_firebase(event);
                     try {
-                        d.updateAdapter(event);
+                        d.updateAdapter();
+                    } catch (NullPointerException e) {
+                        Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                    }
+                }
+
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("FAILED!!", null, null);
+            }
+        });
+
+        friend_connection_database = fDatabase.getReference("friend_data/");
+        friend_connection_database.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                FriendItem friend = dataSnapshot.getValue(FriendItem.class);
+                boolean should_add_event = true;
+                for(FriendItem e : FriendData.getListData()){
+                    try {
+                        if(e.get_key().compareTo(friend.get_key()) == 0) {
+                            should_add_event = false;
+                        }
+                    } catch (NullPointerException q) {
+                        Log.d("FrontendActivity", "WARNING - ATTEMPT TO SEARCH NULL ARRAY");
+                    }
+
+                }
+                if(should_add_event){
+                    FriendData.add_connection_from_firebase(friend);
+                    try {
+                        f.updateAdapter();;
                     } catch (NullPointerException e) {
                         Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
                     }
@@ -185,18 +231,14 @@ public class frontend_activity extends AppCompatActivity {
         });
 
 
-
-
-        //TODO: Implement Friend Connection Database
-        friend_connection_database = fDatabase.getReference("private_user_data/");
-
         //TODO: Implement Group Database
         group_database = fDatabase.getReference("private_user_data/friends");
 
 
-        /*     Sets up the floating action button that persists between tabs.
-               Behaviour of the floating action button changes depending on page loaded.
-         */
+        //     Sets up the initial behaviour of the persistent floating action buttons.
+
+        //  Fab: Responsible for starting and finishing the activities adding events, friends,
+        //      and groups.
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,6 +247,8 @@ public class frontend_activity extends AppCompatActivity {
                 startActivityForResult(i, request_code_add_event);
             }
         });
+
+        //  Fabcal: Responsible for starting the calendar activity.
         FloatingActionButton fabcal = (FloatingActionButton) findViewById(R.id.fabcal);
         fabcal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,6 +257,11 @@ public class frontend_activity extends AppCompatActivity {
                 startActivityForResult(i, request_code_add_event);
             }
         });
+        /*
+            Page Change listener that detects when the user flips a page, and changes the
+            appearance and function accordingly. Currently, only the second button changes
+            behaviour based on the page.
+         */
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {}
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
@@ -231,7 +280,7 @@ public class frontend_activity extends AppCompatActivity {
                 }
                 else if(position == 1) {
                     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-                    fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.pastel_orange)));
+                    fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.pastel_yellow)));
                     fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_person_add_black_24dp));
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -243,7 +292,7 @@ public class frontend_activity extends AppCompatActivity {
                 }
                 else if(position == 2) {
                     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-                    fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.pastel_yellow)));
+                    fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.pastel_orange)));
                     fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_group_add_black_24dp));
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -260,10 +309,13 @@ public class frontend_activity extends AppCompatActivity {
     }
     /*
         This is called when any of the subactivities finishes.
-        Grabs all of the intent data from the subactivity, and either creates a new event, sends
-        a friend request, or creates a new group.
+        Grabs all of the intent data from the subactivity, and either creates a new event, creates
+        a new group, or modifies the user's settings based on the exit
+        code of the activity and what activity actually exited.
     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //First IF block: handle all of the incoming data from the add event activiy, provided
+        //the user successfully creates an event
         if ((requestCode == request_code_add_event) &&
                 resultCode == RESULT_OK) {
             long start_date_millis = data.getExtras().getLong("start_date_millis");
@@ -305,10 +357,17 @@ public class frontend_activity extends AppCompatActivity {
                             event.get_isAllDay() + event.get_privacy() + creation_date.getTime() +
                             current_user_firebase.getDisplayName(), Toast.LENGTH_SHORT).show();
         }
+        //Second if block: user enters edit creation but cancels
         else if ((requestCode == request_code_add_event) &&
                 resultCode == RESULT_CANCELED) {
             Toast.makeText(this, "Event creation cancelled.", Toast.LENGTH_SHORT).show();
         }
+        //Third if block: user exits friend adding
+        else if (requestCode == request_code_add_friend){
+            f.updateAdapter();
+        }
+        //Fourth if block: user exits settings modification
+        //TODO: Create seperate implementation for cancelling the settings activity
         else if (requestCode == request_code_edit_settings){ //currently we don't allow the user to cancel
             current_user_local.set_display_name(data.getExtras().getString("display_name"));
             current_user_local.set_pref_default_privacy(data.getExtras().getInt("privacy"));
@@ -320,6 +379,10 @@ public class frontend_activity extends AppCompatActivity {
         }
     }
 
+    /*
+        Overrides OnCreateOptionsMenu so that we can add an entry for entering the Settings
+        activity.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -327,19 +390,25 @@ public class frontend_activity extends AppCompatActivity {
         return true;
     }
 
+
+    /*'
+        Provides implementation for clicking a icon in the menu at the top right:
+        For the foreseeable future, the only use for the menu is entering the Settings activity.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent i = new Intent(getApplicationContext(), edit_settings_activity.class);
+            //We'll throw in the current user's settings so that we can automatically set them
+            //in the settings activity.
             i.putExtra("display_name", current_user_local.get_display_name());
             i.putExtra("is_24_hr", current_user_local.get_pref_display_24hr());
             i.putExtra("privacy", current_user_local.get_pref_default_privacy());
+            //start the settings activity
             startActivityForResult(i, request_code_edit_settings);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
