@@ -4,6 +4,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 public class FriendData{
     private static DatabaseReference friendDatabase;
@@ -31,6 +33,32 @@ public class FriendData{
     }
     public static void remove_friend(int pos){
         friend_list.remove(pos);
+    }
+
+
+    public static void update_friend(FriendItem friend){
+        //we use this method because it allows us to skirt the ConcurrentModificationException
+        ListIterator<FriendItem> iter = friend_list.listIterator();
+        while (iter.hasNext()) {
+            String str = iter.next().get_key();
+            if (str.compareTo(friend.get_key()) == 0)
+                iter.set(friend);
+        }
+    }
+    //like the implementation above, but allows us to search for the key and remove the list.
+    public static void remove_friend(String key) {
+
+        //we use this method because it allows us to skirt the ConcurrentModificationException
+        Iterator<FriendItem> iter = friend_list.iterator();
+        while (iter.hasNext()) {
+            String str = iter.next().get_key();
+            if (str.compareTo(key) == 0)
+                iter.remove();
+        }
+        for (FriendItem f : friend_list){
+            if(f.get_key().compareTo(key) == 0)
+                friend_list.remove(f);
+        }
     }
     public static int get_friend_count() {return friend_list.size();}
 }

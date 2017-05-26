@@ -31,7 +31,7 @@ public class friends_menu extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getThisContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recView.setLayoutManager(layoutManager);
-        adapter = new FriendAdapter(FriendData.getListData(), this.getThisContext());
+        adapter = new FriendAdapter(this.getThisContext());
         recView.setAdapter(adapter);
         if(FriendData.get_friend_count() != 0) {
             noFriendLayout.setVisibility(View.GONE);
@@ -47,5 +47,11 @@ public class friends_menu extends Fragment {
     public void updateAdapter() {
         noFriendLayout.setVisibility(View.GONE);
         adapter.notifyDataSetChanged();
+        if(FriendData.get_friend_count() != 0){
+            noFriendLayout.setVisibility(View.GONE);
+        }
+        else{
+            noFriendLayout.setVisibility(View.VISIBLE);
+        }
     }
 }

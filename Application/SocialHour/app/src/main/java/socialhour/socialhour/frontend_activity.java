@@ -41,6 +41,7 @@ import socialhour.socialhour.model.FriendItem;
 import socialhour.socialhour.model.GroupItem;
 import socialhour.socialhour.model.PrivateUserData;
 import socialhour.socialhour.model.PublicUserData;
+import socialhour.socialhour.tools.FirebaseData;
 
 import static socialhour.socialhour.tools.FirebaseData.encodeEmail;
 
@@ -190,18 +191,30 @@ public class frontend_activity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 FriendItem friend = dataSnapshot.getValue(FriendItem.class);
-                boolean should_add_event = true;
+
+                //Here, we'll look at if the connection should be added.
+                boolean should_add_connection = true;
+
+                //If the connection is already in the database, we shouldn't add it.
                 for(FriendItem e : FriendData.getListData()){
                     try {
                         if(e.get_key().compareTo(friend.get_key()) == 0) {
-                            should_add_event = false;
+                            should_add_connection = false;
                         }
                     } catch (NullPointerException q) {
                         Log.d("FrontendActivity", "WARNING - ATTEMPT TO SEARCH NULL ARRAY");
                     }
-
                 }
-                if(should_add_event){
+                //If the local user has nothing to do with the connection, we shouldn't add it.
+                String initiator_email = FirebaseData.decodeEmail(friend.get_initiator().get_email());
+                String acceptor_email = FirebaseData.decodeEmail(friend.get_acceptor().get_email());
+                String local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                if(initiator_email.compareTo(local_email) != 0 &&
+                        acceptor_email.compareTo(local_email) != 0){
+                    should_add_connection = false;
+                }
+                //However, if we should add it,
+                if(should_add_connection){
                     FriendData.add_connection_from_firebase(friend);
                     try {
                         f.updateAdapter();;
@@ -211,10 +224,33 @@ public class frontend_activity extends AppCompatActivity {
                 }
 
             }
+
+            //TODO: Finish implementation of onChildChanged() and onChildRemoved.
+            //If onChildChanged, likely someone accepted the request.
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                FriendItem friend = dataSnapshot.getValue(FriendItem.class);
+                FriendData.update_friend(friend);
+                try {
+                    f.updateAdapter();
+                } catch (NullPointerException e) {
+                    Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                }
+            }
+
+            //if onChildremoved, either the user deleted the friend or denied the request.
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                FriendItem friend = dataSnapshot.getValue(FriendItem.class);
+                FriendData.remove_friend(friend.get_key());
+                try {
+                    f.updateAdapter();
+                } catch (NullPointerException e) {
+                    Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                }
+            }
+
+            //these methods never need to be properly overrided due to the nature of our database.
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             @Override

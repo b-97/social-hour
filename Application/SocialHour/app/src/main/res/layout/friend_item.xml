@@ -51,12 +51,31 @@
             android:layout_marginTop="16dp" />
 
         <ImageButton
-            android:id="@+id/deny_wait_button"
+            android:id="@+id/accept_button"
+            android:layout_height="0dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_timer_black_24dp"
-            android:backgroundTint="@color/pastel_yellow"
+            android:minWidth="45dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/roundcorner_red"
+            app:srcCompat="@drawable/ic_done_black_24px"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintRight_toLeftOf="@+id/deny_wait_button" />
+
+        <ImageButton
+            android:id="@+id/deny_wait_button"
+            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:minWidth="45dp"
+            app:srcCompat="@drawable/ic_timer_black_24dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/roundcorner_yellow"
             card_view:layout_constraintRight_toRightOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"
