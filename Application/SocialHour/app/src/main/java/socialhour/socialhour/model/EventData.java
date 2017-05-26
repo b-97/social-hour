@@ -35,7 +35,7 @@ public class EventData {
     public static void add_event_to_firebase(EventItem event){
         String key = eventDatabase.push().getKey();
         event.set_id(key);
-        eventDatabase.child(FirebaseData.FirebaseEncodeEmail(event.get_user_email())).child(key).setValue(event);
+        eventDatabase.child(FirebaseData.encodeEmail(event.get_user_email())).child(key).setValue(event);
     }
     public static void add_event_from_firebase(EventItem event){
         event_list.add(event);

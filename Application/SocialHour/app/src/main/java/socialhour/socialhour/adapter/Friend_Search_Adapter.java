@@ -5,15 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Filterable;
 import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -22,10 +19,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import socialhour.socialhour.R;
-import socialhour.socialhour.frontend_activity;
 import socialhour.socialhour.model.FriendData;
 import socialhour.socialhour.model.FriendItem;
-import socialhour.socialhour.model.PrivateUserData;
 import socialhour.socialhour.model.PublicUserData;
 import socialhour.socialhour.tools.FirebaseData;
 
@@ -126,30 +121,30 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
             add_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    boolean should_add_to_firebase = true;
-                    for(FriendItem f : FriendData.getListData()){
-                        if(FirebaseData.FirebaseDecodeEmail(f.get_initiator().get_email())
-                                .compareTo(FirebaseData.FirebaseDecodeEmail(current_user_local.get_email())) == 0){
-                            if(FirebaseData.FirebaseDecodeEmail(f.get_acceptor().get_email())
-                                .compareTo(FirebaseData.FirebaseDecodeEmail(friend.get_email())) == 0){
-                                should_add_to_firebase = false;
-                            }
-                        }
-                        else if(FirebaseData.FirebaseDecodeEmail(f.get_initiator().get_email())
-                                .compareTo(FirebaseData.FirebaseDecodeEmail(friend.get_email())) == 0){
-                            if(FirebaseData.FirebaseDecodeEmail(f.get_acceptor().get_email())
-                                    .compareTo(current_user_local.get_email()) == 0){
-                                should_add_to_firebase = false;
-                            }
-                        }
-                    }
-                    if(should_add_to_firebase){
+                    if(!ifConnectionExists(friend)){
                         new_connection = new FriendItem(publicData, friend, new Date(), null, false);
                         FriendData.add_connection_to_firebase(new_connection);
                     }
                 }
             });
+        }
+        public boolean ifConnectionExists(PublicUserData other){
+            for(FriendItem f : FriendData.getListData()) {
+                if (FirebaseData.decodeEmail(f.get_initiator().get_email())
+                        .compareTo(FirebaseData.decodeEmail(current_user_local.get_email())) == 0) {
+                    if (FirebaseData.decodeEmail(f.get_acceptor().get_email())
+                            .compareTo(FirebaseData.decodeEmail(other.get_email())) == 0) {
+                        return true;
+                    }
+                } else if (FirebaseData.decodeEmail(f.get_initiator().get_email())
+                        .compareTo(FirebaseData.decodeEmail(other.get_email())) == 0) {
+                    if (FirebaseData.decodeEmail(f.get_acceptor().get_email())
+                            .compareTo(current_user_local.get_email()) == 0) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

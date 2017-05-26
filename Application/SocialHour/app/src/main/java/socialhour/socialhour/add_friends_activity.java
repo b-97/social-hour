@@ -21,9 +21,8 @@ import java.util.ArrayList;
 
 import socialhour.socialhour.adapter.Friend_Search_Adapter;
 import socialhour.socialhour.model.PublicUserData;
-import socialhour.socialhour.tools.FirebaseData;
 
-import static socialhour.socialhour.tools.FirebaseData.FirebaseDecodeEmail;
+import static socialhour.socialhour.tools.FirebaseData.decodeEmail;
 
 public class add_friends_activity extends frontend_activity {
 
@@ -57,8 +56,8 @@ public class add_friends_activity extends frontend_activity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 PublicUserData user = dataSnapshot.getValue(PublicUserData.class);
-                if(FirebaseDecodeEmail(user.get_email()).compareTo(
-                        FirebaseDecodeEmail(current_user_local.get_email())) != 0) {
+                if(decodeEmail(user.get_email()).compareTo(
+                        decodeEmail(current_user_local.get_email())) != 0) {
                     fArrayList.add(user);
                     friendAdapter.getFilter().filter("");
                     friendAdapter.notifyDataSetChanged();
@@ -90,7 +89,6 @@ public class add_friends_activity extends frontend_activity {
 
         SearchView search_view = (SearchView) MenuItemCompat.getActionView(friend_item);
         friend_item.expandActionView();
-
         search_view.setOnQueryTextListener(
                 new SearchView.OnQueryTextListener() {
                     @Override

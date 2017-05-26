@@ -19,9 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.util.ExponentialBackOff;
-import com.google.api.services.calendar.CalendarScopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -32,12 +29,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import socialhour.socialhour.model.EventData;
@@ -47,9 +41,8 @@ import socialhour.socialhour.model.FriendItem;
 import socialhour.socialhour.model.GroupItem;
 import socialhour.socialhour.model.PrivateUserData;
 import socialhour.socialhour.model.PublicUserData;
-import socialhour.socialhour.tools.CalendarRequestTask;
 
-import static socialhour.socialhour.tools.FirebaseData.FirebaseEncodeEmail;
+import static socialhour.socialhour.tools.FirebaseData.encodeEmail;
 
 
 public class frontend_activity extends AppCompatActivity {
@@ -121,7 +114,7 @@ public class frontend_activity extends AppCompatActivity {
         //later on, and have them persist throughout the application. If the data doesn't already
         //exist, we'll make a new PrivateUserData and throw that shit in Google Firebase.
         private_user_database = fDatabase.getReference("private_user_data/" +
-                FirebaseEncodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
         private_user_database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
@@ -130,7 +123,7 @@ public class frontend_activity extends AppCompatActivity {
                 }
                 else{
                     current_user_local = new PrivateUserData(current_user_firebase.getDisplayName(),
-                            FirebaseEncodeEmail(current_user_firebase.getEmail()),
+                            encodeEmail(current_user_firebase.getEmail()),
                             current_user_firebase.getPhotoUrl().toString(),
                             current_user_firebase.getProviderId(), new ArrayList<PublicUserData>(),
                             new ArrayList<GroupItem>(), new ArrayList<EventItem>());
@@ -138,7 +131,7 @@ public class frontend_activity extends AppCompatActivity {
 
                 }
                 public_user_database = fDatabase.getReference("public_user_data/" +
-                        FirebaseEncodeEmail(current_user_local.get_email()));
+                        encodeEmail(current_user_local.get_email()));
                 PublicUserData temp_user_data = new PublicUserData(current_user_local.get_photo(),
                         current_user_local.get_display_name(), current_user_local.get_email());
                 public_user_database.setValue(temp_user_data);
@@ -154,7 +147,7 @@ public class frontend_activity extends AppCompatActivity {
         //individual, the event will be placed on the user's feed.
         //TODO: Provide implementation for the user to
         public_event_database = fDatabase.getReference("public_event_data/" +
-                FirebaseEncodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
         public_event_database.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

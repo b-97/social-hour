@@ -1,11 +1,6 @@
 package socialhour.socialhour.adapter;
 
-import android.app.LauncherActivity;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +12,6 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.List;
 
 import socialhour.socialhour.R;
 import socialhour.socialhour.model.*;
@@ -38,7 +29,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendHold
 
     private static FirebaseUser current_user_firebase = FirebaseAuth.getInstance().getCurrentUser();
 
-    public FriendAdapter(ArrayList<FriendItem> listData, Context c) {
+    public FriendAdapter(Context c) {
         this.inflater = LayoutInflater.from(c);
         this.context = c;
     }
@@ -53,16 +44,17 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendHold
     @Override
     public void onBindViewHolder(FriendHolder holder, int position) {
         FriendItem item = FriendData.get_friend(position);
-        if(FirebaseData.FirebaseDecodeEmail(item.get_initiator().get_email())
-                .compareTo(FirebaseData.FirebaseDecodeEmail(current_user_firebase.getEmail())) == 0){
-            holder.title.setText(item.get_acceptor().get_email());
+        String initiator_email = FirebaseData.decodeEmail(item.get_initiator().get_email());
+        String acceptor_email = FirebaseData.decodeEmail(item.get_acceptor().get_email());
+        String firebase_email = FirebaseData.decodeEmail(current_user_firebase.getEmail());
+
+        if(initiator_email.compareTo(firebase_email) == 0){
+            holder.title.setText(acceptor_email);
             Picasso.with(context).load(item.get_acceptor().get_profile_picture()).into(holder.icon);
         }
-        if(item.get_isAccepted() == false){
+        if(!item.get_isAccepted()  && firebase_email.compareTo(initiator_email)== 0){
             holder.deny_wait_button.setImageResource(R.drawable.ic_timer_black_24dp);
         }
-
-
     }
 
     public void add_friend(FriendItem friend) {

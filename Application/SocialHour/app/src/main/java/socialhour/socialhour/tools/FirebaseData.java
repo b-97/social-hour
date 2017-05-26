@@ -5,10 +5,10 @@ package socialhour.socialhour.tools;
  */
 
 public class FirebaseData {
-    public static String FirebaseEncodeEmail(String string) {
+    public static String encodeEmail(String string) {
         return string.replace(".", ",");
     }
-    public static String FirebaseDecodeEmail(String string) {
+    public static String decodeEmail(String string) {
         return string.replace(",", ".");
     }
 }
