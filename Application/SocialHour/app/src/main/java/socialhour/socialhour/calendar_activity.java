@@ -1,36 +1,18 @@
 package socialhour.socialhour;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 import socialhour.socialhour.adapter.CalendarAdapter;
-import socialhour.socialhour.adapter.EventAdapter;
 import socialhour.socialhour.model.EventData;
 import socialhour.socialhour.model.EventItem;
 
@@ -44,18 +26,12 @@ import socialhour.socialhour.model.EventItem;
 
 public class calendar_activity extends AppCompatActivity{
 
-    private DatabaseReference public_event_database;
-    private FirebaseDatabase fDatabase;
-    private FirebaseUser current_user_firebase;
-
-    private calendar_activity c;
     public RecyclerView calRecView;
     public CalendarAdapter adapter;
     public LinearLayout date_Pick;
     private int mYear;
     private int mMonth;
     private int mDay;
-    private Button pick_date_button;
 
     private DatePicker date_picker;
 
@@ -66,44 +42,58 @@ public class calendar_activity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendar_layout);
 
+        /*
+            Initiate the recyclerview data. We're going to filter everything by the current date, because
+            the calendar is initially pointing to the current date.
+         */
+        Calendar today_cal = Calendar.getInstance();
         adapter = new CalendarAdapter(new ArrayList<EventItem>(),this);
-
-        for(EventItem e : EventData.getListData()){
-            adapter.add(e);
+        for(EventItem e: EventData.getListData()){
+            if(today_cal.get(Calendar.DAY_OF_MONTH) ==mDay && today_cal.get(Calendar.MONTH)
+                    == mMonth && today_cal.get(Calendar.YEAR)==mYear)
+                adapter.add(e);
         }
+        updateAdapter();
+
+        //Initiate all of the views attach the necessary data.
         calRecView = (RecyclerView) this.findViewById(R.id.event_list_calendar);
         date_Pick = (LinearLayout) this.findViewById(R.id.NoEventLayout);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         calRecView.setLayoutManager(layoutManager);
         calRecView.setAdapter(adapter);
 
-        final Calendar cal = Calendar.getInstance();
 
-        current_year = cal.get(Calendar.YEAR);
-        current_month = cal.get(Calendar.MONTH);
-        current_day = cal.get(Calendar.DAY_OF_MONTH);
+        //We need ints because the date_picker doesn't take a calendar
+        current_year = today_cal.get(Calendar.YEAR);
+        current_month = today_cal.get(Calendar.MONTH);
+        current_day = today_cal.get(Calendar.DAY_OF_MONTH);
 
-        Calendar today = Calendar.getInstance();
 
+        //Initiate the date picker and attach a listener
         date_picker = (DatePicker) findViewById(R.id.datePicker);
-        date_picker.init(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener(){
+        date_picker.init(today_cal.get(Calendar.YEAR), today_cal.get(Calendar.MONTH), today_cal.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener(){
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth){
                 mYear = year;
                 mMonth = monthOfYear;
                 mDay = dayOfMonth;
-                Toast.makeText(calendar_activity.super.getApplicationContext(), "" + mYear + "/" + mMonth + "/" + mDay + "", Toast.LENGTH_SHORT).show();
                 updateDisplay();
             }
         });
     }
 
+    /*
+        Notifies the recycleradapter that the dataset changed, so it can choose which events to display.
+     */
     public void updateAdapter() {
         adapter.notifyDataSetChanged();
     }
 
+    /*
+        Function to iterate through the EventItem and update the adapter and recyclerview
+        with all of the events that match that date.
+     */
     protected void updateDisplay(){
         adapter.clear();
         for(EventItem e : EventData.getListData())
@@ -115,7 +105,6 @@ public class calendar_activity extends AppCompatActivity{
                     == mMonth && eCal.get(Calendar.YEAR)==mYear)
                 adapter.add(e);
         }
-
         updateAdapter();
     }
 }
