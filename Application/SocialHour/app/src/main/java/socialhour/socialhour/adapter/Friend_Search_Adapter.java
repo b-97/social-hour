@@ -54,7 +54,7 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
     @Override
     public void onBindViewHolder(Friend_Search_Adapter.ViewHolder viewHolder, int i){
         viewHolder.friends_text.setText(fFilteredList.get(i).get_display_name() + " (" +
-                                        fFilteredList.get(i).get_email() +")");
+                fFilteredList.get(i).get_email() +")");
         viewHolder.friend = fFilteredList.get(i);
         Picasso.with(context).load(fFilteredList.get(i).get_profile_picture()).into(viewHolder.imageView);
     }
