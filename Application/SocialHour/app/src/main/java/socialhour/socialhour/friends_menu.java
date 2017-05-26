@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import socialhour.socialhour.adapter.FriendAdapter;
-import socialhour.socialhour.adapter.GroupAdapter;
 import socialhour.socialhour.model.FriendData;
 
 
