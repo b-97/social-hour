@@ -210,7 +210,7 @@ public class add_event_activity extends frontend_activity {
                 end_date.set(year, monthOfYear, dayOfMonth);
             }
 
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/DD/YYYY");
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
             sdf.setTimeZone(Calendar.getInstance().getTimeZone());
 
             start_date_diag_button.setText(sdf.format(start_date.getTime()));
