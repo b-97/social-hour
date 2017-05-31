@@ -59,18 +59,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         //TODO: UPDATE THIS FUNCTION TO RESPECT 24hour USER PREFERENCE
         if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)){
-            SimpleDateFormat sdf = new SimpleDateFormat("K:m a");
-            return sdf.format(cal2);
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+            return sdf.format(item.get_creation_date());
         }
         //if the year matches, display month and date
         else if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)){
             SimpleDateFormat sdf = new SimpleDateFormat("MMMM d");
-            return sdf.format(cal2);
+            return sdf.format(item.get_creation_date());
         }
         //display date
         else {
             SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, YYYY");
-            return sdf.format(cal2);
+            return sdf.format(item.get_creation_date());
         }
     }
 
