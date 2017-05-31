@@ -39,32 +39,46 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         return new EventHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(EventHolder holder, int position) {
-        EventItem item = EventData.get_event(position);
 
+    /*
+        Function that creates an adapter-appropriate string based on the creation date of the
+        event and the current event.
+        Current behaviour:
+            Display hour and minute if the event is created on the same day
+            Display month and date if event is created on the same year
+            Display month, date and year if otherwise
+     */
+    public String createDateText(EventItem item){
+        //Get calendars out of the current time and creation time of event
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(new Date());
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(item.get_creation_date());
 
-        String event_creation_date_text;
-
+        //if the year and day matches, display the hour, minute, and am/pm
+        //TODO: UPDATE THIS FUNCTION TO RESPECT 24hour USER PREFERENCE
         if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)){
             SimpleDateFormat sdf = new SimpleDateFormat("K:m a");
-            event_creation_date_text = sdf.format(item.get_creation_date());
+            return sdf.format(cal2);
         }
+        //if the year matches, display month and date
         else if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)){
             SimpleDateFormat sdf = new SimpleDateFormat("MMMM d");
-            event_creation_date_text = sdf.format(item.get_creation_date());
+            return sdf.format(cal2);
         }
+        //display date
         else {
             SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, YYYY");
-            event_creation_date_text = sdf.format(item.get_creation_date());
+            return sdf.format(cal2);
         }
+    }
 
-        holder.date.setText(event_creation_date_text);
+    @Override
+    public void onBindViewHolder(EventHolder holder, int position) {
+        EventItem item = EventData.get_event(position);
+
+        holder.date.setText(createDateText(item));
         holder.title.setText(item.get_user_name() + " created event " + item.get_name() +
                                 " at " + item.get_location());
         Picasso.with(context).load(item.get_picture()).into(holder.icon);
@@ -75,6 +89,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         return EventData.getListData().size();
     }
 
+
+    //Not sure if we need this, but keep it in anyways
+    //TODO: IF BELOW METHOD IS NOT GREYED OUT, TEST FUNCTION
     public void delete(int position)
     {
         EventData.remove_event(position);

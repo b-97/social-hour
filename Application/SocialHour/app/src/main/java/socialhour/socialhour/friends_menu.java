@@ -23,8 +23,13 @@ public class friends_menu extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friends_menu, container, false);
 
+        /*
+            Code that sets up the recyclerview, layout manager, and makes an adapter and attaches
+            it to the recyclerview.
+            Also updates the adapter at the end to either display the empty image or load in people.
+         */
+        View view = inflater.inflate(R.layout.fragment_friends_menu, container, false);
         recView = (RecyclerView) view.findViewById(R.id.friend_list);
         noFriendLayout = (LinearLayout) view.findViewById(R.id.NoFriendLayout);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getThisContext());
@@ -32,10 +37,7 @@ public class friends_menu extends Fragment {
         recView.setLayoutManager(layoutManager);
         adapter = new FriendAdapter(this.getThisContext());
         recView.setAdapter(adapter);
-        if(FriendData.get_friend_count() != 0) {
-            noFriendLayout.setVisibility(View.GONE);
-        }
-
+        updateAdapter();
         return view;
     }
 
@@ -43,14 +45,16 @@ public class friends_menu extends Fragment {
         return getActivity();
     }
 
+    /*
+        Tell the adapter to update for how many people are in there.
+        If there's no people to worry about, display an image to let the user know there's nobody
+        there.
+     */
     public void updateAdapter() {
-        noFriendLayout.setVisibility(View.GONE);
         adapter.notifyDataSetChanged();
-        if(FriendData.get_friend_count() != 0){
+        if(FriendData.get_friend_count() != 0)
             noFriendLayout.setVisibility(View.GONE);
-        }
-        else{
+        else
             noFriendLayout.setVisibility(View.VISIBLE);
-        }
     }
 }

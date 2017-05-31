@@ -32,7 +32,8 @@ import static socialhour.socialhour.frontend_activity.current_user_local;
  * Created by michael on 5/3/17.
  */
 
-public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Adapter.ViewHolder> implements Filterable{
+public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Adapter.ViewHolder>
+        implements Filterable{
     private ArrayList<PublicUserData> fArrayList;
     private ArrayList<PublicUserData> fFilteredList;
     private  Context context;
@@ -66,34 +67,25 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
 
     @Override
     public Filter getFilter() {
-
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-
                 String charString = charSequence.toString();
-
                 if (charString.isEmpty()) {
                     fFilteredList = fArrayList;
                 } else {
-
                     ArrayList<PublicUserData> filteredList = new ArrayList<>();
-
                     for (PublicUserData f : fArrayList) {
-
                         if (f.get_display_name().toLowerCase().contains(charString) || f.get_email().toLowerCase().contains(charString)) {
                             filteredList.add(f);
                         }
                     }
-
                     fFilteredList = filteredList;
                 }
-
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = fFilteredList;
                 return filterResults;
             }
-
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 fFilteredList = (ArrayList<PublicUserData>) filterResults.values;
