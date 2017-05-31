@@ -16,32 +16,27 @@ public class EventItem implements Comparable<EventItem>{
     private String name;
     private String description;
     private String location;
-    private String user_name;
     private Date creation_date;
     private Date start_date;
     private Date end_date;
     private int privacy;
-    private String picture;
-    private String user_email;
     private String id;
-
+    private PublicUserData creator;
 
     private boolean isAllDay;
     public EventItem(Date start_date, Date end_date, boolean is_all_day, String name,
-                     String location, int privacy, String picture,
-                     String user_display_name, String user_email, Date creation_date)
+                     String location, int privacy, PublicUserData creator, Date creation_date)
     {
 
         this.name = name;
+        //todo: implement event description
         this.description = "UNIMPLEMENTED DESCRIPTION";
         this.location = location;
         this.start_date = start_date;
         this.end_date = end_date;
         this.privacy = privacy;
         this.isAllDay = is_all_day;
-        this.picture = picture;
-        this.user_name = user_display_name;
-        this.user_email = user_email;
+        this.creator = creator;
         this.creation_date = creation_date;
         this.id = "ID_NULL";
     }
@@ -59,14 +54,11 @@ public class EventItem implements Comparable<EventItem>{
     public String get_name() { return name;}
     public String get_description() { return description;}
     public int get_privacy() { return privacy;}
-    public String get_picture() {return picture;}
     public boolean get_isAllDay() { return isAllDay;}
-    public String get_user_name() {return user_name;}
     public String get_location() {return location;}
     public String get_id() {return id;}
-    public String get_user_email() {return user_email;}
     public Date get_creation_date() {return creation_date;}
-
+    public PublicUserData get_creator() {return creator;}
     /*
         BASIC MUTATORS - EACH RESPECTIVE METHOD MERELY MODIFIES THE VALUE
         TODO: Change all of these to return false if value failed to update
@@ -81,15 +73,13 @@ public class EventItem implements Comparable<EventItem>{
 
     public void set_privacy(int privacy_) {privacy = privacy_;}
     public void set_location(String event_location) {location = event_location;}
-    public void set_user_name(String name) {user_name = name;}
     public void set_isAllDay(boolean isAllDay_)
     {
         isAllDay = isAllDay_;
     }
     public void set_creation_date(Date date) {creation_date = date;}
     public void set_id(String id){this.id = id;}
-    public void set_picture(String pict){this.picture = pict;}
-    public void set_user_email(String email){this.user_email = email;}
+    public void set_creator(PublicUserData creator) {this.creator = creator;}
 
     public int compareTo(@NonNull EventItem event2){
         return this.get_creation_date().compareTo(event2.get_creation_date());

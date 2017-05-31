@@ -371,8 +371,7 @@ public class frontend_activity extends AppCompatActivity {
 
 
             EventItem event = new EventItem(start_time, end_time, is_all_day,
-                    name, location, privacy, current_user_local.get_photo(),
-                    current_user_local.get_display_name(), current_user_local.get_email(),
+                    name, location, privacy, current_user_local.getPublicData(),
                     creation_date);
 
             EventData.add_event_to_firebase(event);

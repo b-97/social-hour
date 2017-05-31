@@ -79,9 +79,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         EventItem item = EventData.get_event(position);
 
         holder.date.setText(createDateText(item));
-        holder.title.setText(item.get_user_name() + " created event " + item.get_name() +
+        holder.title.setText(item.get_creator().get_display_name() +
+                " created event " + item.get_name() +
                                 " at " + item.get_location());
-        Picasso.with(context).load(item.get_picture()).into(holder.icon);
+        Picasso.with(context).load(item.get_creator().get_profile_picture()).into(holder.icon);
     }
 
     @Override

@@ -215,9 +215,8 @@ public class edit_settings_activity extends frontend_activity
             new MakeRequestTask(mCredential).execute();
             new CalendarRequestTask(mCredential).execute(
                     new EventItem(java.util.Calendar.getInstance().getTime(),
-                            java.util.Calendar.getInstance().getTime(),
-                            false, "Coffee", "Joe's", 1, "NULL", "Michael Rinehart",
-                            "mrinehart97@gmail,com", new Date()));
+                            java.util.Calendar.getInstance().getTime(), false, "Coffee", "Joe's", 1,
+                            frontend_activity.current_user_local.getPublicData(), new Date()));
         }
     }
 

@@ -75,9 +75,9 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventH
         }
 
         holder.date.setText(event_creation_date_text);
-        holder.title.setText(item.get_user_name() + " created event " + item.get_name() +
-                                " at " + item.get_location());
-        Picasso.with(context).load(item.get_picture()).into(holder.icon);
+        holder.title.setText(item.get_creator().get_display_name() + " created event "
+                + item.get_name() + " at " + item.get_location());
+        Picasso.with(context).load(item.get_creator().get_profile_picture()).into(holder.icon);
     }
 
     @Override
