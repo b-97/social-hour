@@ -60,14 +60,23 @@ public class PrivateUserData {
     public boolean get_pref_display_24hr() {return pref_display_24hr;}
     public int get_pref_default_privacy() {return pref_default_privacy;}
 
-    public void sort_event_list(){
-        sort(event_list);
-    }
     public void add_event(EventItem event){
         if(event_list == null){
             event_list = new ArrayList<EventItem>();
         }
         event_list.add(event);
+        sort(event_list);
+    }
+    public void modify_event(EventItem event){
+        if(event_list == null){
+            event_list = new ArrayList<EventItem>();
+        }
+        for(int i = 0; i < event_list.size(); i++){
+            if(event.get_id().compareTo(event_list.get(i).get_id()) == 0){
+                event_list.set(i, event);
+                break;
+            }
+        }
         sort(event_list);
     }
     public void add_friend(PublicUserData user){

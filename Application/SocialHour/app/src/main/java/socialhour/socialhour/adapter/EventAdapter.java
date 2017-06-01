@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import socialhour.socialhour.R;
 import socialhour.socialhour.add_event_activity;
+import socialhour.socialhour.frontend_activity;
 import socialhour.socialhour.model.*;
 
 /**
@@ -80,9 +81,47 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
     }
     private String createTitleText(EventItem item){
         //TODO: Honor user preference for 24h format
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-        return item.get_creator() + "'s event" + item.get_name() + "at" + item.get_location() +
-                "from" + sdf.format(item.get_start_date())  + sdf.format(item.get_end_date());
+        SimpleDateFormat time_sdf = new SimpleDateFormat();
+        if(frontend_activity.current_user_local.get_pref_display_24hr()){
+            time_sdf = new SimpleDateFormat("HH:mm");
+        }
+        else{
+            time_sdf = new SimpleDateFormat("hh:mm a");
+        }
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        Calendar cal3 = Calendar.getInstance();
+        cal1.setTime(new Date());
+        cal2.setTime(item.get_start_date());
+        cal3.setTime(item.get_end_date());
+
+        SimpleDateFormat date_sdf;
+
+
+        if(cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal2.get(Calendar.DAY_OF_YEAR) == cal3.get(Calendar.DAY_OF_YEAR)){
+            date_sdf = new SimpleDateFormat("EEEE, MMMM d");
+            return item.get_creator().get_display_name() + "'s event " + item.get_name() + " at " +
+                    item.get_location() + " from " + time_sdf.format(cal2.getTime()) + " to " +
+                    time_sdf.format(cal2.getTime()) + " on " + date_sdf.format(cal3.getTime());
+        }
+        else if(cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)){
+            date_sdf = new SimpleDateFormat("EEEE, MMMM d");
+
+        }
+        else if(cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)){
+            date_sdf = new SimpleDateFormat("MMMM d");
+        }
+        else{
+            date_sdf = new SimpleDateFormat("MMMM d, YYYY");
+        }
+        return item.get_creator().get_display_name() + "'s event " + item.get_name() + " at " +
+                item.get_location() + " from " + time_sdf.format(cal2.getTime()) + " on " +
+                date_sdf.format(cal2.getTime()) + " to " + time_sdf.format(cal3.getTime()) +
+                " on " + date_sdf.format(cal3.getTime());
     }
 
     @Override
@@ -154,9 +193,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
                     i.putExtra("request_code", request_code_edit_event);
                     i.putExtra("key", e.get_id());
                     ((Activity) c2).startActivityForResult(i, request_code_edit_event);
-                }
-                protected void onActivityResult(int requestCode, int resultCode, Intent data){
-                    Toast.makeText(c2, "Event creation cancelled.", Toast.LENGTH_SHORT).show();
                 }
             }
             );

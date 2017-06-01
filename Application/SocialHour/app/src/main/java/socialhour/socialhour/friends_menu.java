@@ -1,6 +1,5 @@
 package socialhour.socialhour;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,18 +31,15 @@ public class friends_menu extends Fragment {
         View view = inflater.inflate(R.layout.fragment_friends_menu, container, false);
         recView = (RecyclerView) view.findViewById(R.id.friend_list);
         noFriendLayout = (LinearLayout) view.findViewById(R.id.NoFriendLayout);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getThisContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recView.setLayoutManager(layoutManager);
-        adapter = new FriendAdapter(this.getThisContext());
+        adapter = new FriendAdapter(this.getActivity());
         recView.setAdapter(adapter);
         updateAdapter();
         return view;
     }
 
-    public Context getThisContext() {
-        return getActivity();
-    }
 
     /*
         Tell the adapter to update for how many people are in there.

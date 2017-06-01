@@ -125,10 +125,8 @@ public class frontend_activity extends AppCompatActivity {
                 if(dataSnapshot.exists()){
                     try {
                         current_user_local = dataSnapshot.getValue(PrivateUserData.class);
-                    }
-                    catch(Exception e)
-                    {
-                        //do nothing
+                    } catch(Exception e) {
+                        Log.d("MainActivity", "Error! Failed to catch that exception!");
                     }
                 }
                 else{
@@ -155,7 +153,6 @@ public class frontend_activity extends AppCompatActivity {
 
         //Grab all of the public events from Google Firebase. If the user is friends with an
         //individual, the event will be placed on the user's feed.
-        //TODO: Provide implementation for the user to
         public_event_database = fDatabase.getReference("public_event_data/" +
                 encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
         public_event_database.addChildEventListener(new ChildEventListener() {
@@ -364,42 +361,37 @@ public class frontend_activity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //First IF block: handle all of the incoming data from the add event activiy, provided
         //the user successfully creates an event
-        if ((requestCode == request_code_add_event || requestCode == request_code_edit_event) &&
-                resultCode == RESULT_OK) {
+        if (requestCode == request_code_add_event && resultCode == RESULT_OK) {
+
+            //grab the start and end date from the activity
             long start_date_millis = data.getExtras().getLong("start_date_millis");
             long end_date_millis = data.getExtras().getLong("end_date_millis");
             String start_date_timezone = data.getExtras().getString("start_date_timezone");
             String end_date_timezone = data.getExtras().getString("end_date_timezone");
-
             Calendar start_date = Calendar.getInstance();
             start_date.setTimeZone(TimeZone.getTimeZone(start_date_timezone));
             Calendar end_date = Calendar.getInstance();
             end_date.setTimeZone(TimeZone.getTimeZone(end_date_timezone));
             start_date.setTimeInMillis(start_date_millis);
             end_date.setTimeInMillis(end_date_millis);
-
             Date start_time = start_date.getTime();
             Date end_time = end_date.getTime();
 
+            //get the privacy, event name, all day status, and event location
             int privacy = data.getExtras().getInt("event_privacy");
-
             String name = data.getExtras().getString("event_name");
             String location = data.getExtras().getString("event_location");
-            Date creation_date = new Date();
             boolean is_all_day = data.getExtras().getBoolean("is_all_day");
 
+            //set the creation date
+            Date creation_date = new Date();
 
             EventItem event = new EventItem(start_time, end_time, is_all_day,
                     name, location, privacy, current_user_local.getPublicData(),
                     creation_date);
-
-            if (requestCode == request_code_add_event)   //if the event is new add it
                 EventData.add_event_to_firebase(event);
-            else if (requestCode == request_code_edit_event){ //if the event is old modify it
-                event.set_id(data.getExtras().getString("key"));
-                EventData.modify_event_to_firebase(event);
-            }
             d.updateAdapter();
+
             //add the event to the private user database aswell
             current_user_local.add_event(event);
             private_user_database.setValue(current_user_local);
@@ -409,9 +401,46 @@ public class frontend_activity extends AppCompatActivity {
                             event.get_isAllDay() + event.get_privacy() + creation_date.getTime() +
                             current_user_firebase.getDisplayName(), Toast.LENGTH_SHORT).show();
         }
+        else if (requestCode == request_code_edit_event && resultCode == RESULT_OK){
+            //Grab the start and end date from the activity
+            long start_date_millis = data.getExtras().getLong("start_date_millis");
+            long end_date_millis = data.getExtras().getLong("end_date_millis");
+            String start_date_timezone = data.getExtras().getString("start_date_timezone");
+            String end_date_timezone = data.getExtras().getString("end_date_timezone");
+            Calendar start_date = Calendar.getInstance();
+            start_date.setTimeZone(TimeZone.getTimeZone(start_date_timezone));
+            Calendar end_date = Calendar.getInstance();
+            end_date.setTimeZone(TimeZone.getTimeZone(end_date_timezone));
+            start_date.setTimeInMillis(start_date_millis);
+            end_date.setTimeInMillis(end_date_millis);
+            Date start_time = start_date.getTime();
+            Date end_time = end_date.getTime();
+
+            //get the privacy, event name, all day status, and event location
+            int privacy = data.getExtras().getInt("event_privacy");
+            String name = data.getExtras().getString("event_name");
+            String location = data.getExtras().getString("event_location");
+            boolean is_all_day = data.getExtras().getBoolean("is_all_day");
+
+            //Update the creation date
+            Date creation_date = new Date();
+
+            //create the event and set the key to the same version of the key
+            EventItem event = new EventItem(start_time, end_time, is_all_day,
+                    name, location, privacy, current_user_local.getPublicData(),
+                    creation_date);
+            event.set_id(data.getExtras().getString("key"));
+
+            //have eventdata replace the event
+            EventData.modify_event_to_firebase(event);
+
+            d.updateAdapter();
+            current_user_local.modify_event(event);
+            private_user_database.setValue(current_user_local);
+        }
         //TODO: Add implementation for end of editing an event
         //Second if block: user enters edit creation but cancels
-        else if ((requestCode == request_code_add_event) &&
+        else if ((requestCode == request_code_add_event || resultCode == request_code_edit_event) &&
                 resultCode == RESULT_CANCELED) {
             Toast.makeText(this, "Event creation cancelled.", Toast.LENGTH_SHORT).show();
         }
@@ -429,6 +458,7 @@ public class frontend_activity extends AppCompatActivity {
             PublicUserData temp_user_data = new PublicUserData(current_user_local.get_photo(),
                     current_user_local.get_display_name(), current_user_local.get_email());
             public_user_database.setValue(temp_user_data);
+            d.resetAdapter();
         }
     }
 

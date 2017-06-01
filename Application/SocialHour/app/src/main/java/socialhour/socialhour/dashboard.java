@@ -52,4 +52,11 @@ public class dashboard extends Fragment {
         noEventLayout.setVisibility(View.GONE);
         adapter.notifyDataSetChanged();
     }
+    public void resetAdapter(){
+        adapter = new EventAdapter(EventData.getListData(), this.getThisContext());
+        recView.setAdapter(adapter);
+        if(EventData.get_event_count() != 0) {
+            noEventLayout.setVisibility(View.GONE);
+        }
+    }
 }
