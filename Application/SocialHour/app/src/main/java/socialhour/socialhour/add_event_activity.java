@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import socialhour.socialhour.model.EventItem;
 
@@ -64,56 +65,17 @@ public class add_event_activity extends frontend_activity {
 
     private boolean EVENT_CREATION_CANCELLED;
 
+    private Bundle extras;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Bundle extras = getIntent().getExtras();
+        extras = getIntent().getExtras();
 
         final Calendar cal = Calendar.getInstance();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        if(extras.getInt("request_code")==request_code_edit_event)
-        {
-            current_year = extras.getInt("start_year");
-            current_month = extras.getInt("start_month");
-            current_day = extras.getInt("start_day");
-            start_hour = extras.getInt("start_hour");
-            start_minute = extras.getInt("start_minute");
-            start_date.set(current_year,current_month,current_day,start_hour,start_minute);
-
-            current_year = extras.getInt("end_year");
-            current_month = extras.getInt("end_month");
-            current_day = extras.getInt("end_day");
-            end_hour = extras.getInt("end_hour");
-            end_minute = extras.getInt("end_minute");
-            end_date.set(current_year,current_month,current_day,end_hour,end_minute);
-
-            event_privacy = extras.getInt("privacy");
-            toolbar.setTitle("Edit Event");
-            edit_event_name_textedit.setText(extras.getString("name"));
-            edit_event_location.setText(extras.getString("location"));
-
-        }
-        else
-        {
-            current_year = cal.get(Calendar.YEAR);
-            current_month = cal.get(Calendar.MONTH);
-            current_day = cal.get(Calendar.DAY_OF_MONTH);
-
-            event_privacy = 0;
-
-            start_date = Calendar.getInstance();
-            end_date = Calendar.getInstance();
-            toolbar.setTitle("Add New Event");
-        }
-
-        EVENT_CREATION_CANCELLED = true; //by default event creation wasn't cancelled
 
 
 
@@ -125,7 +87,7 @@ public class add_event_activity extends frontend_activity {
 
         privacy_spinner = (Spinner) findViewById(R.id.privacy_spinner);
         final ArrayAdapter<String> privacy_adapter = new ArrayAdapter<String>(this,
-                 android.R.layout.simple_spinner_item, privacy_array);
+                android.R.layout.simple_spinner_item, privacy_array);
         privacy_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         privacy_spinner.setAdapter(privacy_adapter);
         privacy_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -146,8 +108,8 @@ public class add_event_activity extends frontend_activity {
         });
 
         //listener setup
-
-
+        edit_event_name_textedit = (TextView) findViewById(R.id.edit_event_name_edittext);
+        edit_event_location = (TextView) findViewById(R.id.event_location_textbox);
 
         /*
             TODO: Convert dialogues to fragments
@@ -185,13 +147,6 @@ public class add_event_activity extends frontend_activity {
                 }
         );
 
-        SimpleDateFormat sdf = new SimpleDateFormat("M/dd/YYYY");
-        sdf.setTimeZone(Calendar.getInstance().getTimeZone());
-
-        start_date_diag_button.setText(sdf.format(start_date.getTime()));
-        end_date_diag_button.setText(sdf.format(end_date.getTime()));
-
-
         /*
                Establishes behaviour for two floating buttons.
                fab1 handles event creation, fab2 handles event cancellation.
@@ -224,6 +179,54 @@ public class add_event_activity extends frontend_activity {
                 isAllDay = isChecked;
             }
         });
+        if(extras.getInt("request_code")==request_code_edit_event)
+        {
+            //initiate start_date and end_date
+            start_date = Calendar.getInstance();
+            end_date = Calendar.getInstance();
+
+            //set the start and end date based on the extras passed to the intent
+            start_date.setTimeInMillis(extras.getLong("start_date_millis"));
+            start_date.setTimeZone(TimeZone.getTimeZone(extras.getString("start_date_timezone")));
+            end_date.setTimeInMillis(extras.getLong("end_date_millis"));
+            end_date.setTimeZone(TimeZone.getTimeZone(extras.getString("end_date_timezone")));
+
+            //use these dates to set the date and time button text
+            SimpleDateFormat date_sdf = new SimpleDateFormat("M/dd/YYYY");
+            SimpleDateFormat time_sdf = new SimpleDateFormat("h:m a");
+            start_date_diag_button.setText(date_sdf.format(start_date.getTime()));
+            end_date_diag_button.setText(date_sdf.format(end_date.getTime()));
+            start_time_diag_button.setText(time_sdf.format(start_date.getTime()));
+            end_time_diag_button.setText(time_sdf.format(end_date.getTime()));
+
+            event_privacy = extras.getInt("privacy");
+            privacy_spinner.setSelection(event_privacy);
+            toolbar.setTitle("Edit Event");
+            edit_event_name_textedit.setText(extras.getString("name"));
+            edit_event_location.setText(extras.getString("location"));
+
+        }
+        else
+        {
+            current_year = cal.get(Calendar.YEAR);
+            current_month = cal.get(Calendar.MONTH);
+            current_day = cal.get(Calendar.DAY_OF_MONTH);
+
+            event_privacy = 0;
+
+            start_date = Calendar.getInstance();
+            end_date = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("M/dd/YYYY");
+            sdf.setTimeZone(Calendar.getInstance().getTimeZone());
+
+            start_date_diag_button.setText(sdf.format(start_date.getTime()));
+            end_date_diag_button.setText(sdf.format(end_date.getTime()));
+            toolbar.setTitle("Add New Event");
+        }
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        EVENT_CREATION_CANCELLED = true; //by default event creation wasn't cancelled
     }
 
     @Override
@@ -333,9 +336,6 @@ public class add_event_activity extends frontend_activity {
             super.finish();
         }
         else{
-            edit_event_name_textedit = (TextView) findViewById(R.id.edit_event_name_edittext);
-            edit_event_location = (TextView) findViewById(R.id.event_location_textbox);
-
             String event_name = edit_event_name_textedit.getText().toString();
             String event_location = edit_event_location.getText().toString();
 
@@ -355,6 +355,12 @@ public class add_event_activity extends frontend_activity {
 
             data.putExtra("event_privacy", event_privacy);
 
+            if(extras.getInt("request_code")==request_code_edit_event) {
+                data.putExtra("key", extras.getString("key"));
+                data.putExtra("new_event", false);
+            }
+            else
+                data.putExtra("new_event", true);
             setResult(RESULT_OK, data);
             super.finish();
         }

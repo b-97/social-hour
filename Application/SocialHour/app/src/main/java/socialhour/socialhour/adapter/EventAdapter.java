@@ -1,5 +1,6 @@
 package socialhour.socialhour.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 
 import android.content.Intent;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
 import socialhour.socialhour.R;
 import socialhour.socialhour.add_event_activity;
@@ -106,6 +109,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         private ImageView icon;
         private View container;
         private TextView date;
+        private final Context c2;
 
         private static final int request_code_add_event = 5;
         private static final int request_code_add_friend = 6;
@@ -120,6 +124,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
             title = (TextView) itemView.findViewById(R.id.event_list_text);
             icon = (ImageView) itemView.findViewById(R.id.event_list_icon);
             container = itemView.findViewById(R.id.cont_event_root);
+            c2 = itemView.getContext();
+
             icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -129,26 +135,27 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
                     i.putExtra("description", e.get_description());
                     i.putExtra("location", e.get_location());
 
-                    i.putExtra("start_year", e.get_start_date().getYear());
-                    i.putExtra("start_month", e.get_start_date().getDate());
-                    i.putExtra("start_day", e.get_start_date().getDay());
-                    i.putExtra("start_hour", e.get_start_date().getHours());
-                    i.putExtra("start_minute", e.get_start_date().getMinutes());
+                    long start_date_millis = e.get_start_date().getTime();
+                    String start_date_timezone = Calendar.getInstance().getTimeZone().getID();
+                    long end_date_millis = e.get_end_date().getTime();
+                    String end_date_timezone = Calendar.getInstance().getTimeZone().getID();
 
-                    i.putExtra("end_year", e.get_end_date().getYear());
-                    i.putExtra("end_month", e.get_end_date().getDate());
-                    i.putExtra("end_day", e.get_end_date().getDay());
-                    i.putExtra("end_hour", e.get_end_date().getHours());
-                    i.putExtra("end_minute", e.get_end_date().getMinutes());
-
+                    i.putExtra("start_date_millis", start_date_millis);
+                    i.putExtra("end_date_millis", end_date_millis);
+                    i.putExtra("start_date_timezone", start_date_timezone);
+                    i.putExtra("end_date_timezone", end_date_timezone);
                     i.putExtra("privacy", e.get_privacy());
                     i.putExtra("isAllDay", e.get_isAllDay());
                     i.putExtra("id", e.get_id());
                     i.putExtra("request_code", request_code_edit_event);
-
-                    //TODO: HOW TO PASS INTENT TO GET TO EDIT EVENT
+                    i.putExtra("key", e.get_id());
+                    ((Activity) c2).startActivityForResult(i, request_code_edit_event);
                 }
-            });
+                protected void onActivityResult(int requestCode, int resultCode, Intent data){
+                    Toast.makeText(c2, "Event creation cancelled.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            );
         }
 
     }
