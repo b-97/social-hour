@@ -7,6 +7,8 @@ package socialhour.socialhour.model;
 import java.util.ArrayList;
 import java.util.Date;
 
+import socialhour.socialhour.tools.FirebaseData;
+
 /**
  * Created by michael on 3/15/17.
  * Handles all of the data for the events.
@@ -26,6 +28,8 @@ public class GroupItem{
     public GroupItem(Date creation_date, PublicUserData group_owner, boolean is_all_day,
                      ArrayList<PublicUserData> members, ArrayList<PublicUserData> admins,
                      String description, ArrayList<EventItem> events, String name) {
+        members = new ArrayList<PublicUserData>();
+        admins = new ArrayList<PublicUserData>();
         this.creation_date = creation_date;
         this.owner = group_owner;
         this.admins = admins;
@@ -56,4 +60,69 @@ public class GroupItem{
     public void set_owner(PublicUserData owner){this.owner = owner;}
     public void set_creation_date(Date creation_date){this.creation_date = creation_date;}
     public void set_key(String key){this.key = key;}
+
+    /*
+        ARRAYLIST MODIFIERS FOR SPECIFIC GROUPS
+     */
+    /*
+        Adds a member to the members arraylist.
+        Checks and makes sure that the member already isn't in there first, however.
+     */
+    public void add_member(PublicUserData member){
+        boolean should_add = true;
+        for(PublicUserData usr: members){
+            //check to make sure the member isn't already in the arraylist
+            if(FirebaseData.decodeEmail(member.get_email())
+                    .compareTo(FirebaseData.decodeEmail(usr.get_email())) == 0){
+                should_add = false;
+                break;
+            }
+        }
+        if(should_add)
+            members.add(member);
+    }
+    /*
+        Adds an admin to the admin arraylist.
+        Checks and makes sure that the member already isn't in there, however.
+     */
+    public void add_admin(PublicUserData admin){
+        boolean should_add = true;
+        for(PublicUserData usr: admins){
+            //check to make sure the admin isn't already in the arraylist
+            if(FirebaseData.decodeEmail(admin.get_email())
+                    .compareTo(FirebaseData.decodeEmail(usr.get_email())) == 0){
+                should_add = false;
+            }
+        }
+        if(should_add)
+            admins.add(admin);
+    }
+    /*
+        Removes a member from the members arraylist.
+        Returns a boolean to check if it was actually removed.
+     */
+    public boolean remove_member(PublicUserData member){
+        for(int i = 0; i < members.size(); i++){
+            if (FirebaseData.decodeEmail(members.get(i).get_email())
+                    .compareTo(FirebaseData.decodeEmail(member.get_email())) == 0){
+                members.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+    /*
+        Removes an admin from the admins arraylist.
+        Returns a boolean to check if it was actually removed.
+     */
+    public boolean remove_admin(PublicUserData admin){
+        for(int i = 0; i < admins.size(); i++){
+            if (FirebaseData.decodeEmail(admins.get(i).get_email())
+                    .compareTo(FirebaseData.decodeEmail(admin.get_email())) == 0){
+                admins.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
 }
