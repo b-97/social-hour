@@ -19,14 +19,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import socialhour.socialhour.adapter.Friend_Search_Adapter;
+import socialhour.socialhour.adapter.Public_User_Search_Adapter;
 import socialhour.socialhour.model.PublicUserData;
 
 import static socialhour.socialhour.tools.FirebaseData.decodeEmail;
 
 public class add_friends_activity extends frontend_activity {
 
-    private Friend_Search_Adapter friendAdapter;
+    private Public_User_Search_Adapter friendAdapter;
     private RecyclerView result_recycler_view;
     private DatabaseReference lDatabase;
     private ArrayList<PublicUserData> fArrayList;
@@ -38,7 +38,7 @@ public class add_friends_activity extends frontend_activity {
         setContentView(R.layout.activity_add_friends_activity);
 
         fArrayList = new ArrayList<PublicUserData>();
-        friendAdapter = new Friend_Search_Adapter(fArrayList, this.getApplicationContext());
+        friendAdapter = new Public_User_Search_Adapter(fArrayList, this.getApplicationContext());
 
 
         result_recycler_view = (RecyclerView) findViewById(R.id.result_recycler_view);

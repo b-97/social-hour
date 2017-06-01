@@ -32,7 +32,7 @@ import static socialhour.socialhour.frontend_activity.current_user_local;
  * Created by michael on 5/3/17.
  */
 
-public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Adapter.ViewHolder>
+public class Public_User_Search_Adapter extends RecyclerView.Adapter<Public_User_Search_Adapter.ViewHolder>
         implements Filterable{
     private ArrayList<PublicUserData> fArrayList;
     private ArrayList<PublicUserData> fFilteredList;
@@ -40,20 +40,20 @@ public class Friend_Search_Adapter extends RecyclerView.Adapter<Friend_Search_Ad
     private DatabaseReference lDatabase =
             FirebaseDatabase.getInstance().getReference("friend_data");
 
-    public Friend_Search_Adapter(ArrayList<PublicUserData> arrayList, Context context) {
+    public Public_User_Search_Adapter(ArrayList<PublicUserData> arrayList, Context context) {
         fArrayList = arrayList;
         fFilteredList = arrayList;
         this.context = context;
     }
 
     @Override
-    public Friend_Search_Adapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public Public_User_Search_Adapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.friend_result_layout, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(Friend_Search_Adapter.ViewHolder viewHolder, int i){
+    public void onBindViewHolder(Public_User_Search_Adapter.ViewHolder viewHolder, int i){
         viewHolder.friends_text.setText(fFilteredList.get(i).get_display_name() + " (" +
                 fFilteredList.get(i).get_email() +")");
         viewHolder.friend = fFilteredList.get(i);
