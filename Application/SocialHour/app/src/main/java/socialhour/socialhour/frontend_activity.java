@@ -119,6 +119,8 @@ public class frontend_activity extends AppCompatActivity {
         //exist, we'll make a new PrivateUserData and throw that shit in Google Firebase.
         private_user_database = fDatabase.getReference("private_user_data/" +
                 encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        public_user_database = fDatabase.getReference("public_user_data/" +
+                encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
         private_user_database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){

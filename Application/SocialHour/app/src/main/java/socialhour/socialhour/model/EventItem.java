@@ -24,10 +24,8 @@ public class EventItem implements Comparable<EventItem>{
     public EventItem(Date start_date, Date end_date, boolean is_all_day, String name,
                      String location, int privacy, PublicUserData creator, Date creation_date)
     {
-
         this.name = name;
-        //todo: implement event description
-        this.description = "UNIMPLEMENTED DESCRIPTION";
+        this.description = "UNIMPLEMENTED DESCRIPTION";       //todo: implement event description
         this.location = location;
         this.start_date = start_date;
         this.end_date = end_date;
@@ -35,7 +33,7 @@ public class EventItem implements Comparable<EventItem>{
         this.isAllDay = is_all_day;
         this.creator = creator;
         this.creation_date = creation_date;
-        this.id = "ID_NULL";
+        this.id = "ID_NULL";    //ID NEEDS TO BE SET BY OTHER CLASSES PRIOR TO PROPER USAGE
     }
 
     public EventItem() {
