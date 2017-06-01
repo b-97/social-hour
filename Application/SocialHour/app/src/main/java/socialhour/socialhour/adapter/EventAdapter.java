@@ -53,7 +53,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
             Display month and date if event is created on the same year
             Display month, date and year if otherwise
      */
-    public String createDateText(EventItem item){
+    private String createDateText(EventItem item){
         //Get calendars out of the current time and creation time of event
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(new Date());
@@ -78,7 +78,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
             return sdf.format(item.get_creation_date());
         }
     }
-    public String createTitleText(EventItem item){
+    private String createTitleText(EventItem item){
         //TODO: Honor user preference for 24h format
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
         return item.get_creator() + "'s event" + item.get_name() + "at" + item.get_location() +
