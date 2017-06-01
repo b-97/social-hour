@@ -73,15 +73,19 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
             return sdf.format(item.get_creation_date());
         }
     }
+    public String createTitleText(EventItem item){
+        //TODO: Honor user preference for 24h format
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        return item.get_creator() + "'s event" + item.get_name() + "at" + item.get_location() +
+                "from" + sdf.format(item.get_start_date())  + sdf.format(item.get_end_date());
+    }
 
     @Override
     public void onBindViewHolder(EventHolder holder, int position) {
         EventItem item = EventData.get_event(position);
 
         holder.date.setText(createDateText(item));
-        holder.title.setText(item.get_creator().get_display_name() +
-                " created event " + item.get_name() +
-                                " at " + item.get_location());
+        holder.title.setText(createTitleText(item));
         Picasso.with(context).load(item.get_creator().get_profile_picture()).into(holder.icon);
     }
 
