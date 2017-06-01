@@ -25,6 +25,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import socialhour.socialhour.model.EventItem;
+
 public class add_event_activity extends frontend_activity {
     private TimePicker time_picker;
 
@@ -37,6 +39,12 @@ public class add_event_activity extends frontend_activity {
     final int PRIVACY_PUBLIC = 1;
     final int PRIVACY_PRIVATE = 2;
     final String privacy_array[] = { "Default", "Private", "Public"};
+
+    private static final int request_code_add_event = 5;
+    private static final int request_code_add_friend = 6;
+    private static final int request_code_add_group = 7;
+    private static final int request_code_edit_settings = 8;
+    private static final int request_code_edit_event = 9;
 
     int event_privacy;
 
@@ -58,26 +66,56 @@ public class add_event_activity extends frontend_activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Bundle extras = getIntent().getExtras();
+
         final Calendar cal = Calendar.getInstance();
-
-        current_year = cal.get(Calendar.YEAR);
-        current_month = cal.get(Calendar.MONTH);
-        current_day = cal.get(Calendar.DAY_OF_MONTH);
-
-        start_date = Calendar.getInstance();
-        end_date = Calendar.getInstance();
-
-        event_privacy = 0;
-
-        EVENT_CREATION_CANCELLED = true; //by default event creation wasn't cancelled
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Add New Event");
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        if(extras.getInt("request_code")==request_code_edit_event)
+        {
+            current_year = extras.getInt("start_year");
+            current_month = extras.getInt("start_month");
+            current_day = extras.getInt("start_day");
+            start_hour = extras.getInt("start_hour");
+            start_minute = extras.getInt("start_minute");
+            start_date.set(current_year,current_month,current_day,start_hour,start_minute);
+
+            current_year = extras.getInt("end_year");
+            current_month = extras.getInt("end_month");
+            current_day = extras.getInt("end_day");
+            end_hour = extras.getInt("end_hour");
+            end_minute = extras.getInt("end_minute");
+            end_date.set(current_year,current_month,current_day,end_hour,end_minute);
+
+            event_privacy = extras.getInt("privacy");
+            toolbar.setTitle("Edit Event");
+            edit_event_name_textedit.setText(extras.getString("name"));
+            edit_event_location.setText(extras.getString("location"));
+
+        }
+        else
+        {
+            current_year = cal.get(Calendar.YEAR);
+            current_month = cal.get(Calendar.MONTH);
+            current_day = cal.get(Calendar.DAY_OF_MONTH);
+
+            event_privacy = 0;
+
+            start_date = Calendar.getInstance();
+            end_date = Calendar.getInstance();
+            toolbar.setTitle("Add New Event");
+        }
+
+        EVENT_CREATION_CANCELLED = true; //by default event creation wasn't cancelled
+
+
 
         /*
             Setting up the spinner with an adapter and a listener so that we can get the user's
@@ -178,6 +216,7 @@ public class add_event_activity extends frontend_activity {
             TODO: write behaviour that disables / "clears" buttons and variables when checked
          */
         is_all_day_check_box = (CheckBox) findViewById(R.id.is_all_day_checkbox);
+        //how to set the inital value of the checkbox
         is_all_day_check_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,
@@ -337,4 +376,11 @@ public class add_event_activity extends frontend_activity {
         finish();
         return true;
     }
+
+    public void setFields(EventItem e)
+    {
+
+    }
+
+
 }

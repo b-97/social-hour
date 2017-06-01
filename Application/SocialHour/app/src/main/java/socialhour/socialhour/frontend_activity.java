@@ -59,6 +59,8 @@ public class frontend_activity extends AppCompatActivity {
     private static final int request_code_add_friend = 6;
     private static final int request_code_add_group = 7;
     private static final int request_code_edit_settings = 8;
+    private static final int request_code_edit_event = 9;
+
     private dashboard d;
     private friends_menu f;
     private groups_menu g;
@@ -120,7 +122,13 @@ public class frontend_activity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
                 if(dataSnapshot.exists()){
-                    current_user_local = dataSnapshot.getValue(PrivateUserData.class);
+                    try {
+                        current_user_local = dataSnapshot.getValue(PrivateUserData.class);
+                    }
+                    catch(Exception e)
+                    {
+                        //do nothing
+                    }
                 }
                 else{
                     current_user_local = new PrivateUserData(current_user_firebase.getDisplayName(),
@@ -176,6 +184,7 @@ public class frontend_activity extends AppCompatActivity {
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            //TODO: ADD THIS IMPLEMENTATION
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {}
             @Override
@@ -345,7 +354,7 @@ public class frontend_activity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //First IF block: handle all of the incoming data from the add event activiy, provided
         //the user successfully creates an event
-        if ((requestCode == request_code_add_event) &&
+        if ((requestCode == request_code_add_event || requestCode == request_code_edit_event) &&
                 resultCode == RESULT_OK) {
             long start_date_millis = data.getExtras().getLong("start_date_millis");
             long end_date_millis = data.getExtras().getLong("end_date_millis");
@@ -373,9 +382,12 @@ public class frontend_activity extends AppCompatActivity {
             EventItem event = new EventItem(start_time, end_time, is_all_day,
                     name, location, privacy, current_user_local.getPublicData(),
                     creation_date);
-
-            EventData.add_event_to_firebase(event);
-
+            if(requestCode == request_code_add_event)   //if the event is new add it
+                EventData.add_event_to_firebase(event);
+            else if(requestCode == request_code_edit_event) //if the event is old modify it
+                EventData.modify_event_to_firebase(event);
+            else
+                //BROKE
             //add the event to the private user database aswell
             current_user_local.add_event(event);
             private_user_database.setValue(current_user_local);
@@ -385,6 +397,7 @@ public class frontend_activity extends AppCompatActivity {
                             event.get_isAllDay() + event.get_privacy() + creation_date.getTime() +
                             current_user_firebase.getDisplayName(), Toast.LENGTH_SHORT).show();
         }
+        //TODO: Add implementation for end of editing an event
         //Second if block: user enters edit creation but cancels
         else if ((requestCode == request_code_add_event) &&
                 resultCode == RESULT_CANCELED) {

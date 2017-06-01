@@ -1,9 +1,11 @@
 package socialhour.socialhour;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -32,6 +34,12 @@ public class calendar_activity extends AppCompatActivity{
     private int mYear;
     private int mMonth;
     private int mDay;
+
+    private static final int request_code_add_event = 5;
+    private static final int request_code_add_friend = 6;
+    private static final int request_code_add_group = 7;
+    private static final int request_code_edit_settings = 8;
+    private static final int request_code_edit_event = 9;
 
     private DatePicker date_picker;
 
@@ -107,4 +115,12 @@ public class calendar_activity extends AppCompatActivity{
         }
         updateAdapter();
     }
+
+    public static void editEvent(Intent i)
+    {
+        //startActivityForResult(i,request_code_edit_event);
+    }
+
+
+
 }

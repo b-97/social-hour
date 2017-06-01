@@ -38,6 +38,10 @@ public class EventData {
         eventDatabase.child(FirebaseData.encodeEmail(event.get_creator().get_email()))
                 .child(key).setValue(event);
     }
+    public static void modify_event_to_firebase(EventItem event){
+        eventDatabase.child(FirebaseData.encodeEmail(event.get_creator().get_email()))
+                .child(event.get_id()).setValue(event);
+    }
     public static void add_event_from_firebase(EventItem event){
         event_list.add(event);
         sort(event_list, Collections.reverseOrder());
