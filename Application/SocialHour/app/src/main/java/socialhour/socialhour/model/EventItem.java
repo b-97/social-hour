@@ -1,10 +1,13 @@
 package socialhour.socialhour.model;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import socialhour.socialhour.add_event_activity;
 
 /**
  * Created by michael on 3/15/17.
@@ -43,6 +46,7 @@ public class EventItem implements Comparable<EventItem>{
 
     public EventItem() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
+
     }
 
 
@@ -83,5 +87,11 @@ public class EventItem implements Comparable<EventItem>{
 
     public int compareTo(@NonNull EventItem event2){
         return this.get_creation_date().compareTo(event2.get_creation_date());
+    }
+
+
+    public void editEvent()
+    {
+
     }
 }

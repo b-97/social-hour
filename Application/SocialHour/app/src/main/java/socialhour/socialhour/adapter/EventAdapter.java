@@ -1,15 +1,20 @@
 package socialhour.socialhour.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
 import socialhour.socialhour.R;
+import socialhour.socialhour.add_event_activity;
 import socialhour.socialhour.model.*;
 
 /**
@@ -83,7 +88,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
     @Override
     public void onBindViewHolder(EventHolder holder, int position) {
         EventItem item = EventData.get_event(position);
-
+        holder.item = item;
         holder.date.setText(createDateText(item));
         holder.title.setText(createTitleText(item));
         Picasso.with(context).load(item.get_creator().get_profile_picture()).into(holder.icon);
@@ -108,6 +113,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         private ImageView icon;
         private View container;
         private TextView date;
+        private final Context c2;
+
+        private static final int request_code_add_event = 5;
+        private static final int request_code_add_friend = 6;
+        private static final int request_code_add_group = 7;
+        private static final int request_code_edit_settings = 8;
+        private static final int request_code_edit_event = 9;
+        private EventItem item;
 
         public EventHolder(View itemView) {
             super(itemView);
@@ -115,6 +128,38 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
             title = (TextView) itemView.findViewById(R.id.event_list_text);
             icon = (ImageView) itemView.findViewById(R.id.event_list_icon);
             container = itemView.findViewById(R.id.cont_event_root);
+            c2 = itemView.getContext();
+
+            icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EventItem e = item;
+                    Intent i = new Intent(context, add_event_activity.class);
+                    i.putExtra("name", e.get_name());
+                    i.putExtra("description", e.get_description());
+                    i.putExtra("location", e.get_location());
+
+                    long start_date_millis = e.get_start_date().getTime();
+                    String start_date_timezone = Calendar.getInstance().getTimeZone().getID();
+                    long end_date_millis = e.get_end_date().getTime();
+                    String end_date_timezone = Calendar.getInstance().getTimeZone().getID();
+
+                    i.putExtra("start_date_millis", start_date_millis);
+                    i.putExtra("end_date_millis", end_date_millis);
+                    i.putExtra("start_date_timezone", start_date_timezone);
+                    i.putExtra("end_date_timezone", end_date_timezone);
+                    i.putExtra("privacy", e.get_privacy());
+                    i.putExtra("isAllDay", e.get_isAllDay());
+                    i.putExtra("id", e.get_id());
+                    i.putExtra("request_code", request_code_edit_event);
+                    i.putExtra("key", e.get_id());
+                    ((Activity) c2).startActivityForResult(i, request_code_edit_event);
+                }
+                protected void onActivityResult(int requestCode, int resultCode, Intent data){
+                    Toast.makeText(c2, "Event creation cancelled.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            );
         }
 
     }
