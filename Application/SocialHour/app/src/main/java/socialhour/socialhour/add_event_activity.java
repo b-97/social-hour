@@ -22,29 +22,21 @@ import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import socialhour.socialhour.model.EventItem;
 
 public class add_event_activity extends frontend_activity {
-    private TimePicker time_picker;
 
-    int start_hour, end_hour;
-    int start_minute, end_minute;
 
     int current_year, current_month, current_day;
 
     final int PRIVACY_DEFAULT = 0;
-    final int PRIVACY_PUBLIC = 1;
-    final int PRIVACY_PRIVATE = 2;
+    final int PRIVACY_PRIVATE = 1;
+    final int PRIVACY_PUBLIC = 2;
     final String privacy_array[] = { "Default", "Private", "Public"};
 
     private static final int request_code_add_event = 5;
-    private static final int request_code_add_friend = 6;
-    private static final int request_code_add_group = 7;
-    private static final int request_code_edit_settings = 8;
     private static final int request_code_edit_event = 9;
 
     int event_privacy;
