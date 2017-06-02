@@ -164,6 +164,7 @@ public class frontend_activity extends AppCompatActivity {
                 String initiator_email = FirebaseData.decodeEmail(friend.get_initiator().get_email());
                 String acceptor_email = FirebaseData.decodeEmail(friend.get_acceptor().get_email());
                 String local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
                 if(initiator_email.compareTo(local_email) != 0 &&
                         acceptor_email.compareTo(local_email) != 0){
                     should_add_connection = false;
@@ -174,11 +175,11 @@ public class frontend_activity extends AppCompatActivity {
                     try {
                         f.updateAdapter();
                         if(friend.get_isAccepted()){
-                            if(initiator_email.compareTo(local_email) != 0){
-                                current_user_local.add_friend(friend.get_initiator());
+                            if(initiator_email.compareTo(local_email) == 0){
+                                current_user_local.add_friend(friend.get_acceptor());
                             }
                             else{
-                                current_user_local.add_friend(friend.get_acceptor());
+                                current_user_local.add_friend(friend.get_initiator());
                             }
                             private_user_database.setValue(current_user_local);
                         }
@@ -244,6 +245,7 @@ public class frontend_activity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot){
                 if(dataSnapshot.exists()){
                     try {
+                        current_user_local = new PrivateUserData();
                         current_user_local = dataSnapshot.getValue(PrivateUserData.class);
                     } catch(Exception e) {
                         Log.d("MainActivity", "Error! Failed to catch that exception!");
