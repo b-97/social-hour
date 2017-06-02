@@ -6,7 +6,7 @@ package socialhour.socialhour.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-
+import socialhour.socialhour.tools.FirebaseData;
 import static java.util.Collections.sort;
 
 public class PrivateUserData {
@@ -50,7 +50,7 @@ public class PrivateUserData {
 
 
     public String get_display_name(){return display_name;}
-    public String get_email(){return email;}
+    public String get_email(){return FirebaseData.decodeEmail(email);}
     public String get_photo(){return photo;}
     public String get_provider_id() {return provider_id;}
     public ArrayList<PublicUserData> get_friends_list() {return friends_list;}
@@ -80,10 +80,36 @@ public class PrivateUserData {
         sort(event_list);
     }
     public void add_friend(PublicUserData user){
+        if(friends_list == null){
+            friends_list = new ArrayList<PublicUserData>();
+        }
         friends_list.add(user);
         sort(friends_list);
     }
-
+    public void update_friend(PublicUserData user){
+        if(friends_list == null){
+            friends_list = new ArrayList<PublicUserData>();
+        }
+        for(int i = 0; i < friends_list.size(); i++){
+            if(FirebaseData.decodeEmail(user.get_email())
+                    .compareTo(FirebaseData.decodeEmail(email)) == 0){
+                friends_list.set(i, user);
+                break;
+            }
+        }
+    }
+    public boolean find_friend(String user_email){
+        if(friends_list != null) {
+            for(int i = 0; i < friends_list.size(); i++){
+                if(user_email
+                        .compareTo(FirebaseData.decodeEmail(friends_list.get(i).get_email())) == 0){
+                    return true;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 
     public void set_display_name(String display_name){this.display_name = display_name;}
     public void set_email(String email){this.email = email;}

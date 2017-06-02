@@ -36,12 +36,10 @@ public class EventData {
     public static void add_event_to_firebase(EventItem event){
         String key = eventDatabase.push().getKey();
         event.set_id(key);
-        eventDatabase.child(FirebaseData.encodeEmail(event.get_creator().get_email()))
-                .child(key).setValue(event);
+        eventDatabase.child(key).setValue(event);
     }
     public static void modify_event_to_firebase(EventItem event){
-        eventDatabase.child(FirebaseData.encodeEmail(event.get_creator().get_email()))
-                .child(event.get_id()).setValue(event);
+        eventDatabase.child(event.get_id()).setValue(event);
     }
     public static void modify_event_from_firebase(EventItem event){
         for(int i = 0; i < event_list.size(); i++){

@@ -79,100 +79,34 @@ public class frontend_activity extends AppCompatActivity {
     public static PrivateUserData current_user_local;
     private DatabaseReference mDatabase;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frontend_activity);
+    //Moving everything out here because this was being activated before the private user data
+    //was being loaded
 
-
-        //allows us to get data of the user currently logged into firebase.
-        current_user_firebase = FirebaseAuth.getInstance().getCurrentUser();
-
-
-        //Fire up the databases that depend on recyclers (events, friends, groups)
-        EventData.init();
-        FriendData.init();
-
-
-
-        //Set up the title bar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Social Hour");
-        setSupportActionBar(toolbar);
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-
-        //instance of FirebaseDatabase that all of the other databases will draw from.
-        fDatabase = FirebaseDatabase.getInstance();
-
-        //Grab the user's data from Google Firebase. This will allow us to change user settings
-        //later on, and have them persist throughout the application. If the data doesn't already
-        //exist, we'll make a new PrivateUserData and throw that shit in Google Firebase.
-        private_user_database = fDatabase.getReference("private_user_data/" +
-                encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
-        public_user_database = fDatabase.getReference("public_user_data/" +
-                encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
-        private_user_database.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot){
-                if(dataSnapshot.exists()){
-                    try {
-                        current_user_local = dataSnapshot.getValue(PrivateUserData.class);
-                    } catch(Exception e) {
-                        Log.d("MainActivity", "Error! Failed to catch that exception!");
-                    }
-                }
-                else{
-                    current_user_local = new PrivateUserData(current_user_firebase.getDisplayName(),
-                            encodeEmail(current_user_firebase.getEmail()),
-                            current_user_firebase.getPhotoUrl().toString(),
-                            current_user_firebase.getProviderId(), new ArrayList<PublicUserData>(),
-                            new ArrayList<GroupItem>(), new ArrayList<EventItem>());
-                    private_user_database.setValue(current_user_local);
-
-                }
-                public_user_database = fDatabase.getReference("public_user_data/" +
-                        encodeEmail(current_user_local.get_email()));
-                PublicUserData temp_user_data = new PublicUserData(current_user_local.get_photo(),
-                        current_user_local.get_display_name(), current_user_local.get_email());
-                public_user_database.setValue(temp_user_data);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError){
-                Log.w("ERROR", "loadPost:onCancelled", databaseError.toException());
-            }
-        });
-
-
-        //Grab all of the public events from Google Firebase. If the user is friends with an
-        //individual, the event will be placed on the user's feed.
-        public_event_database = fDatabase.getReference("public_event_data/" +
-                encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+    protected void addPublicEventListener(){
         public_event_database.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 EventItem event = dataSnapshot.getValue(EventItem.class);
-                boolean should_add_event = true;
+                boolean duplicate_event = false;
                 for(EventItem e : EventData.getListData()){
                     try {
                         if(e.get_id().compareTo(event.get_id()) == 0) {
-                            should_add_event = false;
+                            duplicate_event = true;
                         }
                     } catch (NullPointerException q) {
                         Log.d("FrontendActivity", "WARNING - ATTEMPT TO SEARCH NULL ARRAY");
                     }
-
                 }
-                if(should_add_event){
+                //If the creator is the local user
+                boolean user_or_friends = false;
+                String creator_email = FirebaseData.decodeEmail(event.get_creator().get_email());
+                if(creator_email.compareTo(current_user_local.get_email())== 0){
+                    user_or_friends = true;
+                }
+                else if(current_user_local.find_friend(creator_email)){
+                    user_or_friends = true;
+                }
+                if(!duplicate_event && user_or_friends){
                     EventData.add_event_from_firebase(event);
                     try {
                         d.updateAdapter();
@@ -201,8 +135,13 @@ public class frontend_activity extends AppCompatActivity {
                 Log.d("FAILED!!", null, null);
             }
         });
-
-        friend_connection_database = fDatabase.getReference("friend_data/");
+    }
+    /*
+        Establishes all of the friend connections between users. This isn't necessary for loading
+        the events for Dashboard, but rather for loading the Friends page. Dashboard friends are
+        monitored by the PrivateUserData class.
+     */
+    protected void addFriendEventListener(){
         friend_connection_database.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -233,19 +172,36 @@ public class frontend_activity extends AppCompatActivity {
                 if(should_add_connection){
                     FriendData.add_connection_from_firebase(friend);
                     try {
-                        f.updateAdapter();;
+                        f.updateAdapter();
+                        if(friend.get_isAccepted()){
+                            if(initiator_email.compareTo(local_email) != 0){
+                                current_user_local.add_friend(friend.get_initiator());
+                            }
+                            else{
+                                current_user_local.add_friend(friend.get_acceptor());
+                            }
+                            private_user_database.setValue(current_user_local);
+                        }
                     } catch (NullPointerException e) {
                         Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
                     }
                 }
 
             }
-
-            //TODO: Finish implementation of onChildChanged() and onChildRemoved.
-            //If onChildChanged, likely someone accepted the request.
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 FriendItem friend = dataSnapshot.getValue(FriendItem.class);
+                String initiator_email = FirebaseData.decodeEmail(friend.get_initiator().get_email());
+                String local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                if(friend.get_isAccepted()){
+                    if(initiator_email.compareTo(local_email) != 0){
+                        current_user_local.update_friend(friend.get_initiator());
+                    }
+                    else{
+                        current_user_local.update_friend(friend.get_acceptor());
+                    }
+                    private_user_database.setValue(current_user_local);
+                }
                 FriendData.update_friend(friend);
                 try {
                     f.updateAdapter();
@@ -274,6 +230,102 @@ public class frontend_activity extends AppCompatActivity {
                 Log.d("FAILED!!", null, null);
             }
         });
+    }
+
+    /*
+        This pulls all data down to Firebase, starting with the data that goes into the
+        PrivateUserData class, coming from private_user_database.
+
+        Calls addPublicEventListener and addFriendEventListener to pull necessary data when done.
+     */
+    protected void pullPrivateDataListener(){
+        private_user_database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot){
+                if(dataSnapshot.exists()){
+                    try {
+                        current_user_local = dataSnapshot.getValue(PrivateUserData.class);
+                    } catch(Exception e) {
+                        Log.d("MainActivity", "Error! Failed to catch that exception!");
+                    }
+                }
+                else{
+                    current_user_local = new PrivateUserData(current_user_firebase.getDisplayName(),
+                            encodeEmail(current_user_firebase.getEmail()),
+                            current_user_firebase.getPhotoUrl().toString(),
+                            current_user_firebase.getProviderId(), new ArrayList<PublicUserData>(),
+                            new ArrayList<GroupItem>(), new ArrayList<EventItem>());
+                    private_user_database.setValue(current_user_local);
+                }
+                public_user_database = fDatabase.getReference("public_user_data/" +
+                        encodeEmail(current_user_local.get_email()));
+                PublicUserData temp_user_data = new PublicUserData(current_user_local.get_photo(),
+                        current_user_local.get_display_name(), current_user_local.get_email());
+                public_user_database.setValue(temp_user_data);
+                addPublicEventListener();
+                addFriendEventListener();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError){
+                Log.w("ERROR", "loadPost:onCancelled", databaseError.toException());
+            }
+        });
+    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_frontend_activity);
+
+
+        //allows us to get data of the user currently logged into firebase.
+        current_user_firebase = FirebaseAuth.getInstance().getCurrentUser();
+
+        //Fire up the databases that depend on recyclers (events, friends, groups)
+        EventData.init();
+        FriendData.init();
+
+        //Set up the title bar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Social Hour");
+        setSupportActionBar(toolbar);
+
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
+
+        //instance of FirebaseDatabase that all of the other databases will draw from.
+        fDatabase = FirebaseDatabase.getInstance();
+
+        //Grab the user's data from Google Firebase. This will allow us to change user settings
+        //later on, and have them persist throughout the application. If the data doesn't already
+        //exist, we'll make a new PrivateUserData and throw that shit in Google Firebase.
+
+        /*
+               These four databases currently hold everything we're working with in Google Firebase.
+               private_user_database -
+                        Pushes the data it grabs to PrivateUserData, stored in
+                            static object current_user_local
+                        REQUIREMEMTS: ANY DATA CHANGE TO PrivateUserData MUST BE PUSHED TO
+                            private_user_database!
+               public_user_database -
+                        Manages all of the current users in the
+         */
+        private_user_database = fDatabase.getReference("private_user_data/" +
+                encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        public_user_database = fDatabase.getReference("public_user_data/" +
+                encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        public_event_database = fDatabase.getReference("public_event_data");
+        friend_connection_database = fDatabase.getReference("friend_data/");
+
+        //Pulls all of the necessary data from Google Firebase.
+        pullPrivateDataListener();
 
 
         //TODO: Implement Group Database
