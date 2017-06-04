@@ -86,18 +86,7 @@ public class PrivateUserData {
         friends_list.add(user);
         sort(friends_list);
     }
-    public void update_friend(PublicUserData user){
-        if(friends_list == null){
-            friends_list = new ArrayList<PublicUserData>();
-        }
-        for(int i = 0; i < friends_list.size(); i++){
-            if(FirebaseData.decodeEmail(user.get_email())
-                    .compareTo(FirebaseData.decodeEmail(email)) == 0){
-                friends_list.set(i, user);
-                break;
-            }
-        }
-    }
+
     public boolean find_friend(String user_email){
         if(friends_list != null) {
             for(int i = 0; i < friends_list.size(); i++){

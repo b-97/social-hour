@@ -375,10 +375,4 @@ public class add_event_activity extends frontend_activity {
         return true;
     }
 
-    public void setFields(EventItem e)
-    {
-
-    }
-
-
 }

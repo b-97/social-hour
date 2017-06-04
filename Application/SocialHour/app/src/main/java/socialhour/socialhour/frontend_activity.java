@@ -43,6 +43,7 @@ import socialhour.socialhour.model.PrivateUserData;
 import socialhour.socialhour.model.PublicUserData;
 import socialhour.socialhour.tools.FirebaseData;
 
+import static socialhour.socialhour.tools.FirebaseData.decodeEmail;
 import static socialhour.socialhour.tools.FirebaseData.encodeEmail;
 
 
@@ -77,7 +78,6 @@ public class frontend_activity extends AppCompatActivity {
 
     private FirebaseDatabase fDatabase;
     public static PrivateUserData current_user_local;
-    private DatabaseReference mDatabase;
 
     //Moving everything out here because this was being activated before the private user data
     //was being loaded
@@ -147,63 +147,105 @@ public class frontend_activity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 FriendItem friend = dataSnapshot.getValue(FriendItem.class);
 
-                //Here, we'll look at if the connection should be added.
-                boolean should_add_connection = true;
-
-                //If the connection is already in the database, we shouldn't add it.
-                for(FriendItem e : FriendData.getListData()){
-                    try {
-                        if(e.get_key().compareTo(friend.get_key()) == 0) {
-                            should_add_connection = false;
-                        }
-                    } catch (NullPointerException q) {
-                        Log.d("FrontendActivity", "WARNING - ATTEMPT TO SEARCH NULL ARRAY");
-                    }
-                }
-                //If the local user has nothing to do with the connection, we shouldn't add it.
+                //Strings that we'll use through the course of the algorithm.
                 String initiator_email = FirebaseData.decodeEmail(friend.get_initiator().get_email());
                 String acceptor_email = FirebaseData.decodeEmail(friend.get_acceptor().get_email());
+
+                //if getEmail() returns null we have a shit ton of problems
+                //TODO: Implement some sort of error code to return to the user to handle this
                 String local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
+
+                boolean relevant_connection = true;
                 if(initiator_email.compareTo(local_email) != 0 &&
                         acceptor_email.compareTo(local_email) != 0){
-                    should_add_connection = false;
-                }
-                //However, if we should add it,
-                if(should_add_connection){
-                    FriendData.add_connection_from_firebase(friend);
-                    try {
-                        f.updateAdapter();
-                        if(friend.get_isAccepted()){
-                            if(initiator_email.compareTo(local_email) == 0){
-                                current_user_local.add_friend(friend.get_acceptor());
-                            }
-                            else{
-                                current_user_local.add_friend(friend.get_initiator());
-                            }
-                            private_user_database.setValue(current_user_local);
-                        }
-                    } catch (NullPointerException e) {
-                        Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
-                    }
+                    relevant_connection = false;
                 }
 
+                //If the connection is already in the database, we shouldn't add it.
+                //Also, it's definitely a new connection if FriendData.getListData() is null.
+                boolean duplicate_connection = false;
+                if(relevant_connection && FriendData.getListData() != null) {
+                    for (FriendItem e : FriendData.getListData()) {
+                        if (e.get_key().compareTo(friend.get_key()) == 0) {
+                            duplicate_connection = true;
+                            break;
+                        }
+                    }
+                }
+                //However, if we should add it
+                if(relevant_connection && !duplicate_connection)
+                    FriendData.add_connection_from_firebase(friend);
+                //now, we'll check to see if there is a newly established friendship to the user
+                boolean new_friend_connection = true;
+                if(relevant_connection && !duplicate_connection && friend.get_isAccepted() &&
+                        current_user_local.get_friends_list() != null){
+                    ArrayList<PublicUserData> usrlist = current_user_local.get_friends_list();
+                    for(PublicUserData usr : usrlist) {
+                        if(decodeEmail(usr.get_email()).compareTo(acceptor_email) == 0  ||
+                            decodeEmail(usr.get_email()).compareTo(initiator_email) == 0){
+                            new_friend_connection = false;
+                            break;
+                        }
+                    }
+                }
+                if(new_friend_connection){
+                    if(initiator_email.compareTo(local_email) == 0){
+                        current_user_local.add_friend(friend.get_acceptor());
+                    }
+                    else{
+                        current_user_local.add_friend(friend.get_initiator());
+                    }
+                }
+                private_user_database.setValue(current_user_local);
+                try {
+                    f.updateAdapter();
+                } catch (NullPointerException e) {
+                    Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                }
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 FriendItem friend = dataSnapshot.getValue(FriendItem.class);
                 String initiator_email = FirebaseData.decodeEmail(friend.get_initiator().get_email());
+                String acceptor_email = FirebaseData.decodeEmail(friend.get_acceptor().get_email());
                 String local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                if(friend.get_isAccepted()){
-                    if(initiator_email.compareTo(local_email) != 0){
-                        current_user_local.update_friend(friend.get_initiator());
-                    }
-                    else{
-                        current_user_local.update_friend(friend.get_acceptor());
-                    }
-                    private_user_database.setValue(current_user_local);
+
+                //Test to see if at least one of the parties is the local user.
+                boolean relevant_connection = true;
+                if(initiator_email.compareTo(local_email) != 0 &&
+                        acceptor_email.compareTo(local_email) != 0){
+                    relevant_connection = false;
                 }
-                FriendData.update_friend(friend);
+                //If there is a friend connection and it's relevant, test to see if the user already
+                //has a local friend involved.
+                boolean new_friend_connection = true;
+                if(relevant_connection && friend.get_isAccepted()){
+                    ArrayList<PublicUserData> usrlist = current_user_local.get_friends_list();
+                    for(PublicUserData usr : usrlist) {
+                        if(decodeEmail(usr.get_email()).compareTo(acceptor_email) == 0  ||
+                                decodeEmail(usr.get_email()).compareTo(initiator_email) == 0){
+                            new_friend_connection = false;
+                            break;
+                        }
+                    }
+                }
+
+                if(relevant_connection){
+                    //If the connection at least involves the user, update it.
+                    FriendData.update_friend(friend);
+                    //If we should add a new friend, do so.
+                    if(new_friend_connection){
+                        if(initiator_email.compareTo(local_email) == 0){
+                            current_user_local.add_friend(friend.get_acceptor());
+                        }
+                        else{
+                            current_user_local.add_friend(friend.get_initiator());
+                        }
+                    }
+                }
+
+                //If this method is being called while we're on another activity, catch it.
                 try {
                     f.updateAdapter();
                 } catch (NullPointerException e) {
@@ -222,7 +264,6 @@ public class frontend_activity extends AppCompatActivity {
                     Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
                 }
             }
-
             //these methods never need to be properly overrided due to the nature of our database.
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
@@ -240,24 +281,19 @@ public class frontend_activity extends AppCompatActivity {
         Calls addPublicEventListener and addFriendEventListener to pull necessary data when done.
      */
     protected void pullPrivateDataListener(){
-        private_user_database.addListenerForSingleValueEvent(new ValueEventListener() {
+        private_user_database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
+                Toast.makeText(getApplicationContext(), "TRIGGERED", Toast.LENGTH_LONG).show();
                 if(dataSnapshot.exists()){
-                    try {
-                        current_user_local = new PrivateUserData();
-                        current_user_local = dataSnapshot.getValue(PrivateUserData.class);
-                    } catch(Exception e) {
-                        Log.d("MainActivity", "Error! Failed to catch that exception!");
-                    }
+                    current_user_local =  dataSnapshot.getValue(PrivateUserData.class);
                 }
-                else{
+                if(current_user_local == null){
                     current_user_local = new PrivateUserData(current_user_firebase.getDisplayName(),
                             encodeEmail(current_user_firebase.getEmail()),
                             current_user_firebase.getPhotoUrl().toString(),
                             current_user_firebase.getProviderId(), new ArrayList<PublicUserData>(),
                             new ArrayList<GroupItem>(), new ArrayList<EventItem>());
-                    private_user_database.setValue(current_user_local);
                 }
                 public_user_database = fDatabase.getReference("public_user_data/" +
                         encodeEmail(current_user_local.get_email()));
@@ -328,7 +364,6 @@ public class frontend_activity extends AppCompatActivity {
 
         //Pulls all of the necessary data from Google Firebase.
         pullPrivateDataListener();
-
 
         //TODO: Implement Group Database
         group_database = fDatabase.getReference("private_user_data/friends");
