@@ -155,7 +155,7 @@ public class frontend_activity extends AppCompatActivity {
                 //TODO: Implement some sort of error code to return to the user to handle this
                 String local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                 if(local_email == null){
-                    this.finish();
+                    finish();
                 }
 
                 boolean relevant_connection = true;
