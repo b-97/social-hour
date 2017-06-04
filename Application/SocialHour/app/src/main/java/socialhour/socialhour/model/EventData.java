@@ -54,9 +54,33 @@ public class EventData {
         sort(event_list, Collections.reverseOrder());
     }
 
-    //NOTE: EXTREMELY DANGEROUS TO USE AS FIREBASE SYNC ISN'T ADDED YET!!
-    public static void remove_event(int pos){
-        event_list.remove(pos);
+    //allows the user to remove an event with only an object known.
+    //returns true if event was removed, false otherwise.
+    public static boolean remove_event(EventItem event){
+        if(event_list != null){
+            for(int i = 0; i < event_list.size(); i++){
+                if(event_list.get(i).get_id().compareTo(event.get_id()) == 0){
+                    event_list.remove(i);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //allows the user to remove an event with the position known.
+    //returns true if event was removed, false otherwise.
+    public static boolean remove_event(int i){
+        //Structured in a flattened tree because event_list.size() will throw an exception if
+        //it's not there, and try/catches are computationally expensive
+        if(event_list == null)
+            return false;
+        else if (i >= event_list.size())
+            return false;
+        else{
+            event_list.remove(i);
+            return true;
+        }
     }
 
     public static int get_event_count() {

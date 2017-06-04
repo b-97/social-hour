@@ -73,6 +73,9 @@ public class edit_settings_activity extends frontend_activity
 
     ProgressDialog mProgress;
 
+    final int PRIVACY_PUBLIC = 1;
+    final int PRIVACY_PRIVATE = 2;
+
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -165,9 +168,9 @@ public class edit_settings_activity extends frontend_activity
         boolean is24hr = ((RadioButton) findViewById(R.id.radio_button_24hr)).isChecked();
         int privacy;
         if(((RadioButton) findViewById(R.id.radio_privacy_private)).isChecked())
-            privacy = 2;
+            privacy = PRIVACY_PRIVATE;
         else
-            privacy = 1;
+            privacy = PRIVACY_PUBLIC;
 
         data.putExtra("display_name", display_name);
         data.putExtra("is_24_hr", is24hr);

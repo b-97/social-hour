@@ -345,6 +345,10 @@ public class add_event_activity extends frontend_activity {
             data.putExtra("event_location", event_location);
             data.putExtra("is_all_day", isAllDay);
 
+            if(event_privacy == 0){
+                event_privacy = current_user_local.get_pref_default_privacy();
+            }
+
             data.putExtra("event_privacy", event_privacy);
 
             if(extras.getInt("request_code")==request_code_edit_event) {

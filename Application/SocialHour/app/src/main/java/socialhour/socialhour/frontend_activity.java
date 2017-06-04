@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -81,6 +82,8 @@ public class frontend_activity extends AppCompatActivity {
     private FirebaseDatabase fDatabase;
     public static PrivateUserData current_user_local;
 
+    final int PRIVACY_PUBLIC = 1;
+
     private String firebase_email;
 
     //Moving everything out here because this was being activated before the private user data
@@ -102,15 +105,16 @@ public class frontend_activity extends AppCompatActivity {
                     }
                 }
                 //If the creator either the local usr or one created by a friend
-                boolean user_or_friends = false;
+                boolean permissions = false;
                 String creator_email = FirebaseData.decodeEmail(event.get_creator().get_email());
                 if(creator_email.compareTo(current_user_local.get_email())== 0){
-                    user_or_friends = true;
+                    permissions = true;
                 }
-                else if(current_user_local.find_friend(creator_email)){
-                    user_or_friends = true;
+                else if(current_user_local.find_friend(creator_email) &&
+                        event.get_privacy() == PRIVACY_PUBLIC){
+                    permissions = true;
                 }
-                if(!duplicate_event && user_or_friends){
+                if(!duplicate_event && permissions){
                     EventData.add_event_from_firebase(event);
                     try {
                         d.updateAdapter();
@@ -123,7 +127,31 @@ public class frontend_activity extends AppCompatActivity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 EventItem event = dataSnapshot.getValue(EventItem.class);
-                EventData.modify_event_from_firebase(event);
+                boolean permissions = false;
+                String creator_email = FirebaseData.decodeEmail(event.get_creator().get_email());
+                if(creator_email.compareTo(current_user_local.get_email())== 0){
+                    permissions = true;
+                }
+                else if(current_user_local.find_friend(creator_email) &&
+                        event.get_privacy() == PRIVACY_PUBLIC){
+                    permissions = true;
+                }
+                boolean duplicate_event = false;
+                ArrayList<EventItem> list = EventData.getListData();
+                if(list != null) {
+                    for (EventItem e : list) {
+                        if (e.get_id().compareTo(event.get_id()) == 0) {
+                           duplicate_event = true;
+                        }
+                    }
+                }
+                if(permissions && duplicate_event)
+                    EventData.modify_event_from_firebase(event);
+                else if(permissions && !duplicate_event)
+                        EventData.add_event_from_firebase(event); //don't know why intellij is complaining
+                else if (!permissions && duplicate_event)
+                    EventData.remove_event(event);
+
                 try{
                     d.updateAdapter();
                 } catch (NullPointerException e){
