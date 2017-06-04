@@ -1,0 +1,287 @@
+{
+  "friend_data" : {
+    "-KlddAzyrzwRH3g9epxP" : {
+      "_acceptor" : {
+        "_display_name" : "Dylan Zeller",
+        "_email" : "dylanzeller98@gmail.com",
+        "_profile_picture" : "https://lh3.googleusercontent.com/-4kqbFy_3fdg/AAAAAAAAAAI/AAAAAAAAAAA/AHalGhoajaFTYWKogYXNdugci4fYaBbDSg/s96-c/photo.jpg"
+      },
+      "_initiated_date" : {
+        "date" : 2,
+        "day" : 5,
+        "hours" : 12,
+        "minutes" : 30,
+        "month" : 5,
+        "seconds" : 24,
+        "time" : 1496421024028,
+        "timezoneOffset" : 240,
+        "year" : 117
+      },
+      "_initiator" : {
+        "_display_name" : "Michael Rinehart",
+        "_email" : "mrinehart97@gmail.com",
+        "_profile_picture" : "https://lh3.googleusercontent.com/-6lFWNunyy1w/AAAAAAAAAAI/AAAAAAAAFic/3S6VwVCSJeU/s96-c/photo.jpg"
+      },
+      "_isAccepted" : true,
+      "_key" : "-KlddAzyrzwRH3g9epxP"
+    }
+  },
+  "private_user_data" : {
+    "dylanzeller98@gmail,com" : {
+      "_date_created" : {
+        "date" : 2,
+        "day" : 5,
+        "hours" : 12,
+        "minutes" : 0,
+        "month" : 5,
+        "seconds" : 53,
+        "time" : 1496419253889,
+        "timezoneOffset" : 240,
+        "year" : 117
+      },
+      "_display_name" : "Dylan Zeller",
+      "_email" : "dylanzeller98@gmail.com",
+      "_event_list" : [ {
+        "_creation_date" : {
+          "date" : 2,
+          "day" : 5,
+          "hours" : 12,
+          "minutes" : 1,
+          "month" : 5,
+          "seconds" : 35,
+          "time" : 1496419295105,
+          "timezoneOffset" : 240,
+          "year" : 117
+        },
+        "_creator" : {
+          "_display_name" : "Dylan Zeller",
+          "_email" : "dylanzeller98@gmail.com",
+          "_profile_picture" : "https://lh3.googleusercontent.com/-4kqbFy_3fdg/AAAAAAAAAAI/AAAAAAAAAAA/AHalGhoajaFTYWKogYXNdugci4fYaBbDSg/s96-c/photo.jpg"
+        },
+        "_end_date" : {
+          "date" : 2,
+          "day" : 5,
+          "hours" : 19,
+          "minutes" : 35,
+          "month" : 5,
+          "seconds" : 19,
+          "time" : 1496446519342,
+          "timezoneOffset" : 240,
+          "year" : 117
+        },
+        "_id" : "-KldXaBlXH59aWl2uEUm",
+        "_isAllDay" : false,
+        "_location" : "event",
+        "_name" : "test",
+        "_privacy" : 0,
+        "_start_date" : {
+          "date" : 2,
+          "day" : 5,
+          "hours" : 18,
+          "minutes" : 35,
+          "month" : 5,
+          "seconds" : 19,
+          "time" : 1496442919342,
+          "timezoneOffset" : 240,
+          "year" : 117
+        }
+      } ],
+      "_friends_list" : [ {
+        "_display_name" : "Michael Rinehart",
+        "_email" : "mrinehart97@gmail.com",
+        "_profile_picture" : "https://lh3.googleusercontent.com/-6lFWNunyy1w/AAAAAAAAAAI/AAAAAAAAFic/3S6VwVCSJeU/s96-c/photo.jpg"
+      } ],
+      "_photo" : "https://lh3.googleusercontent.com/-6lFWNunyy1w/AAAAAAAAAAI/AAAAAAAAFic/3S6VwVCSJeU/s96-c/photo.jpg",
+      "_pref_default_privacy" : 1,
+      "_pref_display_24hr" : false,
+      "_provider_id" : "firebase",
+      "publicData" : {
+        "_display_name" : "Dylan Zeller",
+        "_email" : "dyllanzeller98@gmail.com",
+        "_profile_picture" : "https://lh3.googleusercontent.com/-6lFWNunyy1w/AAAAAAAAAAI/AAAAAAAAFic/3S6VwVCSJeU/s96-c/photo.jpg"
+      }
+    },
+    "mrinehart97@gmail,com" : {
+      "PRIVACY_PRIVATE" : 2,
+      "PRIVACY_PUBLIC" : 1,
+      "_date_created" : {
+        "date" : 4,
+        "day" : 0,
+        "hours" : 16,
+        "minutes" : 16,
+        "month" : 5,
+        "seconds" : 45,
+        "time" : 1496607405033,
+        "timezoneOffset" : 240,
+        "year" : 117
+      },
+      "_display_name" : "Michael Rinehart",
+      "_email" : "mrinehart97@gmail.com",
+      "_event_list" : [ {
+        "_creation_date" : {
+          "date" : 4,
+          "day" : 0,
+          "hours" : 16,
+          "minutes" : 17,
+          "month" : 5,
+          "seconds" : 5,
+          "time" : 1496607425216,
+          "timezoneOffset" : 240,
+          "year" : 117
+        },
+        "_creator" : {
+          "_display_name" : "Michael Rinehart",
+          "_email" : "mrinehart97@gmail.com",
+          "_profile_picture" : "https://lh3.googleusercontent.com/-6lFWNunyy1w/AAAAAAAAAAI/AAAAAAAAFic/3S6VwVCSJeU/s96-c/photo.jpg"
+        },
+        "_end_date" : {
+          "date" : 4,
+          "day" : 0,
+          "hours" : 18,
+          "minutes" : 30,
+          "month" : 5,
+          "seconds" : 51,
+          "time" : 1496615451803,
+          "timezoneOffset" : 240,
+          "year" : 117
+        },
+        "_id" : "-KlokFOtRCUUuwyAPauJ",
+        "_isAllDay" : false,
+        "_location" : "event",
+        "_name" : "test",
+        "_privacy" : 0,
+        "_start_date" : {
+          "date" : 4,
+          "day" : 0,
+          "hours" : 17,
+          "minutes" : 30,
+          "month" : 5,
+          "seconds" : 51,
+          "time" : 1496611851803,
+          "timezoneOffset" : 240,
+          "year" : 117
+        }
+      } ],
+      "_friends_list" : [ {
+        "_display_name" : "Dylan Zeller",
+        "_email" : "dylanzeller98@gmail.com",
+        "_profile_picture" : "https://lh3.googleusercontent.com/-4kqbFy_3fdg/AAAAAAAAAAI/AAAAAAAAAAA/AHalGhoajaFTYWKogYXNdugci4fYaBbDSg/s96-c/photo.jpg"
+      } ],
+      "_photo" : "https://lh3.googleusercontent.com/-6lFWNunyy1w/AAAAAAAAAAI/AAAAAAAAFic/3S6VwVCSJeU/s96-c/photo.jpg",
+      "_pref_default_privacy" : 1,
+      "_pref_display_24hr" : false,
+      "_provider_id" : "firebase",
+      "publicData" : {
+        "_display_name" : "Michael Rinehart",
+        "_email" : "mrinehart97@gmail.com",
+        "_profile_picture" : "https://lh3.googleusercontent.com/-6lFWNunyy1w/AAAAAAAAAAI/AAAAAAAAFic/3S6VwVCSJeU/s96-c/photo.jpg"
+      }
+    }
+  },
+  "public_event_data" : {
+    "-Kloakx2xIyRk3Og2Bqn" : {
+      "_creation_date" : {
+        "date" : 4,
+        "day" : 0,
+        "hours" : 15,
+        "minutes" : 35,
+        "month" : 5,
+        "seconds" : 37,
+        "time" : 1496604937961,
+        "timezoneOffset" : 240,
+        "year" : 117
+      },
+      "_creator" : {
+        "_display_name" : "Michael Rinehart",
+        "_email" : "mrinehart97@gmail.com",
+        "_profile_picture" : "https://lh3.googleusercontent.com/-6lFWNunyy1w/AAAAAAAAAAI/AAAAAAAAFic/3S6VwVCSJeU/s96-c/photo.jpg"
+      },
+      "_description" : "UNIMPLEMENTED DESCRIPTION",
+      "_end_date" : {
+        "date" : 4,
+        "day" : 0,
+        "hours" : 18,
+        "minutes" : 31,
+        "month" : 5,
+        "seconds" : 29,
+        "time" : 1496615489280,
+        "timezoneOffset" : 240,
+        "year" : 117
+      },
+      "_id" : "-Kloakx2xIyRk3Og2Bqn",
+      "_isAllDay" : false,
+      "_location" : "event",
+      "_name" : "test",
+      "_privacy" : 0,
+      "_start_date" : {
+        "date" : 4,
+        "day" : 0,
+        "hours" : 17,
+        "minutes" : 31,
+        "month" : 5,
+        "seconds" : 29,
+        "time" : 1496611889280,
+        "timezoneOffset" : 240,
+        "year" : 117
+      }
+    },
+    "-KlokFOtRCUUuwyAPauJ" : {
+      "_creation_date" : {
+        "date" : 4,
+        "day" : 0,
+        "hours" : 16,
+        "minutes" : 17,
+        "month" : 5,
+        "seconds" : 5,
+        "time" : 1496607425216,
+        "timezoneOffset" : 240,
+        "year" : 117
+      },
+      "_creator" : {
+        "_display_name" : "Dylan Zeller",
+        "_email" : "dylanzeller98@gmail.com",
+        "_profile_picture" : "https://lh3.googleusercontent.com/-4kqbFy_3fdg/AAAAAAAAAAI/AAAAAAAAAAA/AHalGhoajaFTYWKogYXNdugci4fYaBbDSg/s96-c/photo.jpg"
+      },
+      "_description" : "UNIMPLEMENTED DESCRIPTION",
+      "_end_date" : {
+        "date" : 4,
+        "day" : 0,
+        "hours" : 18,
+        "minutes" : 30,
+        "month" : 5,
+        "seconds" : 51,
+        "time" : 1496615451803,
+        "timezoneOffset" : 240,
+        "year" : 117
+      },
+      "_id" : "-KlokFOtRCUUuwyAPauJ",
+      "_isAllDay" : false,
+      "_location" : "event",
+      "_name" : "test",
+      "_privacy" : 0,
+      "_start_date" : {
+        "date" : 4,
+        "day" : 0,
+        "hours" : 17,
+        "minutes" : 30,
+        "month" : 5,
+        "seconds" : 51,
+        "time" : 1496611851803,
+        "timezoneOffset" : 240,
+        "year" : 117
+      }
+    }
+  },
+  "public_user_data" : {
+    "dylanzeller98@gmail,com" : {
+      "_display_name" : "Dylan Zeller",
+      "_email" : "dylanzeller98@gmail.com",
+      "_profile_picture" : "https://lh3.googleusercontent.com/-4kqbFy_3fdg/AAAAAAAAAAI/AAAAAAAAAAA/AHalGhoajaFTYWKogYXNdugci4fYaBbDSg/s96-c/photo.jpg"
+    },
+    "mrinehart97@gmail,com" : {
+      "_display_name" : "Michael Rinehart",
+      "_email" : "mrinehart97@gmail.com",
+      "_profile_picture" : "https://lh3.googleusercontent.com/-6lFWNunyy1w/AAAAAAAAAAI/AAAAAAAAFic/3S6VwVCSJeU/s96-c/photo.jpg"
+    }
+  }
+}

@@ -101,7 +101,7 @@ public class frontend_activity extends AppCompatActivity {
                         Log.d("FrontendActivity", "WARNING - ATTEMPT TO SEARCH NULL ARRAY");
                     }
                 }
-                //If the creator is the local user
+                //If the creator either the local usr or one created by a friend
                 boolean user_or_friends = false;
                 String creator_email = FirebaseData.decodeEmail(event.get_creator().get_email());
                 if(creator_email.compareTo(current_user_local.get_email())== 0){
