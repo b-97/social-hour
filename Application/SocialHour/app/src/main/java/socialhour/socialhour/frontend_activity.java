@@ -81,7 +81,7 @@ public class frontend_activity extends AppCompatActivity {
     private FirebaseDatabase fDatabase;
     public static PrivateUserData current_user_local;
 
-    private String local_email;
+    private String firebase_email;
 
     //Moving everything out here because this was being activated before the private user data
     //was being loaded
@@ -159,8 +159,8 @@ public class frontend_activity extends AppCompatActivity {
                 //TODO: Implement some sort of error code to return to the user to handle this
 
                 boolean relevant_connection = true;
-                if(initiator_email.compareTo(local_email) != 0 &&
-                        acceptor_email.compareTo(local_email) != 0){
+                if(initiator_email.compareTo(firebase_email) != 0 &&
+                        acceptor_email.compareTo(firebase_email) != 0){
                     relevant_connection = false;
                 }
 
@@ -192,7 +192,7 @@ public class frontend_activity extends AppCompatActivity {
                     }
                 }
                 if(new_friend_connection){
-                    if(initiator_email.compareTo(local_email) == 0){
+                    if(initiator_email.compareTo(firebase_email) == 0){
                         current_user_local.add_friend(friend.get_acceptor());
                     }
                     else{
@@ -286,9 +286,8 @@ public class frontend_activity extends AppCompatActivity {
         private_user_database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
-                Toast.makeText(getApplicationContext(), "TRIGGERED", Toast.LENGTH_LONG).show();
-                if(dataSnapshot.exists()){
-                    current_user_local =  dataSnapshot.getValue(PrivateUserData.class);
+                if(dataSnapshot.exists()) {
+                    current_user_local = dataSnapshot.getValue(PrivateUserData.class);
                 }
                 if(current_user_local == null){
                     current_user_local = new PrivateUserData(current_user_firebase.getDisplayName(),
@@ -303,8 +302,8 @@ public class frontend_activity extends AppCompatActivity {
                         current_user_local.get_display_name(), current_user_local.get_email());
                 public_user_database.setValue(temp_user_data);
                 if(firstRun) {
-                    addPublicEventListener();
                     addFriendEventListener();
+                    addPublicEventListener();
                 }
                 firstRun = false;
             }
@@ -323,8 +322,8 @@ public class frontend_activity extends AppCompatActivity {
         //allows us to get data of the user currently logged into firebase.
         current_user_firebase = FirebaseAuth.getInstance().getCurrentUser();
 
-        local_email = current_user_firebase.getEmail();
-        if(local_email == null){
+        firebase_email = current_user_firebase.getEmail();
+        if(firebase_email == null){
             Toast.makeText(getApplicationContext(),
                     "ERROR: Not logged in! Sending back to main activity",
                     Toast.LENGTH_SHORT).show();
@@ -369,9 +368,9 @@ public class frontend_activity extends AppCompatActivity {
          */
 
         private_user_database = fDatabase.getReference("private_user_data/" +
-                encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                encodeEmail(firebase_email));
         public_user_database = fDatabase.getReference("public_user_data/" +
-                encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                encodeEmail(firebase_email));
         public_event_database = fDatabase.getReference("public_event_data");
         friend_connection_database = fDatabase.getReference("friend_data/");
 

@@ -96,7 +96,7 @@ public class PrivateUserData {
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public void set_display_name(String display_name){this.display_name = display_name;}
