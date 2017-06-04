@@ -69,6 +69,8 @@ public class frontend_activity extends AppCompatActivity {
 
     private FirebaseUser current_user_firebase;
 
+    private boolean firstRun;
+
     private DatabaseReference public_event_database;
     private DatabaseReference private_user_database;
     private DatabaseReference public_user_database;
@@ -78,6 +80,8 @@ public class frontend_activity extends AppCompatActivity {
 
     private FirebaseDatabase fDatabase;
     public static PrivateUserData current_user_local;
+
+    private String local_email;
 
     //Moving everything out here because this was being activated before the private user data
     //was being loaded
@@ -153,10 +157,6 @@ public class frontend_activity extends AppCompatActivity {
 
                 //if getEmail() returns null we have a shit ton of problems
                 //TODO: Implement some sort of error code to return to the user to handle this
-                String local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                if(local_email == null){
-                    finish();
-                }
 
                 boolean relevant_connection = true;
                 if(initiator_email.compareTo(local_email) != 0 &&
@@ -198,8 +198,8 @@ public class frontend_activity extends AppCompatActivity {
                     else{
                         current_user_local.add_friend(friend.get_initiator());
                     }
+                    private_user_database.setValue(current_user_local);
                 }
-                private_user_database.setValue(current_user_local);
                 try {
                     f.updateAdapter();
                 } catch (NullPointerException e) {
@@ -302,8 +302,11 @@ public class frontend_activity extends AppCompatActivity {
                 PublicUserData temp_user_data = new PublicUserData(current_user_local.get_photo(),
                         current_user_local.get_display_name(), current_user_local.get_email());
                 public_user_database.setValue(temp_user_data);
-                addPublicEventListener();
-                addFriendEventListener();
+                if(firstRun) {
+                    addPublicEventListener();
+                    addFriendEventListener();
+                }
+                firstRun = false;
             }
             @Override
             public void onCancelled(DatabaseError databaseError){
@@ -320,6 +323,13 @@ public class frontend_activity extends AppCompatActivity {
         //allows us to get data of the user currently logged into firebase.
         current_user_firebase = FirebaseAuth.getInstance().getCurrentUser();
 
+        local_email = current_user_firebase.getEmail();
+        if(local_email == null){
+            Toast.makeText(getApplicationContext(),
+                    "ERROR: Not logged in! Sending back to main activity",
+                    Toast.LENGTH_SHORT).show();
+            finish();
+        }
         //Fire up the databases that depend on recyclers (events, friends, groups)
         EventData.init();
         FriendData.init();
@@ -357,6 +367,7 @@ public class frontend_activity extends AppCompatActivity {
                public_user_database -
                         Manages all of the current users in the
          */
+
         private_user_database = fDatabase.getReference("private_user_data/" +
                 encodeEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
         public_user_database = fDatabase.getReference("public_user_data/" +
@@ -365,6 +376,7 @@ public class frontend_activity extends AppCompatActivity {
         friend_connection_database = fDatabase.getReference("friend_data/");
 
         //Pulls all of the necessary data from Google Firebase.
+        firstRun = true;
         pullPrivateDataListener();
 
         //TODO: Implement Group Database
