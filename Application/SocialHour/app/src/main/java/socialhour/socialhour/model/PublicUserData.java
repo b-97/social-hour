@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 
 /**
- * Created by michael on 5/3/17.
+ * Simple wrapper for public user data.
+ * Includes an email address, display name, and profile picture to display.
+ * TODO: INCORPORATE A USER KEY GENERATED FROM FIREBASE RATHER THAN EMAIL
  */
 
 public class PublicUserData implements Comparable<PublicUserData>{

@@ -41,13 +41,13 @@ public class EventData {
     public static void modify_event_to_firebase(EventItem event){
         eventDatabase.child(event.get_id()).setValue(event);
     }
-    public static void modify_event_from_firebase(EventItem event){
-        for(int i = 0; i < event_list.size(); i++){
-            if(event_list.get(i).get_id().compareTo(event.get_id()) == 0){
-                event_list.set(i, event);
-                sort(event_list, Collections.<EventItem>reverseOrder());
-            }
-        }
+    public static boolean modify_event_from_firebase(EventItem event){
+        int i = find_event(event);
+        if (i == -1)
+            return false;
+        event_list.set(i, event);
+        sort(event_list, Collections.<EventItem>reverseOrder());
+        return true;
     }
     public static void add_event_from_firebase(EventItem event){
         event_list.add(event);
@@ -57,17 +57,25 @@ public class EventData {
     //allows the user to remove an event with only an object known.
     //returns true if event was removed, false otherwise.
     public static boolean remove_event(EventItem event){
-        if(event_list != null){
-            for(int i = 0; i < event_list.size(); i++){
-                if(event_list.get(i).get_id().compareTo(event.get_id()) == 0){
-                    event_list.remove(i);
-                    return true;
-                }
-            }
-        }
-        return false;
+        int i = find_event(event);
+        if(i == -1)
+            return false;
+        //else
+        event_list.remove(i);
+        return true;
     }
 
+    //allows the user to get the index of an event with only an object known.
+    //returns -1 if not found or null event_list, the index of the event if found.
+    public static int find_event(EventItem event){
+        if(event_list != null){
+            for(int i = 0; i < event_list.size(); i++){
+                if(event_list.get(i).get_id().compareTo(event.get_id()) == 0)
+                    return i;
+            }
+        }
+        return -1;
+    }
     //allows the user to remove an event with the position known.
     //returns true if event was removed, false otherwise.
     public static boolean remove_event(int i){

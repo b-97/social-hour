@@ -95,14 +95,8 @@ public class frontend_activity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 EventItem event = dataSnapshot.getValue(EventItem.class);
                 boolean duplicate_event = false;
-                for(EventItem e : EventData.getListData()){
-                    try {
-                        if(e.get_id().compareTo(event.get_id()) == 0) {
-                            duplicate_event = true;
-                        }
-                    } catch (NullPointerException q) {
-                        Log.d("FrontendActivity", "WARNING - ATTEMPT TO SEARCH NULL ARRAY");
-                    }
+                if(EventData.find_event(event) != -1){
+                    duplicate_event = true;
                 }
                 //If the creator either the local usr or one created by a friend
                 boolean permissions = false;
@@ -127,29 +121,29 @@ public class frontend_activity extends AppCompatActivity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 EventItem event = dataSnapshot.getValue(EventItem.class);
+
+                //This bit of code calculates whether the user is the event creator, or if the user
+                //is friends with the creator and they have it set to public.
                 boolean permissions = false;
                 String creator_email = FirebaseData.decodeEmail(event.get_creator().get_email());
-                if(creator_email.compareTo(current_user_local.get_email())== 0){
+                if(creator_email.compareTo(current_user_local.get_email())== 0)
                     permissions = true;
-                }
                 else if(current_user_local.find_friend(creator_email) &&
-                        event.get_privacy() == PRIVACY_PUBLIC){
+                        event.get_privacy() == PRIVACY_PUBLIC)
                     permissions = true;
-                }
+
+                //This bit of code checks whether or no
                 boolean duplicate_event = false;
-                ArrayList<EventItem> list = EventData.getListData();
-                if(list != null) {
-                    for (EventItem e : list) {
-                        if (e.get_id().compareTo(event.get_id()) == 0) {
-                           duplicate_event = true;
-                        }
-                    }
+                if(EventData.find_event(event) != -1){
+                    duplicate_event = true;
                 }
-                if(permissions && duplicate_event)
+
+                //Dunno why intellij is crying; we've literally hit the two lower test conditions
+                if(permissions && duplicate_event) //event is cool there, we just need to update
                     EventData.modify_event_from_firebase(event);
-                else if(permissions && !duplicate_event)
-                        EventData.add_event_from_firebase(event); //don't know why intellij is complaining
-                else if (!permissions && duplicate_event)
+                else if(permissions && !duplicate_event) //reached if the user gains permissions
+                        EventData.add_event_from_firebase(event);
+                else if (!permissions && duplicate_event) //reached if the event goes private
                     EventData.remove_event(event);
 
                 try{
@@ -159,7 +153,15 @@ public class frontend_activity extends AppCompatActivity {
                 }
             }
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                EventItem event = dataSnapshot.getValue(EventItem.class);
+                EventData.remove_event(event);
+                try{
+                    d.updateAdapter();
+                } catch(NullPointerException e){
+                    Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                }
+            }
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             @Override
