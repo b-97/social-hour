@@ -234,16 +234,8 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_in_button:
-                signIn();
-                break;
-            /*case R.id.sign_out_button:
-                signOut();
-                break;
-            case R.id.disconnect_button:
-                revokeAccess();
-                break;*/
+        if(v.getId() == R.id.sign_in_button){
+            signIn();
         }
     }
 
