@@ -57,8 +57,6 @@ public class add_friends_activity extends frontend_activity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Toast.makeText(getBaseContext(), friends.toString(), Toast.LENGTH_SHORT).show();
-
         lDatabase = FirebaseDatabase.getInstance().getReference("public_user_data");
 
         lDatabase.addChildEventListener(new ChildEventListener() {

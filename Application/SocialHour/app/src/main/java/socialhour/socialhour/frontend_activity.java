@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -29,8 +28,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -146,12 +143,14 @@ public class frontend_activity extends AppCompatActivity {
                 else if (!permissions && duplicate_event) //reached if the event goes private
                     EventData.remove_event(event);
 
+                //This lets us modify the adapter without worrying about getting knocked out
                 try{
                     d.updateAdapter();
                 } catch (NullPointerException e){
                     Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
                 }
             }
+            //If the event no longer exists, let's get rid of it
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 EventItem event = dataSnapshot.getValue(EventItem.class);
@@ -305,6 +304,7 @@ public class frontend_activity extends AppCompatActivity {
             }
         });
     }
+
 
     /*
         This pulls all data down to Firebase, starting with the data that goes into the
@@ -481,7 +481,9 @@ public class frontend_activity extends AppCompatActivity {
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            ArrayList<String> friend_list = FriendData.get_friends(current_user_local.get_email());
                             Intent i = new Intent(getApplicationContext(), add_group_activity.class);
+                            i.putStringArrayListExtra("email_list", friend_list);
                             startActivityForResult(i, request_code_add_group);
                         }
                     });

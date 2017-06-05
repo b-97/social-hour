@@ -32,14 +32,12 @@ import static socialhour.socialhour.frontend_activity.current_user_local;
  * Created by michael on 5/3/17.
  */
 
-public class Public_User_Search_Adapter extends RecyclerView.Adapter<Public_User_Search_Adapter.ViewHolder>
-        implements Filterable{
+public class Public_User_Search_Adapter
+        extends RecyclerView.Adapter<Public_User_Search_Adapter.ViewHolder> implements Filterable{
     private ArrayList<PublicUserData> fArrayList;
     private ArrayList<PublicUserData> fFilteredList;
     private ArrayList<String> requests;
     private  Context context;
-    private DatabaseReference lDatabase =
-            FirebaseDatabase.getInstance().getReference("friend_data");
 
     public Public_User_Search_Adapter(ArrayList<PublicUserData> arrayList, Context context, ArrayList<String> requests) {
         fArrayList = arrayList;
