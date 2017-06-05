@@ -117,15 +117,6 @@ public class PrivateUserData {
         }
         return -1;
     }
-    public ArrayList<String> get_string_array_list(){
-        ArrayList<String> out = new ArrayList<String>();
-        if(friends_list != null){
-            for(int i = 0; i < friends_list.size(); i++){
-                out.add(FirebaseData.decodeEmail(friends_list.get(i).get_email()));
-            }
-        }
-        return out;
-    }
 
     public void set_display_name(String display_name){this.display_name = display_name;}
     public void set_email(String email){this.email = email;}

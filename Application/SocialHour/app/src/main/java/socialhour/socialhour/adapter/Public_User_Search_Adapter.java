@@ -36,14 +36,27 @@ public class Public_User_Search_Adapter extends RecyclerView.Adapter<Public_User
         implements Filterable{
     private ArrayList<PublicUserData> fArrayList;
     private ArrayList<PublicUserData> fFilteredList;
+    private ArrayList<String> requests;
     private  Context context;
     private DatabaseReference lDatabase =
             FirebaseDatabase.getInstance().getReference("friend_data");
 
-    public Public_User_Search_Adapter(ArrayList<PublicUserData> arrayList, Context context) {
+    public Public_User_Search_Adapter(ArrayList<PublicUserData> arrayList, Context context, ArrayList<String> requests) {
         fArrayList = arrayList;
         fFilteredList = arrayList;
         this.context = context;
+        this.requests = requests;
+    }
+
+    public boolean if_request(String email){
+        if(requests != null){
+            for(int i = 0; i < requests.size(); i++){
+                if(FirebaseData.decodeEmail(email)
+                        .compareTo(FirebaseData.decodeEmail(requests.get(i))) == 0)
+                    return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -57,6 +70,12 @@ public class Public_User_Search_Adapter extends RecyclerView.Adapter<Public_User
         viewHolder.friends_text.setText(fFilteredList.get(i).get_display_name() + " (" +
                 fFilteredList.get(i).get_email() +")");
         viewHolder.friend = fFilteredList.get(i);
+        if(if_request(fFilteredList.get(i).get_email())){
+            viewHolder.add_button.setImageResource(R.drawable.ic_timer_black_24dp);
+        }
+        else{
+            viewHolder.add_button.setImageResource(R.drawable.ic_add_black_24dp);
+        }
         Picasso.with(context).load(fFilteredList.get(i).get_profile_picture()).into(viewHolder.imageView);
     }
 
@@ -116,6 +135,7 @@ public class Public_User_Search_Adapter extends RecyclerView.Adapter<Public_User
                     if(!ifConnectionExists(friend)){
                         new_connection = new FriendItem(publicData, friend, new Date(), null, false);
                         FriendData.add_connection_to_firebase(new_connection);
+                        add_button.setImageResource(R.drawable.ic_timer_black_24dp);
                     }
                 }
             });

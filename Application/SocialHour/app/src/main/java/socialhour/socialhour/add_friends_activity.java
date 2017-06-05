@@ -45,9 +45,9 @@ public class add_friends_activity extends frontend_activity {
         Bundle bundle = getIntent().getExtras();
         final ArrayList<String> friends = bundle.getStringArrayList("email_list");
         final ArrayList<String> requests = bundle.getStringArrayList("request_list");
-        
+
         fArrayList = new ArrayList<PublicUserData>();
-        friendAdapter = new Public_User_Search_Adapter(fArrayList, this.getApplicationContext());
+        friendAdapter = new Public_User_Search_Adapter(fArrayList, this.getApplicationContext(), requests);
 
         result_recycler_view = (RecyclerView) findViewById(R.id.result_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -56,6 +56,8 @@ public class add_friends_activity extends frontend_activity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Toast.makeText(getBaseContext(), friends.toString(), Toast.LENGTH_SHORT).show();
 
         lDatabase = FirebaseDatabase.getInstance().getReference("public_user_data");
 
@@ -69,12 +71,6 @@ public class add_friends_activity extends frontend_activity {
                     should_add_friend = false;
                 if(friends != null) {
                     for (String email : friends) {
-                        if (email.compareTo(user.get_email()) == 0)
-                            should_add_friend = false;
-                    }
-                }
-                if(requests != null){
-                    for (String email : requests) {
                         if (email.compareTo(user.get_email()) == 0)
                             should_add_friend = false;
                     }

@@ -464,7 +464,7 @@ public class frontend_activity extends AppCompatActivity {
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ArrayList<String> friend_list = current_user_local.get_string_array_list();
+                            ArrayList<String> friend_list = FriendData.get_friends(current_user_local.get_email());
                             ArrayList<String> request_list = FriendData.get_requests
                                     (FirebaseData.decodeEmail(current_user_local.get_email()));
                             Intent i = new Intent(getApplicationContext(), add_friends_activity.class);

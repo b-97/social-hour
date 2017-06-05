@@ -62,6 +62,10 @@ public class FriendData{
                 friend_list.remove(f);
         }
     }
+    /*
+        Gets an arraylist all of the email addresses where there is a friend request with the user,
+        yet not accepted. Particularly good for transitioning data between activities.
+     */
     public static ArrayList<String> get_requests(String email){
         ArrayList<String> out = new ArrayList<>();
         if(friend_list != null){
@@ -69,10 +73,31 @@ public class FriendData{
                 if(!friend_list.get(i).get_isAccepted()){
                     if(FirebaseData.decodeEmail(friend_list.get(i).get_initiator().get_email())
                             .compareTo(FirebaseData.decodeEmail(email)) == 0){
-                        out.add(friend_list.get(i).get_initiator().get_email());
+                        out.add(friend_list.get(i).get_acceptor().get_email());
                     }
                     else{
+                        out.add(friend_list.get(i).get_initiator().get_email());
+                    }
+                }
+            }
+        }
+        return out;
+    }
+    /*
+        Gets an arraylist of all of the email addresses where a friend request has been accepted.
+        Particularly good for transitioning data between activities.
+     */
+    public static ArrayList<String> get_friends(String email){
+        ArrayList<String> out = new ArrayList<>();
+        if(friend_list != null){
+            for(int i = 0; i < friend_list.size(); i++){
+                if(friend_list.get(i).get_isAccepted()){
+                    if(FirebaseData.decodeEmail(friend_list.get(i).get_initiator().get_email())
+                            .compareTo(FirebaseData.decodeEmail(email)) == 0){
                         out.add(friend_list.get(i).get_acceptor().get_email());
+                    }
+                    else{
+                        out.add(friend_list.get(i).get_initiator().get_email());
                     }
                 }
             }
