@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -104,7 +105,7 @@ public class frontend_activity extends AppCompatActivity {
                 if(creator_email.compareTo(current_user_local.get_email())== 0){
                     permissions = true;
                 }
-                else if(current_user_local.find_friend(creator_email) &&
+                else if(current_user_local.find_friend(event.get_creator()) != -1 &&
                         event.get_privacy() == PRIVACY_PUBLIC){
                     permissions = true;
                 }
@@ -116,7 +117,6 @@ public class frontend_activity extends AppCompatActivity {
                         Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
                     }
                 }
-
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -128,7 +128,7 @@ public class frontend_activity extends AppCompatActivity {
                 String creator_email = FirebaseData.decodeEmail(event.get_creator().get_email());
                 if(creator_email.compareTo(current_user_local.get_email())== 0)
                     permissions = true;
-                else if(current_user_local.find_friend(creator_email) &&
+                else if(current_user_local.find_friend(event.get_creator()) != -1 &&
                         event.get_privacy() == PRIVACY_PUBLIC)
                     permissions = true;
 
@@ -464,7 +464,12 @@ public class frontend_activity extends AppCompatActivity {
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            ArrayList<String> friend_list = current_user_local.get_string_array_list();
+                            ArrayList<String> request_list = FriendData.get_requests
+                                    (FirebaseData.decodeEmail(current_user_local.get_email()));
                             Intent i = new Intent(getApplicationContext(), add_friends_activity.class);
+                            i.putStringArrayListExtra("email_list", friend_list);
+                            i.putStringArrayListExtra("request_list", request_list);
                             startActivityForResult(i, request_code_add_friend);
                         }
                     });

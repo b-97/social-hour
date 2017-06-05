@@ -1,5 +1,6 @@
 package socialhour.socialhour;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -17,9 +19,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import socialhour.socialhour.adapter.Public_User_Search_Adapter;
+import socialhour.socialhour.model.FriendData;
+import socialhour.socialhour.model.PrivateUserData;
 import socialhour.socialhour.model.PublicUserData;
 
 import static socialhour.socialhour.tools.FirebaseData.decodeEmail;
@@ -32,14 +37,17 @@ public class add_friends_activity extends frontend_activity {
     private ArrayList<PublicUserData> fArrayList;
     private boolean finished = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends_activity);
-
+        Bundle bundle = getIntent().getExtras();
+        final ArrayList<String> friends = bundle.getStringArrayList("email_list");
+        final ArrayList<String> requests = bundle.getStringArrayList("request_list");
+        
         fArrayList = new ArrayList<PublicUserData>();
         friendAdapter = new Public_User_Search_Adapter(fArrayList, this.getApplicationContext());
-
 
         result_recycler_view = (RecyclerView) findViewById(R.id.result_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -49,15 +57,29 @@ public class add_friends_activity extends frontend_activity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         lDatabase = FirebaseDatabase.getInstance().getReference("public_user_data");
 
         lDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 PublicUserData user = dataSnapshot.getValue(PublicUserData.class);
-                if(decodeEmail(user.get_email()).compareTo(
-                        decodeEmail(current_user_local.get_email())) != 0) {
+                boolean should_add_friend = true;
+                if(decodeEmail(user.get_email())
+                        .compareTo(decodeEmail(frontend_activity.current_user_local.get_email())) == 0)
+                    should_add_friend = false;
+                if(friends != null) {
+                    for (String email : friends) {
+                        if (email.compareTo(user.get_email()) == 0)
+                            should_add_friend = false;
+                    }
+                }
+                if(requests != null){
+                    for (String email : requests) {
+                        if (email.compareTo(user.get_email()) == 0)
+                            should_add_friend = false;
+                    }
+                }
+                if(should_add_friend) {
                     fArrayList.add(user);
                     friendAdapter.getFilter().filter("");
                     friendAdapter.notifyDataSetChanged();

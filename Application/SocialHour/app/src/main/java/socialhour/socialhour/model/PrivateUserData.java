@@ -32,12 +32,12 @@ public class PrivateUserData {
         this.email = email;
         this.photo = photo;
         this.provider_id = provider_id;
-        friends_list = new ArrayList<PublicUserData>(p_friends_list);
-        group_list = new ArrayList<GroupItem>(p_group_list);
-        event_list = new ArrayList<EventItem>(p_event_list);
-        date_created = new Date();
+        this.friends_list = p_friends_list;
+        this.group_list = p_group_list;
+        this.event_list = p_event_list;
+        this.date_created = new Date();
         this.pref_display_24hr = false;
-        pref_default_privacy = PRIVACY_PUBLIC;
+        this.pref_default_privacy = PRIVACY_PUBLIC;
     }
 
     public PrivateUserData(){
@@ -87,16 +87,44 @@ public class PrivateUserData {
         sort(friends_list);
     }
 
-    public boolean find_friend(String user_email){
+    public boolean is_user(PublicUserData user){
+        if(FirebaseData.decodeEmail(user.get_email())
+                .compareTo(FirebaseData.decodeEmail(email)) == 0)
+            return true;
+        else
+            return false;
+    }
+
+    public int find_friend(PublicUserData user){
         if(friends_list != null) {
             for(int i = 0; i < friends_list.size(); i++){
-                if(user_email
+                if(FirebaseData.decodeEmail(user.get_email())
                         .compareTo(FirebaseData.decodeEmail(friends_list.get(i).get_email())) == 0){
-                    return true;
+                    return i;
                 }
             }
         }
-        return true;
+        return -1;
+    }
+    public int find_friend(String email){
+        if(friends_list != null) {
+            for(int i = 0; i < friends_list.size(); i++){
+                if(FirebaseData.decodeEmail(email)
+                        .compareTo(FirebaseData.decodeEmail(friends_list.get(i).get_email())) == 0){
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+    public ArrayList<String> get_string_array_list(){
+        ArrayList<String> out = new ArrayList<String>();
+        if(friends_list != null){
+            for(int i = 0; i < friends_list.size(); i++){
+                out.add(FirebaseData.decodeEmail(friends_list.get(i).get_email()));
+            }
+        }
+        return out;
     }
 
     public void set_display_name(String display_name){this.display_name = display_name;}

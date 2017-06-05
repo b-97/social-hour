@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import socialhour.socialhour.tools.FirebaseData;
+
 public class FriendData{
     private static DatabaseReference friendDatabase;
 
@@ -59,6 +61,23 @@ public class FriendData{
             if(f.get_key().compareTo(key) == 0)
                 friend_list.remove(f);
         }
+    }
+    public static ArrayList<String> get_requests(String email){
+        ArrayList<String> out = new ArrayList<>();
+        if(friend_list != null){
+            for(int i = 0; i < friend_list.size(); i++){
+                if(!friend_list.get(i).get_isAccepted()){
+                    if(FirebaseData.decodeEmail(friend_list.get(i).get_initiator().get_email())
+                            .compareTo(FirebaseData.decodeEmail(email)) == 0){
+                        out.add(friend_list.get(i).get_initiator().get_email());
+                    }
+                    else{
+                        out.add(friend_list.get(i).get_acceptor().get_email());
+                    }
+                }
+            }
+        }
+        return out;
     }
     public static int get_friend_count() {return friend_list.size();}
 }
