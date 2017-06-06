@@ -36,7 +36,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupHolder>
     private LayoutInflater inflater;
     private Context context;
 
-    public GroupAdapter(ArrayList<GroupItem> listData, Context c) {
+    public GroupAdapter(Context c) {
         this.inflater = LayoutInflater.from(c);
         context = c;
     }

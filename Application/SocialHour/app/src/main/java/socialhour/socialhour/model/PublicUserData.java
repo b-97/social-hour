@@ -15,6 +15,11 @@ public class PublicUserData implements Comparable<PublicUserData>{
     private String display_name;
     private String email;
 
+    public PublicUserData(PublicUserData pubData){
+        this.profile_picture = pubData.get_profile_picture();
+        this.display_name = pubData.get_display_name();
+        this.email = pubData.get_email();
+    }
     public PublicUserData(String profile_picture, String display_name, String email){
         this.profile_picture = profile_picture;
         this.display_name = display_name;

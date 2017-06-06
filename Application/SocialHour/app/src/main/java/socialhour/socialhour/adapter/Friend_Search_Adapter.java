@@ -43,6 +43,10 @@ public class Friend_Search_Adapter extends
     }
 
 
+    public ArrayList<PublicUserData> get_friend_list(){
+        return friend_list;
+    }
+
     @Override
     public Friend_Search_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.friend_item, parent, false);
@@ -56,22 +60,16 @@ public class Friend_Search_Adapter extends
         Picasso.with(context).load(item.get_profile_picture()).into(holder.icon);
         holder.accept_button.setVisibility(View.GONE);
         boolean already_added = false;
-        if(added_list != null){
-            for(int i = 0; i < added_list.size(); i++){
-                if(FirebaseData.decodeEmail(item.get_email())
-                        .compareTo(FirebaseData.decodeEmail(added_list.get(i).get_email())) == 0){
-                    already_added = true;
-                }
-            }
-        }
-        if(already_added){
+        int q = added_list.indexOf(item);
+
+        if(q != -1){
             holder.deny_wait_button.setImageResource(R.drawable.ic_timer_black_24dp);
             holder.deny_wait_button.setBackground(ContextCompat.getDrawable(context, R.drawable.roundcorner_green));
             holder.deny_wait_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar.make(v, "Already added user!", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    added_list.remove(item);
+                    notifyDataSetChanged();
                 }
             });
         }

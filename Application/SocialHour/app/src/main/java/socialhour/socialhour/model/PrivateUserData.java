@@ -4,15 +4,16 @@ package socialhour.socialhour.model;
  * Created by michael on 5/9/17.
  */
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Date;
 import socialhour.socialhour.tools.FirebaseData;
 import static java.util.Collections.sort;
 
 public class PrivateUserData {
-    private ArrayList<PublicUserData> friends_list;
-    private ArrayList<GroupItem> group_list;
-    private ArrayList<EventItem> event_list;
+    public ArrayList<PublicUserData> friends_list;
+    public ArrayList<GroupItem> group_list;
+    public ArrayList<EventItem> event_list;
     private String display_name;
     private String email;
     private String photo;
@@ -28,6 +29,10 @@ public class PrivateUserData {
                            ArrayList<PublicUserData> p_friends_list,
                            ArrayList<GroupItem> p_group_list,
                            ArrayList<EventItem> p_event_list){
+        //friends_list = new ArrayList<>();
+        //event_list = new ArrayList<>();
+        //group_list = new ArrayList<>();
+
         this.display_name = display_name;
         this.email = email;
         this.photo = photo;
@@ -53,7 +58,9 @@ public class PrivateUserData {
     public String get_email(){return FirebaseData.decodeEmail(email);}
     public String get_photo(){return photo;}
     public String get_provider_id() {return provider_id;}
-    public ArrayList<PublicUserData> get_friends_list() {return friends_list;}
+    public ArrayList<PublicUserData> get_friends_list() {
+        return this.friends_list;
+    }
     public ArrayList<GroupItem> get_group_list() {return group_list;}
     public ArrayList<EventItem> get_event_list() {return event_list;}
     public Date get_date_created() {return date_created;}
@@ -84,7 +91,9 @@ public class PrivateUserData {
             friends_list = new ArrayList<PublicUserData>();
         }
         friends_list.add(user);
-        sort(friends_list);
+        try {
+            sort(friends_list);
+        }catch(NullPointerException e){/*do nothing*/}
     }
 
     public boolean is_user(PublicUserData user){
@@ -106,6 +115,17 @@ public class PrivateUserData {
         }
         return -1;
     }
+    public ArrayList<PublicUserData> convert_emails_to_users(ArrayList<String> emails){
+        ArrayList<PublicUserData> out = new ArrayList<>();
+        if(emails != null) {
+            for (int i = 0; i < emails.size(); i++) {
+                int q = find_friend(emails.get(i));
+                if(q != -1)
+                    out.add(friends_list.get(q));
+            }
+        }
+        return out;
+    }
     public int find_friend(String email){
         if(friends_list != null) {
             for(int i = 0; i < friends_list.size(); i++){
@@ -117,7 +137,11 @@ public class PrivateUserData {
         }
         return -1;
     }
-
+    public void add_group(GroupItem group){
+        if(group_list == null)
+            group_list = new ArrayList<GroupItem>();
+        group_list.add(group);
+    }
     public void set_display_name(String display_name){this.display_name = display_name;}
     public void set_email(String email){this.email = email;}
     public void set_photo(String photo){this.photo = photo;}

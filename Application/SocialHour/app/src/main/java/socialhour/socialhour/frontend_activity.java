@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,6 +38,7 @@ import socialhour.socialhour.model.EventData;
 import socialhour.socialhour.model.EventItem;
 import socialhour.socialhour.model.FriendData;
 import socialhour.socialhour.model.FriendItem;
+import socialhour.socialhour.model.GroupData;
 import socialhour.socialhour.model.GroupItem;
 import socialhour.socialhour.model.PrivateUserData;
 import socialhour.socialhour.model.PublicUserData;
@@ -209,18 +211,19 @@ public class frontend_activity extends AppCompatActivity {
                     FriendData.add_connection_from_firebase(friend);
                 //now, we'll check to see if there is a newly established friendship to the user
                 boolean new_friend_connection = true;
-                if(relevant_connection && !duplicate_connection && friend.get_isAccepted() &&
-                        current_user_local.get_friends_list() != null){
-                    ArrayList<PublicUserData> usrlist = current_user_local.get_friends_list();
-                    for(PublicUserData usr : usrlist) {
-                        if(decodeEmail(usr.get_email()).compareTo(acceptor_email) == 0  ||
-                            decodeEmail(usr.get_email()).compareTo(initiator_email) == 0){
-                            new_friend_connection = false;
-                            break;
+                if(relevant_connection && friend.get_isAccepted()){
+                    if(current_user_local.get_friends_list() != null) {
+                        ArrayList<PublicUserData> usrlist = current_user_local.get_friends_list();
+                        for (PublicUserData usr : usrlist) {
+                            if (decodeEmail(usr.get_email()).compareTo(acceptor_email) == 0 ||
+                                    decodeEmail(usr.get_email()).compareTo(initiator_email) == 0) {
+                                new_friend_connection = false;
+                                break;
+                            }
                         }
                     }
                 }
-                if(new_friend_connection){
+                if(new_friend_connection && friend.get_isAccepted()){
                     if(initiator_email.compareTo(firebase_email) == 0){
                         current_user_local.add_friend(friend.get_acceptor());
                     }
@@ -305,6 +308,106 @@ public class frontend_activity extends AppCompatActivity {
         });
     }
 
+    protected void addGroupListener(){
+        group_database.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                GroupItem group = dataSnapshot.getValue(GroupItem.class);
+                String local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                boolean isRelevant = false;
+                if(group.get_owner().get_email().compareTo(local_email) == 0)
+                    isRelevant = true;
+                else{
+                    if(group.get_members() != null){
+                        for(int i = 0; i < group.get_members().size(); i++){
+                            if(group.get_members().get(i).get_email().compareTo(local_email) == 0){
+                                isRelevant = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                boolean isDuplicate = false;
+                if(GroupData.getListData() != null){
+                    for(int i = 0; i < GroupData.get_group_count(); i++){
+                        if(group.get_key().compareTo(GroupData.get_group(i).get_key()) == 0){
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+                }
+                if(!isDuplicate && isRelevant){
+                    GroupData.add_group_from_firebase(group);
+                }
+                try{
+                    g.updateAdapter();
+                }catch (NullPointerException e){
+                    Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                }
+                Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                GroupItem group = dataSnapshot.getValue(GroupItem.class);
+                String local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                boolean isRelevant = false;
+                if(group.get_owner().get_email().compareTo(local_email) == 0)
+                    isRelevant = true;
+                else{
+                    if(group.get_members() != null){
+                        for(int i = 0; i < group.get_members().size(); i++){
+                            if(group.get_members().get(i).get_email().compareTo(local_email) == 0){
+                                isRelevant = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(isRelevant){
+                    GroupData.update_group(group);
+                }
+                try{
+                    g.updateAdapter();
+                }catch (NullPointerException e){
+                    Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                GroupItem group = dataSnapshot.getValue(GroupItem.class);
+                String local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                boolean isRelevant = false;
+                if(group.get_owner().get_email().compareTo(local_email) == 0)
+                    isRelevant = true;
+                else{
+                    if(group.get_members() != null){
+                        for(int i = 0; i < group.get_members().size(); i++){
+                            if(group.get_members().get(i).get_email().compareTo(local_email) == 0){
+                                isRelevant = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(isRelevant){
+                    GroupData.remove_group(group.get_key());
+                }
+                try{
+                    g.updateAdapter();
+                }catch (NullPointerException e){
+                    Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                }
+            }
+
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
 
     /*
         This pulls all data down to Firebase, starting with the data that goes into the
@@ -334,6 +437,7 @@ public class frontend_activity extends AppCompatActivity {
                 if(firstRun) {
                     addFriendEventListener();
                     addPublicEventListener();
+                    addGroupListener();
                 }
                 firstRun = false;
             }
@@ -362,7 +466,7 @@ public class frontend_activity extends AppCompatActivity {
         //Fire up the databases that depend on recyclers (events, friends, groups)
         EventData.init();
         FriendData.init();
-
+        GroupData.init();
         //Set up the title bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Social Hour");
@@ -408,8 +512,7 @@ public class frontend_activity extends AppCompatActivity {
         firstRun = true;
         pullPrivateDataListener();
 
-        //TODO: Implement Group Database
-        group_database = fDatabase.getReference("private_user_data/friends");
+        group_database = fDatabase.getReference("group_data");
 
 
         //     Sets up the initial behaviour of the persistent floating action buttons.
@@ -464,7 +567,7 @@ public class frontend_activity extends AppCompatActivity {
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ArrayList<String> friend_list = FriendData.get_friends(current_user_local.get_email());
+                            ArrayList<String> friend_list = FriendData.get_friends_emails(current_user_local.get_email());
                             ArrayList<String> request_list = FriendData.get_requests
                                     (FirebaseData.decodeEmail(current_user_local.get_email()));
                             Intent i = new Intent(getApplicationContext(), add_friends_activity.class);
@@ -481,7 +584,7 @@ public class frontend_activity extends AppCompatActivity {
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ArrayList<String> friend_list = FriendData.get_friends(current_user_local.get_email());
+                            ArrayList<String> friend_list = FriendData.get_friends_emails(current_user_local.get_email());
                             Intent i = new Intent(getApplicationContext(), add_group_activity.class);
                             i.putStringArrayListExtra("email_list", friend_list);
                             startActivityForResult(i, request_code_add_group);
@@ -600,6 +703,23 @@ public class frontend_activity extends AppCompatActivity {
                     current_user_local.get_display_name(), current_user_local.get_email());
             public_user_database.setValue(temp_user_data);
             d.resetAdapter();
+        }
+        else if(requestCode == request_code_add_group){
+            if(resultCode == RESULT_OK){
+                String description = data.getExtras().getString("description");
+                String name = data.getExtras().getString("name");
+                PublicUserData owner = current_user_local.getPublicData();
+                ArrayList<String> emails = data.getStringArrayListExtra("email_list");
+                if(current_user_local.convert_emails_to_users(emails) != null){
+                    ArrayList<PublicUserData> members = current_user_local.convert_emails_to_users(emails);
+                    GroupItem result = new GroupItem(new Date(), owner, members, description,
+                            new ArrayList<EventItem>(), name, "NULL");
+                    GroupData.add_group_to_firebase(result);
+                }
+            }
+            else{
+                Toast.makeText(this, "Group creation cancelled.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

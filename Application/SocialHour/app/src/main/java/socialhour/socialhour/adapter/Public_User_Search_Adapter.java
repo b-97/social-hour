@@ -11,8 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import socialhour.socialhour.model.PublicUserData;
 import socialhour.socialhour.tools.FirebaseData;
 
 import static java.util.Collections.sort;
-import static socialhour.socialhour.frontend_activity.current_user_local;
 
 /**
  * Serves as an adapter for searching for new friends
@@ -119,13 +117,15 @@ public class Public_User_Search_Adapter
         private FriendItem new_connection;
         private PublicUserData friend;
         private PublicUserData publicData;
+        private String local_email;
 
         public ViewHolder(View view) {
             super(view);
             friends_text = (TextView) view.findViewById(R.id.friends_text);
             imageView = (ImageView) view.findViewById(R.id.friendImageView);
             add_button = (ImageButton) view.findViewById(R.id.add_friend_button);
-            publicData = current_user_local.getPublicData();
+
+            local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
             add_button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -141,7 +141,7 @@ public class Public_User_Search_Adapter
         public boolean ifConnectionExists(PublicUserData other){
             for(FriendItem f : FriendData.getListData()) {
                 if (FirebaseData.decodeEmail(f.get_initiator().get_email())
-                        .compareTo(FirebaseData.decodeEmail(current_user_local.get_email())) == 0) {
+                        .compareTo(local_email) == 0) {
                     if (FirebaseData.decodeEmail(f.get_acceptor().get_email())
                             .compareTo(FirebaseData.decodeEmail(other.get_email())) == 0) {
                         return true;
@@ -149,7 +149,7 @@ public class Public_User_Search_Adapter
                 } else if (FirebaseData.decodeEmail(f.get_initiator().get_email())
                         .compareTo(FirebaseData.decodeEmail(other.get_email())) == 0) {
                     if (FirebaseData.decodeEmail(f.get_acceptor().get_email())
-                            .compareTo(current_user_local.get_email()) == 0) {
+                            .compareTo(local_email) == 0) {
                         return true;
                     }
                 }

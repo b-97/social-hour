@@ -87,7 +87,7 @@ public class FriendData{
         Gets an arraylist of all of the email addresses where a friend request has been accepted.
         Particularly good for transitioning data between activities.
      */
-    public static ArrayList<String> get_friends(String email){
+    public static ArrayList<String> get_friends_emails(String email){
         ArrayList<String> out = new ArrayList<>();
         if(friend_list != null){
             for(int i = 0; i < friend_list.size(); i++){
@@ -98,6 +98,23 @@ public class FriendData{
                     }
                     else{
                         out.add(friend_list.get(i).get_initiator().get_email());
+                    }
+                }
+            }
+        }
+        return out;
+    }
+    public static ArrayList<PublicUserData> get_friends_data(String email){
+        ArrayList<PublicUserData> out = new ArrayList<>();
+        if(friend_list != null){
+            for(int i = 0; i < friend_list.size(); i++){
+                if(friend_list.get(i).get_isAccepted()){
+                    if(FirebaseData.decodeEmail(friend_list.get(i).get_initiator().get_email())
+                            .compareTo(FirebaseData.decodeEmail(email)) == 0){
+                        out.add(friend_list.get(i).get_acceptor());
+                    }
+                    else{
+                        out.add(friend_list.get(i).get_initiator());
                     }
                 }
             }

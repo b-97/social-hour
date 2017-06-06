@@ -1,5 +1,6 @@
 package socialhour.socialhour;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -41,6 +42,8 @@ public class add_group_activity extends frontend_activity {
     private DatabaseReference lDatabase;
     private RecyclerView result_recycler_view;
     private FirebaseUser local_user;
+    private EditText name_textedit;
+    private EditText description_textedit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,10 @@ public class add_group_activity extends frontend_activity {
         local_user = FirebaseAuth.getInstance().getCurrentUser();
         final String local_user_email = local_user.getEmail();
 
-        group_members = new ArrayList<PublicUserData>();
+        name_textedit = (EditText) findViewById(R.id.group_name_edittext);
+        description_textedit = (EditText) findViewById(R.id.group_description_edittext);
+
+        group_members = new ArrayList<>();
 
         Bundle bundle = getIntent().getExtras();
         final ArrayList<String> email_list = bundle.getStringArrayList("email_list");
@@ -129,8 +135,33 @@ public class add_group_activity extends frontend_activity {
         }
     }
     protected boolean invalid_fields(){
-        return ((((TextView) findViewById(R.id.display_name_edittext)).getText().toString().length() < 1) ||
-                (((TextView) findViewById(R.id.group_description_edittext)).getText().toString().length() < 1 ));
+        return ((name_textedit.getText().toString().length() < 1) ||
+                (description_textedit.getText().toString().length() < 1 ));
+    }
+
+    @Override
+    public void finish(){
+        Intent data = new Intent();
+        if(EVENT_CREATION_CANCELLED){
+            setResult(RESULT_CANCELED, data);
+            super.finish();
+        }
+        else{
+            String name = name_textedit.getText().toString();
+            String description = description_textedit.getText().toString();
+            ArrayList<PublicUserData> friends_list = adapter.get_friend_list();
+            ArrayList<String> email_list = new ArrayList<>();
+            if(friends_list != null){
+                for(int i = 0; i < friends_list.size(); i++){
+                    email_list.add(decodeEmail(friends_list.get(i).get_email()));
+                }
+            }
+            data.putStringArrayListExtra("email_list", email_list);
+            data.putExtra("name", name);
+            data.putExtra("description", description);
+            setResult(RESULT_OK, data);
+            super.finish();
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

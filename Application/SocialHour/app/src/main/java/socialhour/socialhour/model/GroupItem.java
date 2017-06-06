@@ -20,23 +20,23 @@ public class GroupItem{
     private String name;
     private String description;
     private ArrayList<PublicUserData> members;
-    private ArrayList<PublicUserData> admins;
     private PublicUserData owner;
     private Date creation_date;
     private String key;
 
-    public GroupItem(Date creation_date, PublicUserData group_owner, boolean is_all_day,
-                     ArrayList<PublicUserData> members, ArrayList<PublicUserData> admins,
-                     String description, ArrayList<EventItem> events, String name) {
-        members = new ArrayList<PublicUserData>();
-        admins = new ArrayList<PublicUserData>();
+    public GroupItem(Date creation_date, PublicUserData group_owner,
+                     ArrayList<PublicUserData> members,
+                     String description, ArrayList<EventItem> events, String name, String key) {
         this.creation_date = creation_date;
         this.owner = group_owner;
-        this.admins = admins;
         this.members = members;
         this.name = name;
         this.description = description;
-        this.key = "NULL"; //KEY MUST BE SET BY OTHER CLASS
+        this.key = key; //KEY MUST BE SET BY OTHER CLASS
+    }
+
+    public GroupItem(){
+        //we need a constructor with no arguments or Firebase will complain.
     }
 
     /*
@@ -45,7 +45,6 @@ public class GroupItem{
     public String get_name(){return this.name;}
     public String get_description(){return this.description;}
     public ArrayList<PublicUserData> get_members(){return this.members;}
-    public ArrayList<PublicUserData> get_admins(){return this.admins;}
     public PublicUserData get_owner(){return this.owner;}
     public Date get_creation_date(){return this.creation_date;}
     public String get_key(){return this.key;}
@@ -56,7 +55,6 @@ public class GroupItem{
     public void set_name(String name){this.name = name;}
     public void set_description(String description){this.description = description;}
     public void set_members(ArrayList<PublicUserData> members){this.members = members;}
-    public void set_admins(ArrayList<PublicUserData> admins){this.admins = admins;}
     public void set_owner(PublicUserData owner){this.owner = owner;}
     public void set_creation_date(Date creation_date){this.creation_date = creation_date;}
     public void set_key(String key){this.key = key;}
@@ -70,57 +68,32 @@ public class GroupItem{
      */
     public void add_member(PublicUserData member){
         boolean should_add = true;
-        for(PublicUserData usr: members){
-            //check to make sure the member isn't already in the arraylist
-            if(FirebaseData.decodeEmail(member.get_email())
-                    .compareTo(FirebaseData.decodeEmail(usr.get_email())) == 0){
-                should_add = false;
-                break;
+        if(members != null) {
+            for (PublicUserData usr : members) {
+                //check to make sure the member isn't already in the arraylist
+                if (FirebaseData.decodeEmail(member.get_email())
+                        .compareTo(FirebaseData.decodeEmail(usr.get_email())) == 0) {
+                    should_add = false;
+                    break;
+                }
             }
         }
         if(should_add)
             members.add(member);
     }
-    /*
-        Adds an admin to the admin arraylist.
-        Checks and makes sure that the member already isn't in there, however.
-     */
-    public void add_admin(PublicUserData admin){
-        boolean should_add = true;
-        for(PublicUserData usr: admins){
-            //check to make sure the admin isn't already in the arraylist
-            if(FirebaseData.decodeEmail(admin.get_email())
-                    .compareTo(FirebaseData.decodeEmail(usr.get_email())) == 0){
-                should_add = false;
-            }
-        }
-        if(should_add)
-            admins.add(admin);
-    }
+
     /*
         Removes a member from the members arraylist.
         Returns a boolean to check if it was actually removed.
      */
     public boolean remove_member(PublicUserData member){
-        for(int i = 0; i < members.size(); i++){
-            if (FirebaseData.decodeEmail(members.get(i).get_email())
-                    .compareTo(FirebaseData.decodeEmail(member.get_email())) == 0){
-                members.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-    /*
-        Removes an admin from the admins arraylist.
-        Returns a boolean to check if it was actually removed.
-     */
-    public boolean remove_admin(PublicUserData admin){
-        for(int i = 0; i < admins.size(); i++){
-            if (FirebaseData.decodeEmail(admins.get(i).get_email())
-                    .compareTo(FirebaseData.decodeEmail(admin.get_email())) == 0){
-                admins.remove(i);
-                return true;
+        if(members != null) {
+            for (int i = 0; i < members.size(); i++) {
+                if (FirebaseData.decodeEmail(members.get(i).get_email())
+                        .compareTo(FirebaseData.decodeEmail(member.get_email())) == 0) {
+                    members.remove(i);
+                    return true;
+                }
             }
         }
         return false;
