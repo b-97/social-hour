@@ -1,20 +1,21 @@
 package socialhour.socialhour.model;
 
 /**
- * Created by michael on 4/30/17.
+ * Name: GroupItem.java
+ * Author: Michael Rinehart
+ * Organization: Drexel University
+ * Date: 7 June 2017
+ * Purpose: The official data structure for maintaining groups.
+ *         The Group object controls who is the admin, who are the members, the creation date,
+ *         the key for the entry in the database, any events associated with the group, the name,
+ *         and the description of the group.
  */
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
 import socialhour.socialhour.tools.FirebaseData;
 
-/**
- * Created by michael on 3/15/17.
- * Handles all of the data for the events.
- * Right now, there is no reason to have
- */
 
 public class GroupItem{
 
@@ -48,15 +49,18 @@ public class GroupItem{
     public String get_name(){return this.name;}
     public String get_description(){return this.description;}
     public ArrayList<PublicUserData> get_members(){return this.members;}
+    public ArrayList<EventItem> get_events(){return this.events;}
     public PublicUserData get_owner(){return this.owner;}
     public Date get_creation_date(){return this.creation_date;}
     public String get_key(){return this.key;}
     /*
         BASIC MUTATORS - EACH RESPECTIVE METHOD MERELY MODIFIES THE VALUE
+                        IGNORE THE FACT THAT THESE "AREN'T" USED
         TODO: Change all of these to return false if value failed to update
      */
     public void set_name(String name){this.name = name;}
     public void set_description(String description){this.description = description;}
+    public void set_events(ArrayList<EventItem> events){this.events = events;}
     public void set_members(ArrayList<PublicUserData> members){this.members = members;}
     public void set_owner(PublicUserData owner){this.owner = owner;}
     public void set_creation_date(Date creation_date){this.creation_date = creation_date;}
@@ -86,9 +90,13 @@ public class GroupItem{
     }
 
     public void add_event(EventItem event){
-        if(events == null)
-                events = new ArrayList<>();
-        events.add(event);
+        if(events == null){
+            events = new ArrayList<>();
+            events.add(event);
+        }
+        else{
+            events.add(event);
+        }
     }
 
     /*
@@ -107,5 +115,4 @@ public class GroupItem{
         }
         return false;
     }
-    public ArrayList<EventItem> get_events(){ return events;    }
 }

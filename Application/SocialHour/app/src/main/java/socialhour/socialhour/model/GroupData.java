@@ -68,7 +68,11 @@ public class GroupData{
         }
         return null;
     }
-
+    public static void add_event_to_group_firebase(String group_name, EventItem event){
+        int i = findGroupIndex(group_name);
+        group_list.get(i).add_event(event);
+        groupDatabase.child(group_list.get(i).get_key()).setValue(group_list.get(i));
+    }
     public static int findGroupIndex(String name){
         if(group_list != null){
             for(int i = 0; i < group_list.size(); i++){
@@ -99,7 +103,6 @@ public class GroupData{
     }
     //like the implementation above, but allows us to search for the key and remove the list.
     public static void remove_group(String key) {
-
         //we use this method because it allows us to skirt the ConcurrentModificationException
         Iterator<GroupItem> iter = group_list.iterator();
         while (iter.hasNext()) {

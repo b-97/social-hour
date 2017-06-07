@@ -342,6 +342,7 @@ public class frontend_activity extends AppCompatActivity {
                 if(!isDuplicate && isRelevant){
                     GroupData.add_group_from_firebase(group);
                     if(group.get_events() != null){
+                        Toast.makeText(getApplicationContext(), group.toString(), Toast.LENGTH_SHORT).show();
                         for(EventItem e: group.get_events()){
                             if(EventData.find_event(e) == -1)
                                 EventData.add_event_from_firebase(e);
@@ -672,12 +673,13 @@ public class frontend_activity extends AppCompatActivity {
                 EventItem item = new EventItem(start_time, end_time, is_all_day,
                         name, location, privacy,
                         new PublicUserData(current_user_local.get_photo(), group, group+"@socialHour.com"), creation_date);
-                GroupItem groupItem = GroupData.findGroup(group);
-                groupItem.add_event(item);
-                GroupData.modify_group_to_firebase(groupItem);
+                GroupData.add_event_to_group_firebase(group, item);
             }
-            d.updateAdapter();
-            g.updateAdapter();
+            try {
+                d.updateAdapter();
+                g.updateAdapter();
+            }
+            catch(NullPointerException e){}
         }
         else if (requestCode == request_code_edit_event && resultCode == RESULT_OK){
             //Grab the start and end date from the activity
