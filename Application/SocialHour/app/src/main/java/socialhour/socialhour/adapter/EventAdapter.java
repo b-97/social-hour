@@ -80,7 +80,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         }
     }
     private String createTitleText(EventItem item){
-        //TODO: Honor user preference for 24h format
         SimpleDateFormat time_sdf = new SimpleDateFormat();
         if(frontend_activity.current_user_local.get_pref_display_24hr()){
             time_sdf = new SimpleDateFormat("HH:mm");

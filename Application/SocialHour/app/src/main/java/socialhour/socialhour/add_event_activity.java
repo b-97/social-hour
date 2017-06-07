@@ -19,7 +19,9 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -58,6 +60,9 @@ public class add_event_activity extends frontend_activity {
     private boolean EVENT_CREATION_CANCELLED;
 
     private Bundle extras;
+    private SimpleDateFormat time_sdf;
+    private SimpleDateFormat date_sdf = new SimpleDateFormat("M/dd/YYYY");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +74,14 @@ public class add_event_activity extends frontend_activity {
         setContentView(R.layout.activity_add_event_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-
-
+        if(frontend_activity.current_user_local.get_pref_display_24hr()){
+            time_sdf = new SimpleDateFormat("HH:mm");
+        }
+        else{
+            time_sdf = new SimpleDateFormat("hh:mm a");
+        }
+        start_date = Calendar.getInstance();
+        end_date = Calendar.getInstance();
         /*
             Setting up the spinner with an adapter and a listener so that we can get the user's
             privacy choice.
@@ -174,8 +185,6 @@ public class add_event_activity extends frontend_activity {
         if(extras.getInt("request_code")==request_code_edit_event)
         {
             //initiate start_date and end_date
-            start_date = Calendar.getInstance();
-            end_date = Calendar.getInstance();
 
             //set the start and end date based on the extras passed to the intent
             start_date.setTimeInMillis(extras.getLong("start_date_millis"));
@@ -185,7 +194,6 @@ public class add_event_activity extends frontend_activity {
 
             //use these dates to set the date and time button text
             SimpleDateFormat date_sdf = new SimpleDateFormat("M/dd/YYYY");
-            SimpleDateFormat time_sdf = new SimpleDateFormat("h:m a");
             start_date_diag_button.setText(date_sdf.format(start_date.getTime()));
             end_date_diag_button.setText(date_sdf.format(end_date.getTime()));
             start_time_diag_button.setText(time_sdf.format(start_date.getTime()));
@@ -208,11 +216,16 @@ public class add_event_activity extends frontend_activity {
 
             start_date = Calendar.getInstance();
             end_date = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("M/dd/YYYY");
-            sdf.setTimeZone(Calendar.getInstance().getTimeZone());
+            end_date.add(Calendar.HOUR, 1);
 
-            start_date_diag_button.setText(sdf.format(start_date.getTime()));
-            end_date_diag_button.setText(sdf.format(end_date.getTime()));
+
+            date_sdf.setTimeZone(Calendar.getInstance().getTimeZone());
+            time_sdf.setTimeZone(Calendar.getInstance().getTimeZone());
+
+            start_date_diag_button.setText(date_sdf.format(start_date.getTime()));
+            end_date_diag_button.setText(date_sdf.format(end_date.getTime()));
+            start_time_diag_button.setText(time_sdf.format(start_date.getTime()));
+            end_time_diag_button.setText(time_sdf.format(end_date.getTime()));
             toolbar.setTitle("Add New Event");
         }
         setSupportActionBar(toolbar);
@@ -241,14 +254,12 @@ public class add_event_activity extends frontend_activity {
             start_date.set(year, monthOfYear, dayOfMonth);
 
             if(start_date.after(end_date)){
-                end_date.set(year, monthOfYear, dayOfMonth);
+                end_date.setTime(start_date.getTime());
+                end_date.add(Calendar.HOUR, 1);
             }
 
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
-            sdf.setTimeZone(Calendar.getInstance().getTimeZone());
-
-            start_date_diag_button.setText(sdf.format(start_date.getTime()));
-            end_date_diag_button.setText(sdf.format(end_date.getTime()));
+            start_date_diag_button.setText(date_sdf.format(start_date.getTime()));
+            end_date_diag_button.setText(date_sdf.format(end_date.getTime()));
         }
     };
 
@@ -257,9 +268,7 @@ public class add_event_activity extends frontend_activity {
             end_date = Calendar.getInstance();
             end_date.set(year, monthOfYear, dayOfMonth);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
-            sdf.setTimeZone(Calendar.getInstance().getTimeZone());
-            end_date_diag_button.setText(sdf.format(end_date.getTime()));
+            end_date_diag_button.setText(date_sdf.format(end_date.getTime()));
         }
     };
 
@@ -267,18 +276,15 @@ public class add_event_activity extends frontend_activity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             start_date.set(Calendar.HOUR_OF_DAY, hourOfDay);
             start_date.set(Calendar.MINUTE,minute);
+
             if(start_date.after(end_date)){
-                end_date.set(start_date.get(Calendar.YEAR), start_date.get(Calendar.MONTH),
-                        start_date.get(Calendar.DAY_OF_MONTH), start_date.get(Calendar.HOUR_OF_DAY),
-                        start_date.get(Calendar.MINUTE));
+                end_date.setTime(start_date.getTime());
                 end_date.add(Calendar.HOUR_OF_DAY, 1);
             }
-            SimpleDateFormat sdf2 = new SimpleDateFormat("h:m a");
-            SimpleDateFormat sdf = new SimpleDateFormat("M/dd/YYYY");
 
-            start_time_diag_button.setText(sdf2.format(start_date.getTime()));
-            end_date_diag_button.setText(sdf.format(end_date.getTime()));
-            end_time_diag_button.setText(sdf2.format(end_date.getTime()));
+            start_time_diag_button.setText(time_sdf.format(start_date.getTime()));
+            end_date_diag_button.setText(date_sdf.format(end_date.getTime()));
+            end_time_diag_button.setText(time_sdf.format(end_date.getTime()));
         }
     };
     protected TimePickerDialog.OnTimeSetListener lTimePickerListener = new TimePickerDialog.OnTimeSetListener() {
@@ -286,8 +292,7 @@ public class add_event_activity extends frontend_activity {
             end_date.set(Calendar.HOUR_OF_DAY, hourOfDay);
             end_date.set(Calendar.MINUTE, minute);
             SimpleDateFormat sdf2 = new SimpleDateFormat("h:m a");
-            sdf2.setTimeZone(Calendar.getInstance().getTimeZone());
-            end_time_diag_button.setText(sdf2.format(end_date.getTime()));
+            end_time_diag_button.setText(date_sdf.format(end_date.getTime()));
         }
     };
 
