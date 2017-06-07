@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -209,6 +210,8 @@ public class frontend_activity extends AppCompatActivity {
                 //However, if we should add it
                 if(relevant_connection && !duplicate_connection)
                     FriendData.add_connection_from_firebase(friend);
+
+
                 //now, we'll check to see if there is a newly established friendship to the user
                 boolean new_friend_connection = true;
                 if(relevant_connection && friend.get_isAccepted()){
@@ -338,6 +341,10 @@ public class frontend_activity extends AppCompatActivity {
                 }
                 if(!isDuplicate && isRelevant){
                     GroupData.add_group_from_firebase(group);
+                    if(group.get_events() != null)
+                        for(EventItem e : group.get_events())
+                            if(EventData.find_event(e) == -1)
+                                EventData.add_event_from_firebase(e);
                 }
                 try{
                     g.updateAdapter();
@@ -515,7 +522,7 @@ public class frontend_activity extends AppCompatActivity {
         group_database = fDatabase.getReference("group_data");
 
 
-        //     Sets up the initial behaviour of the persistent floating action buttons.
+        //Sets up the initial behaviour of the persistent floating action buttons.
 
         //  Fab: Responsible for starting and finishing the activities adding events, friends,
         //      and groups.

@@ -156,5 +156,6 @@
     <string name="google_calendar_integrate_buttontext">Integrate</string>
     <string name="event_creation_test">Test Event Creation</string>
     <string name="title_calendar_activity">Calendar</string>
+    <string name="group_add_textview">Add to Group?</string>
 
 </resources>

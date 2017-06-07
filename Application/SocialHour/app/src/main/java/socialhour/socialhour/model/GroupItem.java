@@ -4,6 +4,7 @@ package socialhour.socialhour.model;
  * Created by michael on 4/30/17.
  */
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -20,18 +21,20 @@ public class GroupItem{
     private String name;
     private String description;
     private ArrayList<PublicUserData> members;
+    private ArrayList<EventItem> events;
     private PublicUserData owner;
     private Date creation_date;
     private String key;
 
     public GroupItem(Date creation_date, PublicUserData group_owner,
                      ArrayList<PublicUserData> members,
-                     String description, ArrayList<EventItem> events, String name, String key) {
+                     String description, ArrayList<EventItem> events,  String name, String key) {
         this.creation_date = creation_date;
         this.owner = group_owner;
         this.members = members;
         this.name = name;
         this.description = description;
+        this.events = events;
         this.key = key; //KEY MUST BE SET BY OTHER CLASS
     }
 
@@ -98,4 +101,5 @@ public class GroupItem{
         }
         return false;
     }
+    public ArrayList<EventItem> get_events(){ return events;    }
 }
