@@ -85,6 +85,12 @@ public class GroupItem{
             members.add(member);
     }
 
+    public void add_event(EventItem event){
+        if(events == null)
+                events = new ArrayList<>();
+        events.add(event);
+    }
+
     /*
         Removes a member from the members arraylist.
         Returns a boolean to check if it was actually removed.

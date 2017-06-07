@@ -341,17 +341,19 @@ public class frontend_activity extends AppCompatActivity {
                 }
                 if(!isDuplicate && isRelevant){
                     GroupData.add_group_from_firebase(group);
-                    if(group.get_events() != null)
-                        for(EventItem e : group.get_events())
+                    if(group.get_events() != null){
+                        for(EventItem e: group.get_events()){
                             if(EventData.find_event(e) == -1)
                                 EventData.add_event_from_firebase(e);
+                        }
+                    }
                 }
                 try{
+                    d.updateAdapter();
                     g.updateAdapter();
                 }catch (NullPointerException e){
                     Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
                 }
-                Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -373,6 +375,12 @@ public class frontend_activity extends AppCompatActivity {
                 }
                 if(isRelevant){
                     GroupData.update_group(group);
+                    if(group.get_events() != null){
+                        for(EventItem e: group.get_events()){
+                            if(EventData.find_event(e) == -1)
+                                EventData.add_event_from_firebase(e);
+                        }
+                    }
                 }
                 try{
                     g.updateAdapter();
@@ -530,7 +538,9 @@ public class frontend_activity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String[] group_list = GroupData.get_group_names();
                 Intent i = new Intent(getApplicationContext(), add_event_activity.class);
+                i.putExtra("group_list", group_list);
                 i.putExtra("request_code", request_code_add_event);
                 startActivityForResult(i, request_code_add_event);
             }
@@ -561,7 +571,9 @@ public class frontend_activity extends AppCompatActivity {
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            String[] group_list = GroupData.get_group_names();
                             Intent i = new Intent(getApplicationContext(), add_event_activity.class);
+                            i.putExtra("group_list", group_list);
                             i.putExtra("request_code", request_code_add_event);
                             startActivityForResult(i, request_code_add_event);
                         }
@@ -614,11 +626,13 @@ public class frontend_activity extends AppCompatActivity {
         //the user successfully creates an event
         if (requestCode == request_code_add_event && resultCode == RESULT_OK) {
 
+            Bundle extras = data.getExtras();
+
             //grab the start and end date from the activity
-            long start_date_millis = data.getExtras().getLong("start_date_millis");
-            long end_date_millis = data.getExtras().getLong("end_date_millis");
-            String start_date_timezone = data.getExtras().getString("start_date_timezone");
-            String end_date_timezone = data.getExtras().getString("end_date_timezone");
+            long start_date_millis = extras.getLong("start_date_millis");
+            long end_date_millis = extras.getLong("end_date_millis");
+            String start_date_timezone = extras.getString("start_date_timezone");
+            String end_date_timezone = extras.getString("end_date_timezone");
             Calendar start_date = Calendar.getInstance();
             start_date.setTimeZone(TimeZone.getTimeZone(start_date_timezone));
             Calendar end_date = Calendar.getInstance();
@@ -629,28 +643,41 @@ public class frontend_activity extends AppCompatActivity {
             Date end_time = end_date.getTime();
 
             //get the privacy, event name, all day status, and event location
-            int privacy = data.getExtras().getInt("event_privacy");
-            String name = data.getExtras().getString("event_name");
-            String location = data.getExtras().getString("event_location");
-            boolean is_all_day = data.getExtras().getBoolean("is_all_day");
+            int privacy = extras.getInt("event_privacy");
+            String name = extras.getString("event_name");
+            String location = extras.getString("event_location");
+            boolean is_all_day = extras.getBoolean("is_all_day");
 
-            //set the creation date
+            String group = extras.getString("group");
+            Toast.makeText(this, group, Toast.LENGTH_SHORT).show();
+
             Date creation_date = new Date();
 
-            EventItem event = new EventItem(start_time, end_time, is_all_day,
-                    name, location, privacy, current_user_local.getPublicData(),
-                    creation_date);
+            if(group.compareTo("None") == 0){
+                //set the creation date
+                EventItem event = new EventItem(start_time, end_time, is_all_day,
+                        name, location, privacy, current_user_local.getPublicData(),
+                        creation_date);
                 EventData.add_event_to_firebase(event);
+
+                //add the event to the private user database aswell
+                current_user_local.add_event(event);
+                private_user_database.setValue(current_user_local);
+                Toast.makeText(this, event.get_name() + " at " + event.get_start_date() + "/" +
+                        event.get_start_date() + "/" + event.get_end_date() + "Is all day: " +
+                        event.get_isAllDay() + event.get_privacy() + creation_date.getTime() +
+                        current_user_firebase.getDisplayName(), Toast.LENGTH_SHORT).show();
+            }
+            else{
+                EventItem item = new EventItem(start_time, end_time, is_all_day,
+                        name, location, privacy,
+                        new PublicUserData(current_user_local.get_photo(), group, group+"@socialHour.com"), creation_date);
+                GroupItem groupItem = GroupData.findGroup(group);
+                groupItem.add_event(item);
+                GroupData.modify_group_to_firebase(groupItem);
+            }
             d.updateAdapter();
-
-            //add the event to the private user database aswell
-            current_user_local.add_event(event);
-            private_user_database.setValue(current_user_local);
-
-            Toast.makeText(this, event.get_name() + " at " + event.get_start_date() + "/" +
-                            event.get_start_date() + "/" + event.get_end_date() + "Is all day: " +
-                            event.get_isAllDay() + event.get_privacy() + creation_date.getTime() +
-                            current_user_firebase.getDisplayName(), Toast.LENGTH_SHORT).show();
+            g.updateAdapter();
         }
         else if (requestCode == request_code_edit_event && resultCode == RESULT_OK){
             //Grab the start and end date from the activity

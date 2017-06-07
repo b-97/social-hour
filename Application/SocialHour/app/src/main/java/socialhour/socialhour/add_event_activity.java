@@ -21,12 +21,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import socialhour.socialhour.model.EventItem;
+import socialhour.socialhour.model.GroupData;
 
 public class add_event_activity extends frontend_activity {
 
@@ -36,6 +35,7 @@ public class add_event_activity extends frontend_activity {
     final int PRIVACY_DEFAULT = 0;
     final int PRIVACY_PRIVATE = 1;
     final int PRIVACY_PUBLIC = 2;
+
     final String privacy_array[] = { "Default", "Private", "Public"};
 
     private static final int request_code_add_event = 5;
@@ -51,10 +51,11 @@ public class add_event_activity extends frontend_activity {
     private TextView edit_event_location;
     private CheckBox is_all_day_check_box;
     private Spinner privacy_spinner;
+    private Spinner group_spinner;
 
     private Calendar start_date;
     private Calendar end_date;
-
+    private String group;
     private boolean isAllDay;
 
     private boolean EVENT_CREATION_CANCELLED;
@@ -106,6 +107,20 @@ public class add_event_activity extends frontend_activity {
                         event_privacy = PRIVACY_PRIVATE;
                         break;
                 }
+            }
+            public void onNothingSelected(AdapterView<?> arg0) {}
+        });
+
+        group_spinner = (Spinner) findViewById(R.id.group_spinner);
+        String[] group_list = extras.getStringArray("group_list");
+        final ArrayAdapter<String> group_adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, group_list);
+
+        group_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        group_spinner.setAdapter(group_adapter);
+        group_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> adapter, View v, int position, long id){
+                group = adapter.getItemAtPosition(position).toString();
             }
             public void onNothingSelected(AdapterView<?> arg0) {}
         });
@@ -349,6 +364,8 @@ public class add_event_activity extends frontend_activity {
             data.putExtra("event_name", event_name);
             data.putExtra("event_location", event_location);
             data.putExtra("is_all_day", isAllDay);
+
+            data.putExtra("group", group);
 
             if(event_privacy == 0){
                 event_privacy = current_user_local.get_pref_default_privacy();

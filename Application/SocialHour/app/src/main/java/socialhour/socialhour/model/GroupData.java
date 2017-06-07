@@ -3,9 +3,12 @@ package socialhour.socialhour.model;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.reflect.Array;
 import java.security.acl.Group;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
 import socialhour.socialhour.tools.FirebaseData;
@@ -22,6 +25,10 @@ public class GroupData{
         String key = groupDatabase.push().getKey();
         group.set_key(key);
         groupDatabase.child(key).setValue(group);
+    }
+
+    public static void modify_group_to_firebase(GroupItem group){
+        groupDatabase.child(group.get_key()).setValue(group);
     }
 
     public static void add_group_from_firebase(GroupItem group){
@@ -49,6 +56,28 @@ public class GroupData{
                 }
             }
         }
+    }
+
+    public static GroupItem findGroup(String name){
+        if(group_list != null){
+            for(int i = 0; i < group_list.size(); i++){
+                if(group_list.get(i).get_name().compareTo(name) == 0){
+                    return group_list.get(i);
+                }
+            }
+        }
+        return null;
+    }
+
+    public static int findGroupIndex(String name){
+        if(group_list != null){
+            for(int i = 0; i < group_list.size(); i++){
+                if(group_list.get(i).get_name().compareTo(name) == 0){
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
     public static void removeFriendFromGroup(PublicUserData friend, GroupItem group){
         if(group_list != null){
@@ -82,6 +111,18 @@ public class GroupData{
             if(f.get_key().compareTo(key) == 0)
                 group_list.remove(f);
         }
+    }
+    public static String[] get_group_names(){
+        if(group_list != null){
+            ArrayList<String> names = new ArrayList<>();
+            names.add("None");
+            for(int i = 0; i < group_list.size(); i++){
+                names.add(group_list.get(i).get_name());
+            }
+            return names.toArray(new String[names.size()]);
+        }
+        String[] out = {"None"};
+        return out;
     }
     /*
         Gets an arraylist all of the email addresses where there is a group request with the user,

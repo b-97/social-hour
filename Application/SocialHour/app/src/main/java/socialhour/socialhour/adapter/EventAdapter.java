@@ -191,6 +191,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
                     i.putExtra("id", e.get_id());
                     i.putExtra("request_code", request_code_edit_event);
                     i.putExtra("key", e.get_id());
+
+                    String[] group_list = GroupData.get_group_names();
+                    i.putExtra("group_list", group_list);
+
                     ((Activity) c2).startActivityForResult(i, request_code_edit_event);
                 }
             }
