@@ -68,11 +68,16 @@ public class EventData {
     //allows the user to get the index of an event with only an object known.
     //returns -1 if not found or null event_list, the index of the event if found.
     public static int find_event(EventItem event){
-        if(event_list != null){
-            for(int i = 0; i < event_list.size(); i++){
-                if(event_list.get(i).get_id().compareTo(event.get_id()) == 0)
-                    return i;
+        try {
+            if (event_list != null) {
+                for (int i = 0; i < event_list.size(); i++) {
+                    if (event_list.get(i).get_id().compareTo(event.get_id()) == 0)
+                        return i;
+                }
             }
+        }
+        catch(NullPointerException e){
+            return -1;
         }
         return -1;
     }

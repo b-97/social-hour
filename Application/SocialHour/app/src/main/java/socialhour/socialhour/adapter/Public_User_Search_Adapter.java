@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import socialhour.socialhour.R;
+import socialhour.socialhour.frontend_activity;
 import socialhour.socialhour.model.FriendData;
 import socialhour.socialhour.model.FriendItem;
 import socialhour.socialhour.model.PublicUserData;
@@ -66,6 +67,7 @@ public class Public_User_Search_Adapter
         viewHolder.friends_text.setText(fFilteredList.get(i).get_display_name() + " (" +
                 fFilteredList.get(i).get_email() +")");
         viewHolder.friend = fFilteredList.get(i);
+        viewHolder.publicData = frontend_activity.current_user_local.getPublicData();
         if(if_request(fFilteredList.get(i).get_email())){
             viewHolder.add_button.setImageResource(R.drawable.ic_timer_black_24dp);
         }
@@ -124,9 +126,7 @@ public class Public_User_Search_Adapter
             friends_text = (TextView) view.findViewById(R.id.friends_text);
             imageView = (ImageView) view.findViewById(R.id.friendImageView);
             add_button = (ImageButton) view.findViewById(R.id.add_friend_button);
-
             local_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
             add_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

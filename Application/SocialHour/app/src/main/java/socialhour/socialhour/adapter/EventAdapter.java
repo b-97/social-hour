@@ -17,6 +17,7 @@ import socialhour.socialhour.R;
 import socialhour.socialhour.add_event_activity;
 import socialhour.socialhour.frontend_activity;
 import socialhour.socialhour.model.*;
+import socialhour.socialhour.tools.FirebaseData;
 
 /**
  *
@@ -171,31 +172,36 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
             icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     EventItem e = item;
-                    Intent i = new Intent(context, add_event_activity.class);
-                    i.putExtra("name", e.get_name());
-                    i.putExtra("description", e.get_description());
-                    i.putExtra("location", e.get_location());
+                    if(FirebaseData.decodeEmail(item.get_creator().get_email()).compareTo(
+                            frontend_activity.current_user_local.get_email()) == 0 ||
+                            item.get_isGroupEvent()){
+                        Intent i = new Intent(context, add_event_activity.class);
+                        i.putExtra("name", e.get_name());
+                        i.putExtra("description", e.get_description());
+                        i.putExtra("location", e.get_location());
 
-                    long start_date_millis = e.get_start_date().getTime();
-                    String start_date_timezone = Calendar.getInstance().getTimeZone().getID();
-                    long end_date_millis = e.get_end_date().getTime();
-                    String end_date_timezone = Calendar.getInstance().getTimeZone().getID();
+                        long start_date_millis = e.get_start_date().getTime();
+                        String start_date_timezone = Calendar.getInstance().getTimeZone().getID();
+                        long end_date_millis = e.get_end_date().getTime();
+                        String end_date_timezone = Calendar.getInstance().getTimeZone().getID();
 
-                    i.putExtra("start_date_millis", start_date_millis);
-                    i.putExtra("end_date_millis", end_date_millis);
-                    i.putExtra("start_date_timezone", start_date_timezone);
-                    i.putExtra("end_date_timezone", end_date_timezone);
-                    i.putExtra("privacy", e.get_privacy());
-                    i.putExtra("isAllDay", e.get_isAllDay());
-                    i.putExtra("id", e.get_id());
-                    i.putExtra("request_code", request_code_edit_event);
-                    i.putExtra("key", e.get_id());
+                        i.putExtra("start_date_millis", start_date_millis);
+                        i.putExtra("end_date_millis", end_date_millis);
+                        i.putExtra("start_date_timezone", start_date_timezone);
+                        i.putExtra("end_date_timezone", end_date_timezone);
+                        i.putExtra("privacy", e.get_privacy());
+                        i.putExtra("isAllDay", e.get_isAllDay());
+                        i.putExtra("id", e.get_id());
+                        i.putExtra("request_code", request_code_edit_event);
+                        i.putExtra("key", e.get_id());
 
-                    String[] group_list = GroupData.get_group_names();
-                    i.putExtra("group_list", group_list);
+                        String[] group_list = GroupData.get_group_names();
+                        i.putExtra("group_list", group_list);
 
-                    ((Activity) c2).startActivityForResult(i, request_code_edit_event);
+                        ((Activity) c2).startActivityForResult(i, request_code_edit_event);
+                    }
                 }
             }
             );

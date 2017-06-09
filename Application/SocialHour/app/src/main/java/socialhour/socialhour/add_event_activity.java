@@ -19,13 +19,10 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
-
-import socialhour.socialhour.model.GroupData;
 
 public class add_event_activity extends frontend_activity {
 
@@ -33,8 +30,8 @@ public class add_event_activity extends frontend_activity {
     int current_year, current_month, current_day;
 
     final int PRIVACY_DEFAULT = 0;
-    final int PRIVACY_PRIVATE = 1;
-    final int PRIVACY_PUBLIC = 2;
+    final int PRIVACY_PUBLIC = 1;
+    final int PRIVACY_PRIVATE = 2;
 
     final String privacy_array[] = { "Default", "Private", "Public"};
 
@@ -306,8 +303,7 @@ public class add_event_activity extends frontend_activity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             end_date.set(Calendar.HOUR_OF_DAY, hourOfDay);
             end_date.set(Calendar.MINUTE, minute);
-            SimpleDateFormat sdf2 = new SimpleDateFormat("h:m a");
-            end_time_diag_button.setText(date_sdf.format(end_date.getTime()));
+            end_time_diag_button.setText(time_sdf.format(end_date.getTime()));
         }
     };
 

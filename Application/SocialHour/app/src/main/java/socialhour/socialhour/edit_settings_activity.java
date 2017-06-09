@@ -2,14 +2,13 @@ package socialhour.socialhour;
 
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -27,28 +26,18 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.client.util.DateTime;
 
 import com.google.api.services.calendar.model.*;
-import com.google.api.services.calendar.model.Calendar;
+import com.google.firebase.auth.FirebaseAuth;
 
 import android.Manifest;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -57,12 +46,8 @@ import java.util.*;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-
-import org.w3c.dom.Text;
-
-import socialhour.socialhour.R;
+import socialhour.socialhour.model.EventData;
 import socialhour.socialhour.model.EventItem;
-import socialhour.socialhour.tools.CalendarRequestTask;
 
 public class edit_settings_activity extends frontend_activity
     implements EasyPermissions.PermissionCallbacks {
@@ -76,16 +61,18 @@ public class edit_settings_activity extends frontend_activity
     final int PRIVACY_PUBLIC = 1;
     final int PRIVACY_PRIVATE = 2;
 
+    boolean signout;
+
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     GoogleAccountCredential mCredential;
-    private static final String BUTTON_TEXT = "Call Google Calendar API";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
 
     private ToggleButton calendarApiAuth;
+    private Button signoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,20 +101,22 @@ public class edit_settings_activity extends frontend_activity
                 .setBackOff(new ExponentialBackOff());
 
         calendarApiAuth = (ToggleButton) findViewById(R.id.calendar_integration_button);
-        //TODO: Set initial Calendar Checked value
         calendarApiAuth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                if(calendarApiAuth.isChecked()){
-                    getResultsFromApi();
-                }
-                else {
-                    //TODO: Provide implementation to unhook Google Calendar????
-                }
+                getResultsFromApi();
             }
         });
+        signout = false;
 
-
+        signoutButton = (Button) findViewById(R.id.settings_sign_out_button);
+        signoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                signout = true;
+                finish();
+            }
+        });
 
         //Initialize values for the radio buttons.
         if(is_24_hr){
@@ -175,6 +164,7 @@ public class edit_settings_activity extends frontend_activity
         data.putExtra("display_name", display_name);
         data.putExtra("is_24_hr", is24hr);
         data.putExtra("privacy", privacy);
+        data.putExtra("signout", signout);
 
         setResult(RESULT_OK, data);
         super.finish();
@@ -216,10 +206,6 @@ public class edit_settings_activity extends frontend_activity
                     Toast.LENGTH_SHORT).show();
         } else {
             new MakeRequestTask(mCredential).execute();
-            new CalendarRequestTask(mCredential).execute(
-                    new EventItem(java.util.Calendar.getInstance().getTime(),
-                            java.util.Calendar.getInstance().getTime(), false, "Coffee", "Joe's", 1,
-                            frontend_activity.current_user_local.getPublicData(), new Date()));
         }
     }
 
@@ -441,7 +427,7 @@ public class edit_settings_activity extends frontend_activity
         private List<String> getDataFromApi() throws IOException {
             // List the next 10 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
-            List<String> eventStrings = new ArrayList<String>();
+            List<String> eventStrings = new ArrayList<>();
             Events events = mService.events().list("primary")
                     .setMaxResults(10)
                     .setTimeMin(now)
@@ -460,44 +446,24 @@ public class edit_settings_activity extends frontend_activity
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), start));
             }
-            java.util.Calendar start_cal = java.util.Calendar.getInstance();
-            start_cal.set(java.util.Calendar.YEAR, 2017);
-            start_cal.set(java.util.Calendar.MONTH, 5);
-            start_cal.set(java.util.Calendar.DAY_OF_MONTH, 12);
-            start_cal.set(java.util.Calendar.HOUR, 10);
-            start_cal.set(java.util.Calendar.MINUTE, 30);
-            java.util.Calendar end_cal = java.util.Calendar.getInstance();
-            end_cal.set(java.util.Calendar.YEAR, 2017);
-            end_cal.set(java.util.Calendar.MONTH, 5);
-            end_cal.set(java.util.Calendar.DAY_OF_MONTH, 12);
-            end_cal.set(java.util.Calendar.HOUR, 11);
-            end_cal.set(java.util.Calendar.MINUTE, 30);
-
-            Date start_date = start_cal.getTime();
-            Date end_date = start_cal.getTime();
-
-            DateTime start_date_time = new DateTime(start_date);
-            DateTime end_date_time = new DateTime(end_date);
-
-            EventDateTime event_start_date_time = new EventDateTime()
-                    .setDateTime(start_date_time);
-            EventDateTime event_end_date_time = new EventDateTime()
-                    .setDateTime(end_date_time);
-
-            Event google_event = new Event()
-                    .setSummary("Coffee")
-                    .setLocation("Joe's")
-                    .setDescription("test")
-                    .setStart(event_start_date_time)
-                    .setEnd(event_end_date_time);
-            try {
-                google_event = mService.events().insert("primary", google_event).execute();
-                Log.d("Event000 created: %s\n", google_event.getHtmlLink());
+            for(EventItem e: EventData.getListData()) {
+                DateTime start_date_time = new DateTime(e.get_start_date());
+                DateTime end_date_time = new DateTime(e.get_end_date());
+                EventDateTime event_start_time = new EventDateTime().setDateTime(start_date_time);
+                EventDateTime event_end_time = new EventDateTime().setDateTime(end_date_time);
+                Event google_event = new Event()
+                        .setSummary(e.get_name())
+                        .setLocation(e.get_description())
+                        .setStart(event_start_time)
+                        .setEnd(event_end_time);
+                try {
+                    google_event = mService.events().insert("primary", google_event).execute();
+                    Log.d("Event000 created: %s\n", google_event.getHtmlLink());
+                }
+                catch(IOException f){
+                    Log.d("Whoops!", this.toString());
+                }
             }
-            catch(IOException e){
-                throw e;
-            }
-
             return eventStrings;
         }
 

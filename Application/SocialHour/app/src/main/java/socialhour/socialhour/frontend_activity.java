@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -29,7 +28,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -257,13 +255,15 @@ public class frontend_activity extends AppCompatActivity {
                 //If there is a friend connection and it's relevant, test to see if the user already
                 //has a local friend involved.
                 boolean new_friend_connection = true;
-                if(relevant_connection && friend.get_isAccepted()){
+                if(relevant_connection && friend.get_isAccepted()) {
                     ArrayList<PublicUserData> usrlist = current_user_local.get_friends_list();
-                    for(PublicUserData usr : usrlist) {
-                        if(decodeEmail(usr.get_email()).compareTo(acceptor_email) == 0  ||
-                                decodeEmail(usr.get_email()).compareTo(initiator_email) == 0){
-                            new_friend_connection = false;
-                            break;
+                    if (usrlist != null) {
+                        for (PublicUserData usr : usrlist) {
+                            if (decodeEmail(usr.get_email()).compareTo(acceptor_email) == 0 ||
+                                    decodeEmail(usr.get_email()).compareTo(initiator_email) == 0) {
+                                new_friend_connection = false;
+                                break;
+                            }
                         }
                     }
                 }
@@ -342,7 +342,6 @@ public class frontend_activity extends AppCompatActivity {
                 if(!isDuplicate && isRelevant){
                     GroupData.add_group_from_firebase(group);
                     if(group.get_events() != null){
-                        Toast.makeText(getApplicationContext(), group.toString(), Toast.LENGTH_SHORT).show();
                         for(EventItem e: group.get_events()){
                             if(EventData.find_event(e) == -1)
                                 EventData.add_event_from_firebase(e);
@@ -351,6 +350,10 @@ public class frontend_activity extends AppCompatActivity {
                 }
                 try{
                     d.updateAdapter();
+                }catch (NullPointerException e){
+                    Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                }
+                try{
                     g.updateAdapter();
                 }catch (NullPointerException e){
                     Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
@@ -385,6 +388,11 @@ public class frontend_activity extends AppCompatActivity {
                 }
                 try{
                     g.updateAdapter();
+                }catch (NullPointerException e){
+                    Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
+                }
+                try{
+                    d.updateAdapter();
                 }catch (NullPointerException e){
                     Log.d("MainActivity", "WARNING: Can't update adapter because we're not on the main activity!");
                 }
@@ -614,7 +622,9 @@ public class frontend_activity extends AppCompatActivity {
 
             }
         });
-
+        if(current_user_local != null) {
+            private_user_database.setValue(current_user_local);
+        }
     }
     /*
         This is called when any of the subactivities finishes.
@@ -650,7 +660,6 @@ public class frontend_activity extends AppCompatActivity {
             boolean is_all_day = extras.getBoolean("is_all_day");
 
             String group = extras.getString("group");
-            Toast.makeText(this, group, Toast.LENGTH_SHORT).show();
 
             Date creation_date = new Date();
 
@@ -658,25 +667,25 @@ public class frontend_activity extends AppCompatActivity {
                 //set the creation date
                 EventItem event = new EventItem(start_time, end_time, is_all_day,
                         name, location, privacy, current_user_local.getPublicData(),
-                        creation_date);
+                        creation_date, false);
                 EventData.add_event_to_firebase(event);
 
                 //add the event to the private user database aswell
                 current_user_local.add_event(event);
                 private_user_database.setValue(current_user_local);
-                Toast.makeText(this, event.get_name() + " at " + event.get_start_date() + "/" +
-                        event.get_start_date() + "/" + event.get_end_date() + "Is all day: " +
-                        event.get_isAllDay() + event.get_privacy() + creation_date.getTime() +
-                        current_user_firebase.getDisplayName(), Toast.LENGTH_SHORT).show();
             }
             else{
                 EventItem item = new EventItem(start_time, end_time, is_all_day,
                         name, location, privacy,
-                        new PublicUserData(current_user_local.get_photo(), group, group+"@socialHour.com"), creation_date);
+                        new PublicUserData(current_user_local.get_photo(), group, group+"@socialHour.com"), creation_date, true);
+                item.set_id(public_event_database.push().getKey());
                 GroupData.add_event_to_group_firebase(group, item);
             }
             try {
                 d.updateAdapter();
+            }
+            catch(NullPointerException e){}
+            try{
                 g.updateAdapter();
             }
             catch(NullPointerException e){}
@@ -708,7 +717,7 @@ public class frontend_activity extends AppCompatActivity {
             //create the event and set the key to the same version of the key
             EventItem event = new EventItem(start_time, end_time, is_all_day,
                     name, location, privacy, current_user_local.getPublicData(),
-                    creation_date);
+                    creation_date, false);
             event.set_id(data.getExtras().getString("key"));
 
             //have eventdata replace the event
@@ -718,7 +727,7 @@ public class frontend_activity extends AppCompatActivity {
             current_user_local.modify_event(event);
             private_user_database.setValue(current_user_local);
         }
-        //TODO: Add implementation for end of editing an event
+
         //Second if block: user enters edit creation but cancels
         else if ((requestCode == request_code_add_event || resultCode == request_code_edit_event) &&
                 resultCode == RESULT_CANCELED) {
@@ -729,7 +738,6 @@ public class frontend_activity extends AppCompatActivity {
             f.updateAdapter();
         }
         //Fourth if block: user exits settings modification
-        //TODO: Create seperate implementation for cancelling the settings activity
         else if (requestCode == request_code_edit_settings){ //currently we don't allow the user to cancel
             current_user_local.set_display_name(data.getExtras().getString("display_name"));
             current_user_local.set_pref_default_privacy(data.getExtras().getInt("privacy"));

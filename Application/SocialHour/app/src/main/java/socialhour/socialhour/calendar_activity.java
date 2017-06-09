@@ -35,11 +35,6 @@ public class calendar_activity extends AppCompatActivity{
     private int mMonth;
     private int mDay;
 
-    private static final int request_code_add_event = 5;
-    private static final int request_code_add_friend = 6;
-    private static final int request_code_add_group = 7;
-    private static final int request_code_edit_settings = 8;
-    private static final int request_code_edit_event = 9;
 
     private DatePicker date_picker;
 
@@ -61,7 +56,7 @@ public class calendar_activity extends AppCompatActivity{
                     == mMonth && today_cal.get(Calendar.YEAR)==mYear)
                 adapter.add(e);
         }
-        updateAdapter();
+        adapter.notifyDataSetChanged();
 
         //Initiate all of the views attach the necessary data.
         calRecView = (RecyclerView) this.findViewById(R.id.event_list_calendar);
@@ -77,6 +72,9 @@ public class calendar_activity extends AppCompatActivity{
         current_month = today_cal.get(Calendar.MONTH);
         current_day = today_cal.get(Calendar.DAY_OF_MONTH);
 
+        mYear = current_year;
+        mMonth = current_month;
+        mDay = current_day;
 
         //Initiate the date picker and attach a listener
         date_picker = (DatePicker) findViewById(R.id.datePicker);
@@ -89,13 +87,7 @@ public class calendar_activity extends AppCompatActivity{
                 updateDisplay();
             }
         });
-    }
-
-    /*
-        Notifies the recycleradapter that the dataset changed, so it can choose which events to display.
-     */
-    public void updateAdapter() {
-        adapter.notifyDataSetChanged();
+        updateDisplay();
     }
 
     /*
@@ -113,14 +105,6 @@ public class calendar_activity extends AppCompatActivity{
                     == mMonth && eCal.get(Calendar.YEAR)==mYear)
                 adapter.add(e);
         }
-        updateAdapter();
+        adapter.notifyDataSetChanged();
     }
-
-    public static void editEvent(Intent i)
-    {
-        //startActivityForResult(i,request_code_edit_event);
-    }
-
-
-
 }

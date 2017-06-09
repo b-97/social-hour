@@ -47,20 +47,8 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
     private static final String TAG = "SignInActivity";
 
     private GoogleApiClient mGoogleApiClient;
-    private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
 
-    private boolean mIntentInProgress;
-    private boolean mShouldResolve;
-
-    private ConnectionResult connectionResult;
-
-    private SignInButton signInButton;
-
-    private Button signOutButton;
-    private TextView tvName, tvMail, tvNotSignedIn;
-    private ImageView imgProfilePic;
-    private LinearLayout viewContainer;
     FirebaseAuth mAuth;
 
     @Override
@@ -145,6 +133,19 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
+        else if(requestCode == 999){
+            FirebaseAuth.getInstance().signOut();
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>()
+                    {
+                        @Override
+                        public void onResult(Status status)
+                        {
+                            updateUI(null);
+                        }
+                    });
+            System.exit(0);
+        }
     }
 
     private void handleSignInResult(GoogleSignInResult result)
@@ -172,15 +173,7 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
 
     private void signOut()
     {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>()
-                {
-                    @Override
-                    public void onResult(Status status)
-                    {
-                        updateUI(null);
-                    }
-                });
+
     }
 
     private void revokeAccess()
